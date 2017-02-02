@@ -1,0 +1,22 @@
+{
+  "name": "ngeo-qs",
+  "version": "0.0.1",
+  "description": "Ngeo Light Query Server",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.14.1",
+    "express-http-proxy": "^0.11.0"
+  },
+  "devDependencies": {
+    "winston": "^1.1.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git"
+  },
+  "author": "Telespazio FR",
+  "license": "MIT"
+}
