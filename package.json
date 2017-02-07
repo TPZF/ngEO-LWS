@@ -4,14 +4,22 @@
   "description": "Ngeo Light Query Server",
   "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.16.0",
+    "errorhandler": "^1.5.0",
     "express": "^4.14.1",
-    "express-http-proxy": "^0.11.0"
+    "express-http-proxy": "^0.11.0",
+    "http-proxy": "^1.16.2",
+    "method-override": "^2.3.7",
+    "routes": "^2.1.0"
   },
   "devDependencies": {
+    "mocha": "^3.2.0",
+    "should": "^11.2.0",
+    "supertest": "^3.0.0",
     "winston": "^1.1.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./node_modules/mocha/bin/mocha **/*.spec.js --reporter spec"
   },
   "repository": {
     "type": "git",
