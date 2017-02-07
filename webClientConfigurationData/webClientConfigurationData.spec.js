@@ -24,7 +24,7 @@ describe("SAMPLE unit test",function(){
     .expect(200)
     .end(function(err,res){
       //confData = JSON.parse(res);
-      logger.info(res);
+      //logger.info(res);
       //res.status.should.equal(200);
       //res.body.error.should.equal(false);
       //res.body.data.should.equal(30);
