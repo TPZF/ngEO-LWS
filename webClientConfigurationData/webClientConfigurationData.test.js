@@ -5,15 +5,13 @@
 var supertest = require("supertest");
 var should = require("should");
 var logger = require('../utils/logger');
-var app = require('../app');
 // This agent refers to PORT where program is runninng.
 
 var server = supertest("http://localhost:3000");
-// var server = supertest(app);
 
 // UNIT test begin
 
-describe("SAMPLE unit test",function(){
+describe("Unit test of the IF-ngEO-WebClientConfigurationData that shall return the configuration file for the WEBC",function(){
   var confData = {};
   
   it("should return a json file",function(done){
