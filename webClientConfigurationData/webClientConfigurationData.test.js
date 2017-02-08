@@ -13,7 +13,7 @@ var server = supertest("http://localhost:3000");
 
 // UNIT test begin
 
-describe("1. - Unit test of the IF-ngEO-WebClientConfigurationData",function(){
+describe("IF-ngEO-WebClientConfigurationData --> Unit test",function(){
   var confData = {};
   
   it("should return the configuration json file for the WEBC and verify some parameter in the json file",function(done){
