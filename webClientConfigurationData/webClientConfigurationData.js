@@ -15,6 +15,7 @@ router.use(function timeLog(req, res, next) {
 // define the home page route
 router.get('/', function(req, res) {
    var options = { root: __dirname };
+   //res.send({"a": "toto"});
    res.sendFile('./configuration.json',options);
 });
 // define the about route

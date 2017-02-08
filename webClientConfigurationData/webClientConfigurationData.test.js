@@ -5,27 +5,28 @@
 var supertest = require("supertest");
 var should = require("should");
 var logger = require('../utils/logger');
+var app = require('../app');
+var assert = require('assert');
 // This agent refers to PORT where program is runninng.
-
 var server = supertest("http://localhost:3000");
+
 
 // UNIT test begin
 
-describe("Unit test of the IF-ngEO-WebClientConfigurationData that shall return the configuration file for the WEBC",function(){
+describe("1. - Unit test of the IF-ngEO-WebClientConfigurationData that shall return the configuration file for the WEBC and verifying some mandatory parameter in the json file",function(){
   var confData = {};
   
   it("should return a json file",function(done){
     //calling ADD api
     server
     .get('/webClientConfigurationData')
-    // .expect("Content-type",/json/)
+    .expect("Content-type",/json/)
     .expect(200)
     .end(function(err,res){
-      //confData = JSON.parse(res);
-      //logger.info(res);
-      //res.status.should.equal(200);
-      //res.body.error.should.equal(false);
-      //res.body.data.should.equal(30);
+      var confData = JSON.parse(res.text);
+      //to be modified whenever we have another test file
+      assert.equal(confData.tableView.directDownloadColumn,7);
+      assert.equal(confData.tableView.columnsDef.length,15);
       done();
     });
   });
