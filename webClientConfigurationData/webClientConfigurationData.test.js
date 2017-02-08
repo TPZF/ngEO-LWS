@@ -13,10 +13,10 @@ var server = supertest("http://localhost:3000");
 
 // UNIT test begin
 
-describe("1. - Unit test of the IF-ngEO-WebClientConfigurationData that shall return the configuration file for the WEBC and verifying some mandatory parameter in the json file",function(){
+describe("1. - Unit test of the IF-ngEO-WebClientConfigurationData",function(){
   var confData = {};
   
-  it("should return a json file",function(done){
+  it("should the configuration json file for the WEBC and verify some parameter in the json file",function(done){
     //calling ADD api
     server
     .get('/webClientConfigurationData')
