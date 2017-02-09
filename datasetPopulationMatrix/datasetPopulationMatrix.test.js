@@ -7,6 +7,7 @@ var should = require("should");
 var logger = require('../utils/logger');
 var app = require('../app');
 var assert = require('assert');
+var utils = require('../utils/utils');
 // This agent refers to PORT where program is runninng.
 var server = supertest("http://localhost:3000");
 
@@ -23,23 +24,11 @@ describe("IF-ngEO-datasetPopulationMatrix --> Unit test",function(){
     .expect("Content-type",/json/)
     .expect(200)
     .end(function(err,res){
-      var confData = JSON.parse(res.text);
+      var confData = JSON.parse(utils.removeComments(res.text));
+      //var confData = JSON.parse(res.text);
       //to be modified whenever we have another test file
       assert.equal(confData.datasetpopulationmatrix.criteriaTitles.length,6);
       done();
     });
   });
 });
-
-
-/**
- * Helper function to remove comments from the JSON file
- */
-var removeComments = function(string) {
-	var starCommentRe = new RegExp("/\\\*(.|[\r\n])*?\\\*/", "g");
-	var slashCommentRe = new RegExp("(^[\/]|[^:]\/)\/.*[\r|\n]", "g");
-	string = string.replace(slashCommentRe, "");
-	string = string.replace(starCommentRe, "");
-
-	return string;
-};
