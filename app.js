@@ -34,10 +34,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/ngeo/webClientConfigurationData',webClientConfigurationData);
 app.use('/ngeo/datasetPopulationMatrix',datasetPopulationMatrix);
+//search product here by taking in account the dataset we want to search on the backend
 app.use('/ngeo/catalogue/:fCollectionId/search/',productSearch);
-/*app.use('/ngeo/catalogue/:colname/search/',function(req, res, next) { 
-  logger.info(req.params);
-});*/
 
 
 //var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
