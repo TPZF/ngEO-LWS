@@ -20,6 +20,7 @@ var express = require('express'),
 
 var webClientConfigurationData = require('./webClientConfigurationData/webClientConfigurationData');
 var datasetPopulationMatrix = require('./datasetPopulationMatrix/datasetPopulationMatrix');
+var productSearch = require('./productSearch/productSearch');
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/webClientConfigurationData',webClientConfigurationData);
 app.use('/datasetPopulationMatrix',datasetPopulationMatrix);
+app.use('/productSearch',productSearch);
 
 //var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 
@@ -44,22 +46,5 @@ http.createServer(app).listen(app.get('port'), function(){
   logger.info("Express server listening @ http://%s:%s", host,port);
   
 });
-
-
-
-/*app.route('/book')
-  .get(function(req, res) {
-    res.send('Get a random book');
-	logger.info("seinding the reposne  as Get git a random book");
-  })
-  .post(function(req, res) {
-    res.send('Add a book');
-	logger.info("adding Add on post  a random book");
-  })
-  .put(function(req, res) {
-    res.send('Update the book');
-	logger.info("update on put Update the book");
-  });
-*/
 
 module.exports = app;
