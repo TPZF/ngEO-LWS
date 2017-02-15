@@ -20,7 +20,7 @@ describe("IF-ngEO-WebClientConfigurationData --> Unit test",function(){
   it("should return the configuration json file for the WEBC and verify some parameter in the json file",function(done){
     //calling ADD api
     server
-    .get('/webClientConfigurationData')
+    .get('/ngeo/webClientConfigurationData')
     .expect("Content-type",/json/)
     .expect(200)
     .end(function(err,res){

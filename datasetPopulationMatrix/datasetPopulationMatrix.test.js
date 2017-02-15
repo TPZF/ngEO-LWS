@@ -20,7 +20,7 @@ describe("IF-ngEO-datasetPopulationMatrix --> Unit test",function(){
   it("should return the dataset population json file for the WEBC and verify some parameter in the json file",function(done){
     //calling ADD api
     server
-    .get('/datasetPopulationMatrix')
+    .get('/ngeo/datasetPopulationMatrix')
     .expect("Content-type",/json/)
     .expect(200)
     .end(function(err,res){
