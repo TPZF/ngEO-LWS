@@ -16,10 +16,20 @@ TBD
 You should install 
 node.js version 7.5.0
 npm version 4.1.2 (for windows installation it is already contained in)
-Create a repository where you want to place you dev folder
+Create a repository where you want to place your dev folder
 CD to this repository
 Retrieve the project git in your repository by typing "git clone ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git"
 Then do npm install and that is it as the "package.json" file contains already lib needed
+
+As we install also library `xml2json`, it depends on `node-gyp`
+and you have to install manually specific OS dependant lib according to your OS
+@see https://github.com/nodejs/node-gyp
+
+on windows we did by opening the command tools in admminstrative mode(you need to be admin to install python)
+
+`npm install --global --production windows-build-tools`
+
+For other OS please see https://github.com/nodejs/node-gyp as on linux, python is already installed natively
 
 ## Installation Troubleshootings
 If by installing node and nm you have troubleshootings by typing "npm -v"
@@ -28,6 +38,9 @@ In windows, go to {user-home}\AppData\Roaming
 and delete npm cache 'npm' and 'npm-cache'
 Do the same step on your favourite OS
 Reinstall node and normally all is well ;)
+
+## Dev Installation
+TO DO
 
 ## API Reference
 
