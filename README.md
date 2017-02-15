@@ -50,6 +50,12 @@ agile dashbord, docs .. can be found @ https://tuleap.telespazio.fr/plugins/git/
 
 TBD
 
+## Troubleshootings
+If you are in centos 6.x then you need to install python 2.7 as it i the version working with node-gyp
+We have followed this and please read carefully till the end because you have to create a file manually in order to let python v2.7 working
+Please read
+'http://sametmax.com/installer-python-2-7-x-sur-centos-6-x-les-doigts-dans-le-nez/'
+
 ## Contributors
 
 Maxime SBIN (maxime.shubin@telespazio.com)
