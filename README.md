@@ -56,6 +56,9 @@ We have followed this and please read carefully till the end because you have to
 Please read
 'http://sametmax.com/installer-python-2-7-x-sur-centos-6-x-les-doigts-dans-le-nez/'
 
+You have also to install c++11 on centos
+https://edwards.sdsu.edu/research/c11-on-centos-6/
+
 ## Contributors
 
 Maxime SBIN (maxime.shubin@telespazio.com)
