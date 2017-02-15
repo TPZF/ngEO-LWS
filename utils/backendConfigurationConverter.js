@@ -101,6 +101,33 @@ var _convertBackendEntryIntoFeature = function(objectEntryToConvert){
 
 }
 
+/**
+* Will convert the gml footprint into the footprint frmat known by our webclient.
+* GML is lon lat and we will convert it into lat lon arrays
+* TODO make it as generic to convert all gml format
+* @param defaultValue
+*		The gml entry in format of gml object containing coordinates are in coordinates string (lon1 lat1 lon2 lat2 ... lonn latn)
+* @return
+*		the geometry json object in webc known format	
+*/
+var _convertGmlFpToInternalFp = function(gmlFpEntry){
+	var geometry = {};
+	geometry.type = "Polygon";
+	geometry.coordinates = [];
+	geometry.coordinates[0] = [];
+	var poslist = gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMember.Polygon.exterior.LinearRing.posList;
+
+	var arrList = poslist.split(" ",-1);
+	
+	for (var i=0 ; i < arrList.length ; i=i+2){
+		var coord = [];
+		coord[0] = arrList[i+1];
+		coord[1] = arrList[i];
+		geometry.coordinates[0].push(coord);
+	}
+
+	return geometry;
+}
 
 module.exports = {
 
@@ -154,21 +181,36 @@ module.exports = {
 		}
 	},
 
+	/**
+	 * Convert entries from backend format to featurecollection format compatible with web client known format
+	 * @param entries
+	 *		entries to convert 
+	 * @return
+	 *		the feature collection geojson object in webc known format	
+	 */
 	convertBackendEntryIntoFeature: function(entries){
-		//for(i=0; i<entries.length;i++){
+		var featureCollection = {};
+		var features = [];
+
+		for(i=0; i<entries.length;i++){
 			var objectEntryToConvert = entries[0];
-			var feature = {};
-			feature.id = objectEntryToConvert.id;
-			feature.type = "Feature";
-			feature.properties = {};
-			for (key in objectEntryToConvert){
-				feature.properties[key] = objectEntryToConvert[key]
-				//console.log(objectEntryToConvert[key]);
+			if(objectEntryToConvert){
+				var feature = {};
+				feature.id = objectEntryToConvert.id;
+				feature.type = "Feature";
+				feature.properties = {};
+				for (key in objectEntryToConvert){
+					feature.properties[key] = objectEntryToConvert[key];
+				}
+				var gmlfoi = objectEntryToConvert.EarthObservation.featureOfInterest;
+				if(gmlfoi){
+					feature.geometry = _convertGmlFpToInternalFp(gmlfoi);
+				}
+				features.push(feature);
 			}
-			feature.geometry = "todo";
-			console.log(feature);
-		//}
-		return feature;
+		}
+		featureCollection.features = features;
+		return featureCollection;
 	}
 
 };

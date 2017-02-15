@@ -32,9 +32,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/webClientConfigurationData',webClientConfigurationData);
-app.use('/datasetPopulationMatrix',datasetPopulationMatrix);
-app.use('/productSearch',productSearch);
+app.use('/ngeo/webClientConfigurationData',webClientConfigurationData);
+app.use('/ngeo/datasetPopulationMatrix',datasetPopulationMatrix);
+app.use('/ngeo/catalogue/:fCollectionId/search/',productSearch);
+/*app.use('/ngeo/catalogue/:colname/search/',function(req, res, next) { 
+  logger.info(req.params);
+});*/
+
 
 //var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 
