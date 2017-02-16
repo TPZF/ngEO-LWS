@@ -9,8 +9,27 @@ var router = express.Router({mergeParams: true});
 var configurationConverter = require('../utils/backendConfigurationConverter');
 
 var backendUrl = "https://sxcat.eox.at/opensearch/collections/";
-var queryPathUrl = "/atom?count=50&offset=900&bbox=&grel=&start=1990-01-01T00:00:00.000Z&end=2003-12-31T23:59:59.000Z&trel=&platformSerialIdentifier=&instrumentShortName=&wrsLongitudeGrid=&wrsLatitudeGrid=&availabilityTime=";
+//var queryPathUrl = "/atom?count=50&offset=900&bbox=&grel=&start=1990-01-01T00:00:00.000Z&end=2003-12-31T23:59:59.000Z&trel=&platformSerialIdentifier=&instrumentShortName=&wrsLongitudeGrid=&wrsLatitudeGrid=&availabilityTime=";
 
+
+/**
+* Given a request, trasnform its query string to query string to send to the backend
+* @return
+*      the query string that we have to send to the backend
+*/
+var _getQueryPath = function(req){
+    var queryPath;
+    if(req && req.query){
+        queryPath = "?"
+        var qArray = req.query;
+        for(key in qArray){
+            queryPath = queryPath + key + "="+qArray[key]+"&";
+        }
+        //supress the last & character we have added
+        queryPath = queryPath.substring(0,queryPath.length-1);
+    }
+    return queryPath;
+}
 
 // 'https://sxcat.eox.at/opensearch/collections/Landsat57Merged/atom?count=50&offset=900&bbox=&grel=&start=1990-01-01T00:00:00.000Z&end=2003-12-31T23:59:59.000Z&trel=&platformSerialIdentifier=&instrumentShortName=&wrsLongitudeGrid=&wrsLatitudeGrid=&availabilityTime=',
 
@@ -22,7 +41,10 @@ router.use(function timeLog(req, res, next) {
 
 // define the home page route
 router.get('/', function(req, res) {
-    request(backendUrl + req.params['fCollectionId'] + queryPathUrl , function (error, response, body) {
+    //TODO in the future the base backend url shall be dynamicly taken from the osdx document (maybe shall be saved in a conf file, to be ckecked in the furure the best way to do that)
+    var theSearchUrl = backendUrl + req.params['fCollectionId'] + "/atom" + _getQueryPath(req);
+    logger.info(theSearchUrl);
+    request( theSearchUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             //test.replace(/dog|fish/g, '');
             //for the moment replace all the xmlns in hard coded manner so we have a json file compatoble direct with webc response by just doing some
