@@ -1,7 +1,6 @@
 var supertest = require("supertest");
 var should = require("should");
 var logger = require('../utils/logger');
-//var app = require('../app');
 var assert = require('assert');
 var utils = require('../utils/utils');
 var nock = require('nock');
