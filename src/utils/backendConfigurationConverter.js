@@ -188,7 +188,7 @@ module.exports = {
 	 * @return
 	 *		the feature collection geojson object in webc known format	
 	 */
-	convertBackendEntryIntoFeature: function(entries){
+	convertBackendEntryIntoFeatureCollection: function(entries){
 		var featureCollection = {};
 		var features = [];
 

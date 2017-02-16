@@ -33,7 +33,7 @@ router.get('/', function(req, res) {
             //convert the json into response compatible with webc format
             var entries = ojson.feed['entry'];
             if(entries){
-                res.send(configurationConverter.convertBackendEntryIntoFeature(entries));
+                res.send(configurationConverter.convertBackendEntryIntoFeatureCollection(entries));
             }else{
                 res.status(404).send("Some inconsistency with response received from the backend \n" + xml2JSON.toJson(body));
             }
