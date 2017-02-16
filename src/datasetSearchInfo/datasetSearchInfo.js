@@ -1,6 +1,7 @@
 let request = require('request');
 let express = require('express');
 let xml2JSON = require('xml2json');
+let _ = require('lodash');
 
 let backendUrl = 'https://sxcat.eox.at/opensearch/collections/';
 
@@ -24,12 +25,13 @@ let buildResponse = function(datasetId, xml) {
             "keywords": [], // TODO
             "downloadOptions": [], // TODO
             "attributes": [], // TODO
-            "startDate": url['prm:Parameter'][4].minInclusive,
-            "endDate": url['prm:Parameter'][4].maxInclusive
+            "startDate": _.find(url['prm:Parameter'], { name: "start" }).minInclusive,
+            "endDate": _.find(url['prm:Parameter'], { name: "end" }).maxInclusive
         }
     };
     return outputJson;
 }
+
 
 /**
  * Get datasetInfo request
