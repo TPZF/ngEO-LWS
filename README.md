@@ -30,13 +30,14 @@ on windows we did by opening the command tools in admminstrative mode(you need t
 
 `npm install --global --production windows-build-tools`
 
-For other OS please see `https://github.com/nodejs/node-gyp` as on linux, python is already installed natively
+For other OS please see `https://github.com/nodejs/node-gyp` as on linux, python is already installed natively.
+- You need python version 2.7 for linux , so if this version is not used then you have to upgrade the version to 2.7
 
 ## Installation Troubleshootings
-If by installing node and nm you have troubleshootings by typing "npm -v"
+If by installing node and npm you have troubleshootings by typing `npm -v`
 Then uninstall node
-In windows, go to {user-home}\AppData\Roaming
-and delete npm cache 'npm' and 'npm-cache'
+In windows, go to **{user-home}\AppData\Roaming**
+and delete npm cache **npm** and **npm-cache**
 Do the same step on your favourite OS
 Reinstall node and normally all is well ;)
 
