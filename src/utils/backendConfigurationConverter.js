@@ -193,7 +193,7 @@ module.exports = {
 		var features = [];
 
 		for(i=0; i<entries.length;i++){
-			var objectEntryToConvert = entries[0];
+			var objectEntryToConvert = entries[i];
 			if(objectEntryToConvert){
 				var feature = {};
 				feature.id = objectEntryToConvert.id;
