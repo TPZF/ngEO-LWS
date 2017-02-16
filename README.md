@@ -20,7 +20,7 @@ TBD
 - Create a repository where you want to place your dev folder
 - CD to this repository
 - Retrieve the project git in your repository by typing git clone `ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git`
--Then do npm install and that is it as the **package.json** file contains already lib needed
+- Then do npm install and that is it as the **package.json** file contains already lib needed
 
 As we install also library `xml2json`, it depends on `node-gyp`
 and you have to install manually specific OS dependant lib according to your OS
