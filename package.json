@@ -24,7 +24,8 @@
     "winston": "^1.1.2"
   },
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha src/**/*.test.js --reporter spec"
+    "test": "node ./node_modules/mocha/bin/mocha src/**/*.test.js --reporter spec",
+    "start": "node src/app.js"
   },
   "repository": {
     "type": "git",
