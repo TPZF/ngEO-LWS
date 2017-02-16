@@ -3,7 +3,7 @@
  *	i.e. to map properties from file
  */
 var data = require('./catalogJsonMaper.json');
-var lodash = require('lodash');
+var _ = require('lodash');
 
 var _getValue = function(object, property, defaultValue) {
 	if ( object ) {
@@ -11,7 +11,7 @@ var _getValue = function(object, property, defaultValue) {
 		var kv = property.split("="); // Split by "=" to handle arrays
 		if ( kv.length == 2 ) {
 			// Array
-			value = lodash.find(object, function(item) {
+			value = _.find(object, function(item) {
 				return item[kv[0]] == kv[1];
 			});
 		} else {
