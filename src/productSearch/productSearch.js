@@ -44,7 +44,10 @@ router.get('/', function(req, res) {
     //TODO in the future the base backend url shall be dynamicly taken from the osdx document (maybe shall be saved in a conf file, to be ckecked in the furure the best way to do that)
     var theSearchUrl = backendUrl + req.params['fCollectionId'] + "/atom" + _getQueryPath(req);
     logger.info(theSearchUrl);
+    let startTime = Date.now();
     request( theSearchUrl, function (error, response, body) {
+        logger.info('Time elapsed for request to SX-CAT : ', Date.now() - startTime);
+        startDate = Date.now();
         if (!error && response.statusCode == 200) {
             //test.replace(/dog|fish/g, '');
             //for the moment replace all the xmlns in hard coded manner so we have a json file compatoble direct with webc response by just doing some
@@ -54,8 +57,11 @@ router.get('/', function(req, res) {
             var ojson = JSON.parse(repJson);
             //convert the json into response compatible with webc format
             var entries = ojson.feed['entry'];
+            logger.info('Time elapsed for conversion : ', Date.now() - startTime);
+            startTime = Date.now();
             if(entries){
                 res.send(configurationConverter.convertBackendEntryIntoFeatureCollection(entries));
+                logger.info('Send time : ', Date.now() - startTime);
             }else{
                 res.status(404).send("Some inconsistency with response received from the backend \n" + xml2JSON.toJson(body));
             }
