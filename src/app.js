@@ -39,13 +39,10 @@ app.use('/ngeo/catalogue/:fCollectionId/search/',productSearch);
 
 
 //var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
-
-http.createServer(app).listen(app.get('port'), function(){
-  var host = app.get('host');
+var host = 'localhost';
+http.createServer(app).listen(app.get('port'), host, function(){
   var port = app.get('port');
-  
-  //logger.info("Express server listening on port " + app.get('port'));
-  logger.info("Express server listening @ http://%s:%s", host,port);
+  logger.info("Express server listening @ http://%s:%s", host, port);
   
 });
 
