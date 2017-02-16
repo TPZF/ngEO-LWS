@@ -41,7 +41,12 @@ router.get('/', function (req, res) {
     let datasetOsddUrl = backendUrl + datasetId;
     request( datasetOsddUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            res.send(buildResponse(datasetId, xml2JSON.toJson(body)));
+            if ( req.query.sxcat ) {
+                // Used for debug
+                res.send(JSON.parse(xml2JSON.toJson(body)));
+            } else {
+                res.send(buildResponse(datasetId, xml2JSON.toJson(body)));
+            }
         } else {
             res.send('error');
         }
