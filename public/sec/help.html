@@ -1,0 +1,42 @@
+﻿<!doctype html>
+<html>
+
+<head>
+	<title>ngEO</title>
+	<meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../css/vendor.css" /> 
+	<link rel="stylesheet" type="text/css" href="../css/help.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script src="../js/home.js"></script>
+	<script>require("home").initialize("../conf");</script>
+	
+</head>
+
+<body>
+	
+	<!-- Menu Bar -->
+	<header>
+		<img src="../images/ngeo-logo.png" />
+		<p>The next generation user services for earth observation.</p>
+		<nav>
+			<a href="../index.html">Home</a>
+			<a href="./#data-services-area">Data Services Area</a>
+			<a href="./#account">My account</a>
+			<a class="active" href="help.html">User Guide</a>
+			<!-- <a data-role="button" data-mini="true" data-inline="true" data-icon="gear" class="ui-btn-right" href="#">Login</a> -->
+			<a class="contactUs" href="">Contact Us</a>
+		</nav>
+	</header>
+
+	<div id="itoc">
+		<iframe src="../pages/userManual/index.html"></iframe>
+	</div>
+	<div id="icontent">
+		<iframe src="../pages/userManual/ch01.html" name="content"></iframe>
+	</div>
+	
+
+
+</body>
+
+</html>

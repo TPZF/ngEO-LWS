@@ -1,0 +1,168 @@
+/* Palette */
+/* Layout */
+/* Width to avoid warping the elements on next line while resizing the window */
+/**
+ * Main body definition (no longer needed because of jquery-mobile?)
+ */
+/* line 18, client/css/help.less */
+body {
+  font-family: MyriadPro-Regular, 'Myriad Pro Regular', MyriadPro, 'Myriad Pro', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  background-color: #0f0f0f;
+  color: #ffffff;
+  text-shadow: 0 1px 1px #111111;
+  font-weight: normal;
+  background: linear-gradient(#444444, #222222) repeat scroll 0 0 #222222;
+}
+/**
+ * Full page layout
+ */
+/* line 32, client/css/help.less */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  min-width: 1190px;
+}
+/* line 40, client/css/help.less */
+div {
+  margin: 0;
+  padding: 0;
+}
+/* line 46, client/css/help.less */
+a {
+  color: #2489CE;
+  font-weight: bold;
+}
+/* line 54, client/css/help.less */
+#icontent {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 402px;
+  right: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+/* line 66, client/css/help.less */
+#itoc {
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  width: 400px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-right: 2px solid #ffffff;
+}
+/* line 79, client/css/help.less */
+iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+/* line 167, client/css/mixins.less */
+.dropZoneStyle {
+  border: 5px dashed black;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  font-size: 1.4em;
+  font-weight: bold;
+}
+/* Palette */
+/* Layout */
+/* Width to avoid warping the elements on next line while resizing the window */
+/* basic button variables */
+/* color variables set relative to @button_color. You probably don't need to change these. */
+/* status bar */
+/**
+ * MenuBar
+ * 	Contains style for the menu bar and how to display menu item 'page'
+ *  The menu item 'page' has 
+ *		transparent background
+ *		layered above the map
+ */
+/**
+ * Header : content is centered horizontally and border at bottom to separate with the toolbar
+ */
+/* line 15, client/css/menubar.less */
+header {
+  text-align: center;
+  padding: 0;
+  border-bottom: 2px solid #ffffff;
+  height: 48px;
+  min-width: 1190px;
+  /* All elements in header are inline, and vertically aligned */
+  /* H1 : bigger font */
+  /* Small paragraph */
+  /* navigation menu */
+}
+/* line 23, client/css/menubar.less */
+header > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 29, client/css/menubar.less */
+header h1 {
+  font-size: 2.8em;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+/* line 38, client/css/menubar.less */
+header p {
+  width: 12em;
+  font-size: 0.7em;
+  border-left: 1px solid #ffffff;
+  padding-left: 0.3em;
+  margin: 0.3em 3em 0.3em 0.3em;
+  color: #b3b3b3;
+}
+/* line 50, client/css/menubar.less */
+header nav a {
+  display: inline-block;
+  padding: 0.6em;
+  border-left: 1px solid #b3b3b3;
+  color: #b3b3b3;
+  text-decoration: none;
+  font-weight: bold;
+  text-shadow: 2px 2px 2px #808080;
+}
+/* line 60, client/css/menubar.less */
+header nav a:hover {
+  color: #ffffff;
+  text-shadow: 2px 2px 2px #b3b3b3;
+}
+/* line 65, client/css/menubar.less */
+header nav a.active {
+  color: #2489ce;
+  text-shadow: 2px 2px 2px #154f77;
+}
+/* line 70, client/css/menubar.less */
+header nav a:first-child {
+  border-left-style: none;
+}
+/* line 76, client/css/menubar.less */
+.menuBarPage {
+  position: absolute;
+  width: 100%;
+  z-index: 1001;
+}
+/* line 82, client/css/menubar.less */
+.menuBarPageContent {
+  background-color: rgba(15, 15, 15, 0.5);
+  margin: 0px auto;
+  width: 1190px;
+  padding: 1em;
+}
+
+
+/*# sourceMappingURL=help.css.map*/

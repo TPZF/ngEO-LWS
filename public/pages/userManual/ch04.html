@@ -1,0 +1,212 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Chapter 4. My Account Services</title>
+<link rel="stylesheet" type="text/css" href="../../css/userManual.css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="ngEO Web Client User Manual">
+<link rel="up" href="index.html" title="ngEO Web Client User Manual">
+<link rel="prev" href="ch03.html" title="Chapter 3. Data Access Services">
+<base target="content">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter">
+<div class="titlepage"><div><div><h1 class="title">
+<a name="account"></a>Chapter 4. My Account Services</h1></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="sect1"><a href="ch04.html#downloadManagers">4.1. Download Managers Monitoring</a></span></dt>
+<dt><span class="sect1"><a href="ch04.html#dars">4.2. Data Access Requests Monitoring</a></span></dt>
+<dt><span class="sect1"><a href="ch04.html#prefs">4.3. User Preferences</a></span></dt>
+<dt><span class="sect1"><a href="ch04.html#shopcartMgmt">4.4. Shopcarts Management</a></span></dt>
+<dt><span class="sect1"><a href="ch04.html#layerManagerPref">4.5. Layer Manager</a></span></dt>
+</dl></div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="downloadManagers"></a>4.1. Download Managers Monitoring</h2></div></div></div>
+<p>The "Download Managers" tab in My account menu is dedicated to
+				monitor the user's download managers. Several download managers can
+				be installed by a user on different working machines. The user
+				interface allows to install a local download manager through the
+				three buttons displayed in the Download managers tab. Each button is related to an OS specific download manager installer: Windows, Linux and MasOS.</p>
+<p>The view is accessible through My account entry on the menu
+				bar.
+			</p>
+<p>
+				Information details are displayed for each of the available
+				download managers : status, identifier, name, user ID, IP Address
+				and the last access date. </p>
+<div><img src="screenshots/downloadManagersView.jpg"></div>
+<p>
+			</p>
+<p>
+			</p>
+<p>A registered download manager can have one of the three
+				possible statuses:
+			</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>ACTIVE: is represented by the <img src="screenshots/activeIcon.jpg"> icon. An
+					ACTIVE download manager is actually downloading products.
+				</p></li>
+<li class="listitem"><p>INACTIVE: is represented by the <img src="screenshots/inactiveIcon.jpg"> icon.
+					An INACTIVE download manager is an available download manager but
+					does not have ongoing downloading tasks.
+				</p></li>
+<li class="listitem"><p>STOPPED: is represented by the <img src="screenshots/cancelledIcon.jpg"> icon.
+					A STOPPED download manager is a download manager which has been
+					stopped and so it is not working.
+				</p></li>
+</ul></div>
+<p>
+			</p>
+<p>A registered download manager can be managed once it is
+				selected with the commands:
+			</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+<p>Stop: is represented by the button <img src="screenshots/dmStopButton.jpg">.
+					</p>
+<p>This command makes the download manager  stop be assigned to product downloads, 
+					purge scheduled/paused Product downloads, but continue ongoing downloading activities until these are finished.</p>
+<p>
+				</p>
+</li>
+<li class="listitem">
+<p>Stop Immediately: is represented respectively by the
+					button <img src="screenshots/dmStopImmediatelyButton.jpg"> icon.
+					</p>
+<p>This command makes the download manager stop be assigned to product downloads and stop all ongoing and scheduled/paused Product downloads.</p>
+<p>
+				</p>
+</li>
+</ul></div>
+<p>
+			</p>
+<p>
+				To manage a download manager, click on its row in the table, the
+				command buttons are updated according to the download manager
+				status. When a command button is clicked, the status change
+				request is sent to the server and a notification message is
+				displayed. </p>
+<div><img src="screenshots/downloadManagerCommands.jpg"></div>
+<p>
+			</p>
+<p>
+				<img src="screenshots/warning.jpg"> <span class="emphasis"><em>Only the ACTIVE and
+					INACTIVE download managers can be managed.</em></span> <span class="emphasis"><em>STOPPED
+					download managers are only displayed.</em></span>
+
+			</p>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="dars"></a>4.2. Data Access Requests Monitoring</h2></div></div></div> User's
+			submitted data access requests can be viewed and monitored through
+			the Data Access Requests tab accessible through My account entry on
+			the menu bar. <div><img src="screenshots/darsView.jpg"></div>
+<p>On the left side, the download managers already assigned to
+				data access requests are displayed. On the right side is displayed
+				the list of the users' data access requests.</p>
+<p>
+				The request list can be filtered by the download manager they are
+				assigned to. By clicking, on the download manager name, the
+				requests list is updated. </p>
+<div><img src="screenshots/darsFiltering.jpg"></div>
+<p>
+			</p>
+<p>A data access request can have one of the the possible statuses:
+				</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Processing: is an going request, it is represented by the <img src="screenshots/activeIcon.jpg"> icon.
+					</p></li>
+<li class="listitem"><p>Paused: is paused request, it is represented by the <img src="screenshots/inactiveIcon.jpg"> icon.
+					</p></li>
+<li class="listitem"><p>Cancelled: is a cancelled request, it is represented by the <img src="screenshots/cancelledIcon.jpg"> icon.
+					</p></li>
+<li class="listitem"><p>Completed: is a completed request, it is represented by the <img src="screenshots/completedIcon.jpg"> icon. --&gt;
+					</p></li>
+</ul></div>
+<p>
+			</p>
+<p>Each request has details information. In order to see them, click on the a data access request to expand its content.
+				</p>
+<p><img src="screenshots/expandedDAR.jpg"></p>
+<p>
+				</p>
+<p>The data access request id, status, completion percentage
+					and the number of products are displayed.</p>
+<p>
+				</p>
+<p>Buttons Pause, Resume and Stop Immediately buttons are
+					displayed according to the request status.</p>
+<p>
+			</p>
+<p>Each Simple Data Access Request has products when it is submitted.
+				However, standing order requests are submitted with scheduling options, so they do not have product urls when they are created.
+				</p>
+<p>During standing order request processing, when the products are ready, they should appear in the Products sections. </p>
+<p>
+				
+				</p>
+<p>Click on the Products button to visualize the products details.</p>
+<p>
+				</p>
+<div><img src="screenshots/expandedDARProducts.jpg"></div>
+<p>
+			</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>
+						Click on the Stop definitively button <img src="screenshots/stopDefinitivelyButton.jpg"> to cancel a
+						processing or a paused data access request.
+					</p></li>
+<li class="listitem"><p>
+						Click on the Pause button <img src="screenshots/pauseButton.jpg"> to pause a processing data access request.
+					</p></li>
+<li class="listitem"><p>
+						Click on the Resume button <img src="screenshots/resumeButton.jpg"> to change the status of a paused data
+						access request to processing.
+					</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="prefs"></a>4.3. User Preferences</h2></div></div></div>
+<p>
+				Click on the User Preferences tab in My account, the view lists just the last selected dataset and background layer.
+				
+			</p>
+<div><img src="screenshots/prefsTab.jpg"></div>
+<p> To reset the preferences, click on the Reset Preferences button <img src="screenshots/resetPrefsButton.jpg">.</p>
+<p>
+				<img src="screenshots/warning.jpg"> <span class="emphasis"><em>The preferences storage is not cross-browsers compatible. They are only reloaded when using the same browser new window. </em></span>
+			</p>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shopcartMgmt"></a>4.4. Shopcarts Management</h2></div></div></div>
+<p>
+				Click on the Shopcarts tab in My account, it displays your entire available shopcarts.				
+			</p>
+<div><img src="screenshots/shopcartsTab.jpg"></div>
+<p>Click on shopcart to change the current shopcart accessible in the Data Access Services area.</p>
+<p>The following actions are avaible in the buttons below : </p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Click on New to create a new empty shopcart.</p></li>
+<li class="listitem"><p>Click on Share to share your shopcart.</p></li>
+<li class="listitem"><p>Click on Export to export the shopcart content in KML, Atom or HTML format.</p></li>
+<li class="listitem"><p>Click on Rename to rename the current shopcart.</p></li>
+<li class="listitem"><p>Click on Duplicate to duplicate all the current shopcart content in a new shopcart.</p></li>
+<li class="listitem"><p>Click on Delete to remove the curernt shopcart.</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="layerManagerPref"></a>4.5. Layer Manager</h2></div></div></div>
+<p>
+				Click on the layer Maneger tab in My account, the view displays the layer manager form.
+			</p>
+<div><img src="screenshots/layerManagerTab.jpg"></div>
+<p>You can add your own WMS or WMTS layer or server by clicling the "Add layer" button.</p>
+<p>When you tick on a layer name or list, it will be automatically added in your layer list that you can then manage here <a class="xref" href="ch02.html#layersHowTo" title="2.8. How to select Layers?">Section 2.8, “How to select Layers?”</a>.</p>
+<p>You can remove your layer by clicking on the "x" button when your mouse is on this layer name or list from your preferences.</p>
+</div>
+</div></body>
+</html>

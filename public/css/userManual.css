@@ -1,0 +1,31 @@
+/* Palette */
+/* Layout */
+/**
+ * Main body definition (no longer needed because of jquery-mobile?)
+ */
+/* line 15, client/css/userManual.less */
+body {
+  font-family: MyriadPro-Regular, 'Myriad Pro Regular', MyriadPro, 'Myriad Pro', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  background-color: #0f0f0f;
+  color: #ffffff;
+  text-shadow: 0 1px 1px #111111;
+  font-weight: normal;
+  background: linear-gradient(#444444, #222222) repeat scroll 0 0 #222222;
+}
+/**
+ * Full page layout
+ */
+/* line 29, client/css/userManual.less */
+html,
+body {
+  min-height: 99.9%;
+}
+/* line 35, client/css/userManual.less */
+a {
+  color: #2489CE;
+  font-weight: bold;
+}
+
+
+/*# sourceMappingURL=userManual.css.map*/

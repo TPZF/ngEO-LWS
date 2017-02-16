@@ -30,7 +30,7 @@ app.use(methodOverride());
 app.use(errorHandler());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/ngeo/webClientConfigurationData',webClientConfigurationData);
 app.use('/ngeo/datasetPopulationMatrix',datasetPopulationMatrix);

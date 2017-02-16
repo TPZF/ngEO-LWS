@@ -1,0 +1,526 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Chapter 3. Data Access Services</title>
+<link rel="stylesheet" type="text/css" href="../../css/userManual.css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<link rel="home" href="index.html" title="ngEO Web Client User Manual">
+<link rel="up" href="index.html" title="ngEO Web Client User Manual">
+<link rel="prev" href="ch02.html" title="Chapter 2. Getting Started">
+<link rel="next" href="ch04.html" title="Chapter 4. My Account Services">
+<base target="content">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter">
+<div class="titlepage"><div><div><h1 class="title">
+<a name="das"></a>Chapter 3. Data Access Services</h1></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="sect1"><a href="ch03.html#idm1599236160">3.1. Catalogue Search</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch03.html#idm1599235520">3.1.1. Datasets Selection</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599228992">3.1.2. Search Criteria</a></span></dt>
+</dl></dd>
+<dt><span class="sect1"><a href="ch03.html#idm1599197760">3.2. Search Results</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch03.html#idm1599197248">3.2.1. Table Results</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599192512">3.2.2. Direct Download</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599187008">3.2.3. Data Access Request</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599180096">3.2.4. Standing Order Data Access Request</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599174208">3.2.5. Hosted Processing</a></span></dt>
+</dl></dd>
+<dt><span class="sect1"><a href="ch03.html#shopcart">3.3. Shopcart</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch03.html#idm1599169728">3.3.1. Content</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599167808">3.3.2. Manage shopcart items</a></span></dt>
+</dl></dd>
+<dt><span class="sect1"><a href="ch03.html#idm1599163072">3.4. Map</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch03.html#idm1599162432">3.4.1. Map Modes</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1604813616">3.4.2. Navigation</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1605026352">3.4.3. Products on Map</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599591632">3.4.4. Map Layers</a></span></dt>
+<dt><span class="sect2"><a href="ch03.html#idm1599599312">3.4.5. Map Background</a></span></dt>
+</dl></dd>
+</dl></div>
+<p>The data access services are the main functionalities of ngeo.
+			They consist in :
+		</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>catalogue searching using dataset geo-temporal criteria
+				and/or dataset inherent criteria</p></li>
+<li class="listitem"><p>retrieving products metadata and data</p></li>
+<li class="listitem"><p>submitting data access requests</p></li>
+<li class="listitem"><p>visualizing and manipulating data on the map.</p></li>
+</ul></div>
+<p>
+		</p>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="idm1599236160"></a>3.1. Catalogue Search</h2></div></div></div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599235520"></a>3.1.1. Datasets Selection</h3></div></div></div>
+<p>
+					The first and necessary step to make a catalogue search is to
+					choose a dataset. The dataset selection widget is accessible by clicking on
+					the <img src="screenshots/toolBarIcons/datasetsIcon.jpg"> button.
+					When the button is clicked, the widget is opened and it displays
+					the list of available datasets. Each dataset is represented by
+					its name and the number of items it contains.
+					</p>
+<div><img src="screenshots/datasetSelectionWidget.jpg"></div>
+<p>
+				</p>
+<p>
+					<img src="screenshots/tip.jpg"> Only datasets with search authorization are displayed.
+				</p>
+<p>
+					<img src="screenshots/tip.jpg"> The icon <img src="screenshots/viewDisabled.jpg"> means that you cannot view the dataset products, i.e. browse the product image in the map.
+				</p>
+<p>
+					<img src="screenshots/tip.jpg"> The icon <img src="screenshots/downloadDisabled.jpg"> means that you cannot download the datasets products.
+				</p>
+<p>
+					To select a dataset, the user has to scroll out the list and
+					choose the dataset by clicking on the list entry. It is also
+					possible to filter the available list of datasets by the means
+					of the filter combo boxes.
+					</p>
+<div><img src="screenshots/datasetFilters.jpg"></div>
+<p> 
+					</p>
+<p>By default, all the
+					criteria are set to "None". As soon as a criteria is chosen in
+					one of the combo boxes, the datasets are filtered and the list is
+					updated, taken into account the other combo boxes selected
+					criteria.</p>
+<p>		
+					</p>
+<p>
+					In order to disable the filtering for a criterion, set back the
+					selected option to "None".</p>
+<p>
+				</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599228992"></a>3.1.2. Search Criteria</h3></div></div></div>
+<p>
+					Once a dataset has been selected, to set the search criteria,
+					the user has to click on the button <img src="screenshots/toolBarIcons/searchIcon.jpg"> on the left	toolbar.
+					The search criteria widget is then displayed. </p>
+<div><img src="screenshots/dateCriteria.jpg"></div>
+<p>
+					It is composed of several accordion, each accordion displays a search criteria type. Each button on the footer has its own role.</p>
+<p>The Search button submits the search request to the server in order to
+				retrieve the results. See <a class="xref" href="ch03.html#resultsTable">Section 3.2.1, “Table Results”</a>.</p>
+<p>The Share button when	clicked, displays a popup. <img src="screenshots/sharePopup.jpg">
+				Clik on url, a new browser window is opened, the search widget is displayed with all the search parameters set.
+				</p>
+<p>There search criteria types are :</p>
+<div class="sect3">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="idm1599225152"></a>3.1.2.1. Date Criteria</h4></div></div></div>
+<p>
+							They consist in the start and stop dates of the selected
+							dataset. In order to change the selected date, click on the
+							icon <img src="screenshots/calendarTriggererButton.jpg"> to
+							display the calendar widget. 
+							</p>
+<div><img src="screenshots/calandarWidget.jpg"></div>
+<p> 
+							Choose the month and year using the combo boxes, then click on the day date. The
+							calendar widget is closed and the chosen date does appear in
+							the text field.
+						</p>
+<p>
+							It is also possible to change the dates using a time slider. To enable the time slider, check the checkbox <img src="screenshots/timeSliderCheckBox.jpg">.
+							The search widget is then hidden and the timeSlider is displayed in the bottom of the map.
+						</p>
+<div><img src="screenshots/timeSlider.jpg"></div>
+<p>	Drag the time bar to move and change the time range. </p>
+<p>It is also possible to move the time slider bar by clicking on the left and right arrows of the time slider.
+						The bar is then moved respectively to the left or to the right.</p>
+<div><img src="screenshots/timeSliderBar.jpg"></div>
+<p>
+							Drag the bar left handle and the bar right handle to enlarge the time range or to make it smaller.
+						</p>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>Each time the bar is moved or resized, a search is launched and the results are displayed on the map.</em></span>
+						</p>
+</div>
+<div class="sect3">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="idm1599219392"></a>3.1.2.2. Area Criteria</h4></div></div></div>
+<p>
+							They consist in geographical criteria to be used in the
+							search. To visualize the area widget, click on Area tab inside
+							the search criteria widget. 
+						</p>
+<div><img src="screenshots/areaWidget.jpg"></div>
+<p>The area is created using either a rectangular zone, a polygon a Gazetteer or can be imported from a file.</p>
+<p><span class="emphasis"><em>A rectangle search area or a BBOX </em></span>is defined by :
+							</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>West: the maximum longitude</p></li>
+<li class="listitem"><p>East: the minimum longitude</p></li>
+<li class="listitem"><p>North: the maximum latitude</p></li>
+<li class="listitem"><p>South: the minimum latitude</p></li>
+</ul></div>
+<p>
+							By default, the coordinates are synchronized with the map
+							extent. To disable this behavior uncheck the <img src="screenshots/useExtentCheckBox.jpg"> check box. 
+							Thus the coordinates can be entered manually is each text field.
+						</p>
+<p>
+							</p>
+<p><span class="emphasis"><em>A Polygon search area </em></span> is defined by its coordinates.</p>
+<p>
+						
+							</p>
+<p>To enable drawing polygons, click on the Polygon button in the area widget.
+							The polygon definition view is displayed.
+							</p>
+<p> 
+							</p>
+<div><img src="screenshots/polygonWidget.jpg"></div>
+<p> 
+							</p>
+<p>Enter the polygon coordinates in the text field under 'Enter coordinates:' and then press the Draw button.
+							</p>
+<p>
+							
+							</p>
+<p>It is also possible to draw a polygon using the mouse.
+							On the polygon view, press the Draw button, then click on the map to select a polygon edge.
+							Move the mouse to choose another point an so on. When all the points are choosen double click to finish the definition of the polygon.
+							The polygon widget is then displayed with the polygon coordinates.
+							</p>
+<p>
+							</p>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>To remove a polygon, select its coordinates in the text field, delete them an then press the Draw button.</em></span>
+							</p>
+<p>
+						</p>
+<p>
+							</p>
+<p><span class="emphasis"><em>A Gazetteer search area</em></span> can be defined by clicking the area widget.
+							The gazetteer view is displayed.</p>
+<p>
+							
+							</p>
+<div><img src="screenshots/gazetteerWidget.jpg"></div>
+<p> 
+							</p>
+<p>Enter the location to search in the text field and then press Enter.</p>
+<p>
+							</p>
+<p>The location items retrieved from the server are displayed in a list.</p>
+<p>
+							</p>
+<p>Click on the choosen location to define the search area.</p>
+<p>
+						</p>
+<p><span class="emphasis"><em>To import a search Area</em></span> click on the "Import" button in the area widget.
+							The import view is displayed.
+						</p>
+<div><img src="screenshots/importWidget.jpg"></div>
+<p>Drag a KML, GML or GeoJSON file from the file system and then drop it in the Drop zone of the import view.</p>
+<p>The imported zone in the drawn on the map and a notification message appears underneath the Drop zone.</p>
+<p>
+							<img src="screenshots/warning.jpg"> <span class="emphasis"><em>Only KML, GML and GeoJSON files can be imported.</em></span>
+						</p>
+</div>
+<div class="sect3">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="idm1599204544"></a>3.1.2.3. Advanced Filters and Download Options</h4></div></div></div>
+<p>They are criteria relative to the selected dataset, so
+							they change depending on the dataset chosen.
+						</p>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>Different datasets
+								can have the same criteria.</em></span>
+						</p>
+<p> To visualize the advanced criteria, click on Advanced Filters and Download Options
+						tab inside the search filters widget. </p>
+<div><img src="screenshots/advancedCriteria.jpg"></div>
+<p> Each criterion is
+						displayed by its name and a selection widget. Criteria having a
+						range are displayed with sliders. Move the slider or set the
+						value inside the text field to change the selected value.
+						Criteria having a multiple selection possibilities are
+						displayed with a list of checkboxes. Check or uncheck the check
+						boxes to change the criterion selected value.
+						</p>
+<p>
+							<img src="screenshots/warning.jpg"> <span class="emphasis"><em>The Advanced Filters and Download Options are displayed per dataset choosen.</em></span>
+						</p>
+</div>
+<div class="sect3">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="idm1599200704"></a>3.1.2.4. Download Options</h4></div></div></div>
+<p>They are options relative to the selected dataset, so
+							they change depending on the dataset chosen.
+						</p>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>Different datasets
+								can have the same download options.</em></span>
+						</p>
+<p>
+						</p>
+<div><img src="screenshots/downloadOptions.jpg"></div>
+<p>
+
+						Each option is displayed by its name and a combobox containing
+						the possible values.
+						</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="idm1599197760"></a>3.2. Search Results</h2></div></div></div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599197248"></a>3.2.1. Table Results</h3></div></div></div>
+<p>
+							Once the search criteria have been filled in and the Search button clicked,
+							results are availabe in a table with the products metadata	in the bottom of the home page.
+							Click on the table button <img src="screenshots/tableButton.jpg">  to display the results table.
+						</p>
+<div><img src="screenshots/resultsTable.jpg"></div>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>The results table can
+								be hidden by clicking on the <img src="screenshots/tableButton.jpg"> button on
+								the toolbar.
+							</em></span>
+						</p>
+<p>
+							The navigation in the table results is insured by the pagination tools <img src="screenshots/tablePaginationButtons.jpg">.
+						</p>
+<p>
+							The field "Filet table" allows to filter the results according to the text entered.
+						</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599192512"></a>3.2.2. Direct Download</h3></div></div></div>
+<p>
+							The Direct Download is a functionnality of the user client
+							making the user download the retrieved products if they have a
+							url starting with <span class="emphasis"><em>http or https</em></span>. In the results table,
+							<span class="emphasis"><em>downloadable products are highlighted by an underlined product
+							identifier.</em></span> 
+						</p>
+<div><img src="screenshots/downloadableProduct.jpg"></div>
+<p>
+							For a <span class="emphasis"><em>downloadable product</em></span>, click on the product id. The direct
+							download widget is opened. 
+						</p>
+<div><img src="screenshots/directDownloadWidget.jpg"></div>
+<p>According to the product url and to the download managers
+							registered, the user can have the choice to to download via:
+						</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>the browser</p></li>
+<li class="listitem"><p>or the local download manager</p></li>
+</ul></div>
+<p>
+						</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599187008"></a>3.2.3. Data Access Request</h3></div></div></div>
+<p>A Data Access Request is a request to the server
+							issued from the results table with product items having a url field filled in. </p>
+<p>This request aims to issue a download request for all the items
+							included when they will be downloadable. A download manager has
+							to be assigned to the request and will insure the download.</p>
+<p>To include products in a Simple Data Access Request, check
+							the products checkboxes in the results table.</p>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>If the Retrieve
+								Product button <img src="screenshots/retrieveProductButton.jpg"> is still disabled this means
+								that the products selected does not have a url. So change the
+								selected products.
+							</em></span>
+						</p>
+<p>
+							Click on Retrieve Product button to display the data access
+							widget with the list of available download managers. </p>
+<div><img src="screenshots/darWidget.jpg"></div>
+<p>
+						</p>
+<p>The "Validate" button makes the validation
+							request sent to the server, and the server response displayed
+							underneath the button. If the request is successfully validated,
+							the estimated size of the products are displayed and a
+							notification message confirms that the request has been
+							acknowleged. The Validation button is renamed into "Confirm":</p>
+<div><img src="screenshots/validatedDARWidget.jpg"></div>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>If the validation has
+								failed an error message is dispalyed.</em></span>
+						</p>
+<p>
+							Click on "Confirm" button to submit, the confirmation
+							request to the server. The server response is displayed
+							underneath the button. If the request has been successfully
+							confirmed, the request is being processed, unless an error
+							message is dispalyed. 
+						</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599180096"></a>3.2.4. Standing Order Data Access Request</h3></div></div></div>
+<p>A Standing Order Data Access Request allows the user to schedule a search by data criteria
+						in order to retrieve and download products. Thus, a download manager has
+							to be assigned to the request and will insure the download.</p>
+<p>This functionnality is available from the Subscribe button in the left toolbar.</p>
+<div><img src="screenshots/subscribeWidget.jpg"></div>
+<p>The "Data-driven Order" type is selected to submit a <span class="emphasis"><em>data-driven</em></span> Standing Order</p>
+<p>Fill in the fields (same as a search) and click on the Order button. Then the list of available download managers is displayed.
+						</p>
+<div><img src="screenshots/darWidget.jpg"></div>
+<p>
+						</p>
+<p>The "Validate" button makes the validation
+							request sent to the server, and the server response is displayed
+							underneath the button. If the request is successfully validated, a
+							notification message confirms that the request has been
+							acknowleged. The validation button is renamed into "Confirm" </p>
+<div><img src="screenshots/validatedDARWidget.jpg"></div>
+<p>
+							<img src="screenshots/tip.jpg"> <span class="emphasis"><em>If the validation has
+								failed an error message is dispalyed.</em></span>
+						</p>
+<p>
+							Click on "Confirm" button to submit, the confirmation
+							request to the server. The server response is displayed
+							underneath the button. If the request has been successfully
+							confirmed, the request is being processed, unless an error
+							message is dispalyed. 
+						</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599174208"></a>3.2.5. Hosted Processing</h3></div></div></div>
+<p>A processing can be added when a product is downloaded through a Data Access Request.</p>
+<p>The different processing available are accessible when a Data Access Request is created by opening the Processing accordion.</p>
+<div><img src="screenshots/darProcessingWidget.jpg"></div>
+<p>Click on a listed processing to select it for the Data Acccess Request.</p>
+<div><img src="screenshots/processingSelection.jpg"></div>
+<p>Then, click on Configure to set the processing parameters. Parameters are specific for each processing.</p>
+</div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="shopcart"></a>3.3. Shopcart</h2></div></div></div>
+<p>The user has a current shopcart available in the Data Access Services area. He can manage his shopcarts in My Account area. See <a class="xref" href="ch04.html#shopcartMgmt" title="4.4. Shopcarts Management">Section 4.4, “Shopcarts Management”</a>
+					</p>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599169728"></a>3.3.1. Content</h3></div></div></div>
+<p>The current shopcart content is displayed directly in the map.</p>
+<p>Click on dataset containing shopcart icon <img src="screenshots/shopcartButton.jpg"> to display the current shopcart being used.</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599167808"></a>3.3.2. Manage shopcart items</h3></div></div></div>
+						Items are added into the current shopcart via :
+						<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+<p>Map : click on a product in the map and then click on "Shopcart" icon</p>
+<div><img src="screenshots/mapPopupAddShopcart.jpg"></div>
+</li>
+<li class="listitem"><p>Table : select products and then click on Add to Shopcart button <img src="screenshots/addShopcartButton.jpg"></p></li>
+</ul></div>
+						
+						In the Shopcart table, the user can :
+						<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Update the download options of the selected shopcart items.</p></li>
+<li class="listitem"><p>Delete the selected items from the shopcart</p></li>
+<li class="listitem"><p>Export the selected items in KML, Atom or HTML format</p></li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="idm1599163072"></a>3.4. Map</h2></div></div></div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599162432"></a>3.4.1. Map Modes</h3></div></div></div> 
+						ngEO user interface offers to the user two map modes 2D and 3D. Both modes are used to :
+						<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>vizualize the products footprints</p></li>
+<li class="listitem"><p>navigate on the globe</p></li>
+<li class="listitem"><p>choose search area coordinates</p></li>
+<li class="listitem"><p>project product browse images</p></li>
+<li class="listitem"><p>vizualize map layers</p></li>
+<li class="listitem"><p>choose map background</p></li>
+</ul></div>
+						These functionnalities are detailed in the next sections.
+						
+						<p>Click on the 2D/3D <img src="screenshots/toolBarIcons/mapMode.jpg"> button on the toolbar to change the map mode
+						from 2D to 3D and inversely.</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1604813616"></a>3.4.2. Navigation</h3></div></div></div>
+<p> In order to zoom in either:
+							</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Click on the Zooum In <img src="screenshots/toolBarIcons/zoomInIcon.jpg">button on the toolbar</p></li>
+<li class="listitem"><p>or move the mouse wheel in.</p></li>
+</ul></div>
+<p>
+						</p>
+<p> In order to zoom out either:
+							</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Click on the Zooum Out <img src="screenshots/toolBarIcons/zoomOutIcon.jpg">button on the toolbar to zoom out. </p></li>
+<li class="listitem"><p>or move the mouse wheel out.</p></li>
+</ul></div>
+<p>
+						</p>
+<p>Click on the Start View <img src="screenshots/toolBarIcons/startViewIcon.jpg">button on the toolbar to return back to the initial view.</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1605026352"></a>3.4.3. Products on Map</h3></div></div></div>
+<p>Once a catalogue search is done and the products are retrieved, the related footprints are drawn on the map.
+						</p>
+<p>Click inside a footprint:
+							</p>
+<div class="itemizedlist">
+<img src="screenshots/itemOnMap.jpg"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>the product row is checked on the results table</p></li>
+<li class="listitem"><p>a popup widget is displayed with information on the selected product</p></li>
+<li class="listitem"><p>Tick the "eyes" icon in the table or toggle the browse icon <img src="screenshots/browseIcon.jpg"> in the information panel in order to project the browse image inside the footprints</p></li>
+<li class="listitem"><p>the icon <img src="screenshots/darIcon.jpg"> allows submitting a Simple Data access Request.
+								Follow the same steps as in section <a class="xref" href="ch02.html#simpleDARHowTo" title="2.3. How to submit a Data Access request?">Section 2.3, “How to submit a Data Access request?”</a>
+								</p></li>
+</ul>
+</div>
+<p>
+						</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599591632"></a>3.4.4. Map Layers</h3></div></div></div>
+<p>To access the map layers, click on the layers icon on the toolbar <img src="screenshots/toolBarIcons/layersIcon.jpg">.</p>
+<p>The layers widget is displayed.</p>
+<div><img src="screenshots/layersWidget.jpg"></div>
+<p>In order to remove a layer from the map, uncheck the checkbox in front of the dataset name upper the table</p>
+</div>
+<div class="sect2">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="idm1599599312"></a>3.4.5. Map Background</h3></div></div></div>
+<p>To access the available map backgrouds, click on the background icon on the toolbar <img src="screenshots/toolBarIcons/backgroundIcon.jpg">.</p>
+<p>The backgrounds' widget is displayed.</p>
+<div><img src="screenshots/backgroundsWidget.jpg"></div>
+<p>Click, then, on the radio button in front of the background name to change the map background.</p>
+</div>
+</div>
+</div></body>
+</html>
