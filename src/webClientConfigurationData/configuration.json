@@ -80,10 +80,10 @@
 	"proxyUrl": "http://localhost:3000/proxy?url=",
 	
 	"searchResults": {
-		"countPerPage": 100
+		"countPerPage": 50
 	},
 	"expandSearch": {
-		"countPerPage": 100
+		"countPerPage": 50
 	},
 
 	"keyDates" : [["2015-04-25", "Super date"]],
