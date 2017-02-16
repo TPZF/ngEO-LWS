@@ -56,7 +56,7 @@ Type `npm test`
 - If you are in centos 6.x then you need to install python 2.7 as it i the version working with node-gyp
 - We have followed this and please read carefully till the end because you have to create a file manually in order to let python v2.7 working
 - Please read `http://sametmax.com/installer-python-2-7-x-sur-centos-6-x-les-doigts-dans-le-nez/`
--You have also to install c++11 on centos `https://edwards.sdsu.edu/research/c11-on-centos-6/`
+- You have also to install c++11 on centos `https://edwards.sdsu.edu/research/c11-on-centos-6/`
 
 ## Contributors
 
