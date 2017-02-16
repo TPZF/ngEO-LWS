@@ -31,6 +31,7 @@ on windows we did by opening the command tools in admminstrative mode(you need t
 `npm install --global --production windows-build-tools`
 
 For other OS please see `https://github.com/nodejs/node-gyp` as on linux, python is already installed natively.
+
 - You need python version 2.7 for linux , so if this version is not used then you have to upgrade the version to 2.7
 
 ## Installation Troubleshootings
