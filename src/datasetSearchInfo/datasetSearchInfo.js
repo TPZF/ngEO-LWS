@@ -1,7 +1,7 @@
 let request = require('request');
 let express = require('express');
-let xml2JSON = require('xml2json');
 let _ = require('lodash');
+let Xml2JsonParser = require('../utils/xml2jsonParser');
 
 let backendUrl = 'https://sxcat.eox.at/opensearch/collections/';
 
@@ -15,18 +15,19 @@ router.use(function timeLog(req, res, next) {
 /**
  * Build response respecting protocol used by current version of WEBC
  */
-let buildResponse = function(datasetId, xml) {
-    let inputJson = JSON.parse(xml);
-    let url = inputJson.OpenSearchDescription.Url[0]; // Take the first one by default(GET/bbox)
+let buildResponse = function(datasetId, inputJson) {
+    let url = inputJson.Url[0]; // Take the first one by default(GET/bbox)
+    let startParam = _.find(url['prm:Parameter'], function(item) { return item['@'].name == "start" });
+    let endParam = _.find(url['prm:Parameter'], function(item) { return item['@'].name == "end" });
     let outputJson = {
         "datasetSearchInfo": {
             "datasetId": datasetId,
-            "description": inputJson.OpenSearchDescription.Description,
+            "description": inputJson.Description,
             "keywords": [], // TODO
             "downloadOptions": [], // TODO
             "attributes": [], // TODO
-            "startDate": _.find(url['prm:Parameter'], { name: "start" }).minInclusive,
-            "endDate": _.find(url['prm:Parameter'], { name: "end" }).maxInclusive
+            "startDate": startParam['@'].minInclusive,
+            "endDate": endParam['@'].maxInclusive
         }
     };
     return outputJson;
@@ -41,14 +42,18 @@ router.get('/', function (req, res) {
     let datasetOsddUrl = backendUrl + datasetId;
     request( datasetOsddUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            if ( req.query.sxcat ) {
+            Xml2JsonParser.parse(body, function(result) {
                 // Used for debug
-                res.send(JSON.parse(xml2JSON.toJson(body)));
-            } else {
-                res.send(buildResponse(datasetId, xml2JSON.toJson(body)));
-            }
+                if ( req.query.sxcat ) {
+                    res.send(result);
+                } else {
+                    res.send(buildResponse(datasetId, result))
+                }
+            }, function(errorMessage) {
+                res.send(errorMessage);
+            });
         } else {
-            res.send('error');
+            res.send('Error on SX-CAT catalog');
         }
     })    
 });
@@ -59,9 +64,13 @@ router.get('/atom', function(req, res) {
     let datasetOsddUrl = backendUrl + datasetId + '/atom';
     request( datasetOsddUrl, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            res.send(JSON.parse(xml2JSON.toJson(body)));
+            Xml2JsonParser.parse(body, function(result) {
+                res.send(JSON.parse(result));    
+            }, function(errorMessage) {
+                res.send(errorMessage);
+            });
         } else {
-            res.send('error');
+            res.send('Error on SX-CAT catalog');
         }
     });
 })
