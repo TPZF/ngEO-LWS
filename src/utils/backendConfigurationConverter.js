@@ -4,7 +4,7 @@
  */
 var data = require('./catalogJsonMaper.json');
 var _ = require('lodash');
-var xml2js = require('xml2js-expat');
+let Xml2JsonParser = require('../utils/xml2jsonParser');
 var logger = require('./logger');
 
 var _getValue = function(object, property, defaultValue) {
@@ -211,22 +211,20 @@ module.exports = {
 
 	/**
 	 * Convert json to current ngeo WEBC format
+	 * 
 	 * @param {string} body
 	 *      Xml received from backend converted to json as string
-	 * @return featurecollection j
-	 *      son object compatible with webc format     
+	 * @return featureCollection
+	 *      Feature collection compatible with WEBC format
 	 */
 	convertToNgeoWebCFormat: function(body) {
-		var featurecollection;
-		var parser = new xml2js.Parser(function(xmlData, error) {
-			if (!error) {
-				logger.info('Time elapsed by fast expat to convert xml into xml2js-expat json format : ', Date.now() - startTime);
-			}
-			featurecollection = _convertBackendEntryIntoFeatureCollection(JSON.stringify(xmlData));
+		var featureCollection;
+		Xml2JsonParser.parse(body, function(parsedJson) {
+			featureCollection = _convertBackendEntryIntoFeatureCollection(JSON.stringify(parsedJson))
+		}, function(errorMessage) {
+			featureCollection = [];
 		});
-		var startTime = Date.now();
-		parser.parseString(body);
-		return featurecollection;
+		return featureCollection;
 	}
 
 };
