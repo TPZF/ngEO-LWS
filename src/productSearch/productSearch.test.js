@@ -38,7 +38,6 @@ describe("IF-ngEO-productSearch --> Unit test", function () {
           var aFeature = jsonProcessed.features[i];
           aFeature.should.have.property('type').exactly('Feature');
           aFeature.should.have.keys('id','type','properties','geometry');
-          aFeature.properties.should.have;
 
           var earthObsProp = aFeature.properties.EarthObservation;
           earthObsProp.should.have.keys('phenomenonTime','procedure');
