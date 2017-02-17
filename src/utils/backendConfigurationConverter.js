@@ -4,6 +4,8 @@
  */
 var data = require('./catalogJsonMaper.json');
 var _ = require('lodash');
+var xml2js = require('xml2js-expat');
+var logger = require('./logger');
 
 var _getValue = function(object, property, defaultValue) {
 	if ( object ) {
@@ -87,21 +89,6 @@ var _set = function(object, path, value) {
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
-* Given a object Entry from feed-->Entry[i], will convert it into a webccompatible geojson feature object
-*/
-var _convertBackendEntryIntoFeature = function(objectEntryToConvert){
-	var feature = {};
-	feature.id = objectEntryToConvert.id;
-	feature.type = "Feature";
-	feature.properties = {};
-	for (key in objectEntryToConvert){
-		console.log(objectEntryToConvert[key]);
-	}
-	feature.geometry = "todo";
-
-}
-
-/**
 * Will convert the gml footprint into the footprint frmat known by our webclient.
 * GML is lon lat and we will convert it into lat lon arrays
 * TODO make it as generic to convert all gml format
@@ -127,6 +114,47 @@ var _convertGmlFpToInternalFp = function(gmlFpEntry){
 	}
 
 	return geometry;
+}
+
+/**
+ * Convert entries from backend format to featurecollection format compatible with web client known format
+ * @param entries
+ *		entries to convert 
+ * @return
+ *		the feature collection geojson object in webc known format	
+ */
+var	_convertBackendEntryIntoFeatureCollection = function(repJson){
+	var startTime = new Date();
+	//for the moment replace all the xmlns in hard coded manner so we have a json file compatoble direct with webc response by just doing some
+	//replacement at some place
+	var repJson = repJson.replace(/os\:|dc\:|georss\:|media\:|eop\:|ows\:|om\:|gml\:|xsi:\:|xlink\:|eo\:|geo\:|time\:|opt\:|sar\:/g,'')
+	var ojson = JSON.parse(repJson);
+	//convert the json into response compatible with webc format
+	var entries = ojson['entry']; // depending on expat lib
+	var featureCollection = {};
+	if(entries){
+		var features = [];
+			for(i=0; i<entries.length;i++){
+			var objectEntryToConvert = entries[i];
+			if(objectEntryToConvert){
+				var feature = {};
+				feature.id = objectEntryToConvert.id;
+				feature.type = "Feature";
+				feature.properties = {};
+				for (key in objectEntryToConvert){
+					feature.properties[key] = objectEntryToConvert[key];
+				}
+				var gmlfoi = objectEntryToConvert.EarthObservation.featureOfInterest;
+				if(gmlfoi){
+					feature.geometry = _convertGmlFpToInternalFp(gmlfoi);
+				}
+				features.push(feature);
+			}
+		}
+		featureCollection.features = features;
+	}
+	logger.info('Our conversion from json to the webc format geojson data is : ', Date.now() - startTime);
+	return featureCollection;
 }
 
 module.exports = {
@@ -182,35 +210,23 @@ module.exports = {
 	},
 
 	/**
-	 * Convert entries from backend format to featurecollection format compatible with web client known format
-	 * @param entries
-	 *		entries to convert 
-	 * @return
-	 *		the feature collection geojson object in webc known format	
+	 * Convert json to current ngeo WEBC format
+	 * @param {string} body
+	 *      Xml received from backend converted to json as string
+	 * @return featurecollection j
+	 *      son object compatible with webc format     
 	 */
-	convertBackendEntryIntoFeatureCollection: function(entries){
-		var featureCollection = {};
-		var features = [];
-
-		for(i=0; i<entries.length;i++){
-			var objectEntryToConvert = entries[i];
-			if(objectEntryToConvert){
-				var feature = {};
-				feature.id = objectEntryToConvert.id;
-				feature.type = "Feature";
-				feature.properties = {};
-				for (key in objectEntryToConvert){
-					feature.properties[key] = objectEntryToConvert[key];
-				}
-				var gmlfoi = objectEntryToConvert.EarthObservation.featureOfInterest;
-				if(gmlfoi){
-					feature.geometry = _convertGmlFpToInternalFp(gmlfoi);
-				}
-				features.push(feature);
+	convertToNgeoWebCFormat: function(body) {
+		var featurecollection;
+		var parser = new xml2js.Parser(function(xmlData, error) {
+			if (!error) {
+				logger.info('Time elapsed by fast expat to convert xml into xml2js-expat json format : ', Date.now() - startTime);
 			}
-		}
-		featureCollection.features = features;
-		return featureCollection;
+			featurecollection = _convertBackendEntryIntoFeatureCollection(JSON.stringify(xmlData));
+		});
+		var startTime = Date.now();
+		parser.parseString(body);
+		return featurecollection;
 	}
 
 };

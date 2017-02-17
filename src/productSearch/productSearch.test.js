@@ -7,7 +7,6 @@ var nock = require('nock');
 // This agent refers to PORT where program is runninng.
 var server = supertest("http://localhost:3000");
 
-var xml2JSON = require('xml2json');
 var configurationConverter = require('../utils/backendConfigurationConverter');
 var fs = require("fs");
 
@@ -33,12 +32,7 @@ describe("IF-ngEO-productSearch --> Unit test", function () {
       .get('/ngeo/catalogue/myTestFeatureCollectionId/search')
       .expect(200)
       .end(function (err, res) {
-      	 var repJson = xml2JSON.toJson(res.text).replace(/os\:|dc\:|georss\:|media\:|eop\:|ows\:|om\:|gml\:|xsi:\:|xlink\:|eo\:|geo\:|time\:|opt\:|sar\:/g,'');
-         //json object
-         var ojson = JSON.parse(repJson);
-         //convert the json into response compatible with webc format
-         var entries = ojson.feed['entry'];
-         var jsonProcessed = configurationConverter.convertBackendEntryIntoFeatureCollection(entries);
+         var jsonProcessed = configurationConverter.convertToNgeoWebCFormat(res.text)
          assert.equal(jsonProcessed.features.length,10);
          done();
       });
