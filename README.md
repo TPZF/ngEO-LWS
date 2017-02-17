@@ -61,7 +61,7 @@ Type `npm test`
 
 ## Contributors
 
-- Maxime SBIN (maxime.shubin@telespazio.com)
+- SHUBIN Maxime (maxime.shubin@telespazio.com)
 - ALIHOUSSEN Irchad (alihoussen.irchad@telespazio.com)
 
 ## License
