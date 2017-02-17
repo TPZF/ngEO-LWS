@@ -2,10 +2,10 @@
  *  Logger instance based on winston
  */
 
-var winston = require('winston');
+let winston = require('winston');
 winston.emitErrs = true;
 
-var logger = new winston.Logger({
+let logger = new winston.Logger({
 	transports: [
 		// // Uncomment if need to debug in file
 		// new winston.transports.File({
@@ -30,7 +30,7 @@ var logger = new winston.Logger({
 module.exports = logger;
 
 module.exports.stream = {
-	write: function(message, encoding){
+	write: function (message, encoding) {
 		logger.info(message);
 	}
 };
