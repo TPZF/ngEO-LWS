@@ -14,7 +14,7 @@ let fs = require("fs");
 
 describe("IF-ngEO-productSearch --> Unit test", function () {
 
-  it("should return a search file in atom opensearch xml response, convert it into geojson webc compliant format and ensure that the number of product found in the stub xml file which are 10 are well processed as 10 geojson features", function (done) {
+  it("should return a search file in atom opensearch xml response, convert it into geojson webc compliant format and ensure that the number of product found in the stub xml file which are 10 are well processed as 10 geojson features, test also some mandatory parameters that a feature shall have", function (done) {
     //stun the response by sending our test configuration file
     let contents = fs.readFileSync('./test_data/backend-rep-Landsat57Merged-all-test-file.xml');
     //parse it
@@ -32,8 +32,17 @@ describe("IF-ngEO-productSearch --> Unit test", function () {
       .get('/ngeo/catalogue/myTestFeatureCollectionId/search')
       .expect(200)
       .end(function (err, res) {
-        let jsonProcessed = configurationConverter.convertToNgeoWebCFormat(res.text)
-        assert.equal(jsonProcessed.features.length, 10);
+        let jsonProcessed = configurationConverter.convertToNgeoWebCFormat(res.text);
+        jsonProcessed.should.have.property('features').with.lengthOf(10);
+        for(var i=0;i<jsonProcessed.features.length;i++){
+          var aFeature = jsonProcessed.features[i];
+          aFeature.should.have.property('type').exactly('Feature');
+          aFeature.should.have.keys('id','type','properties','geometry');
+          aFeature.properties.should.have;
+
+          var earthObsProp = aFeature.properties.EarthObservation;
+          earthObsProp.should.have.keys('phenomenonTime','procedure');
+        }
         done();
       });
   })
