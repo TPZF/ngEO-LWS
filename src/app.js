@@ -6,17 +6,17 @@
 process.chdir(__dirname);
 
 let express = require('express'),
-    http = require('http'),
-    path = require('path'),
-    httpProxy = require('http-proxy'),
-    proxy = require('./proxy'),
-    expressProxy = require('express-http-proxy'),
-    url = require('url'),
-    logger = require('./utils/logger'),
-    methodOverride = require('method-override'),
-    errorHandler = require('errorhandler'),
-    bodyParser = require('body-parser'),
-    routes = require('routes');
+	http = require('http'),
+	path = require('path'),
+	httpProxy = require('http-proxy'),
+	proxy = require('./proxy'),
+	expressProxy = require('express-http-proxy'),
+	url = require('url'),
+	logger = require('./utils/logger'),
+	methodOverride = require('method-override'),
+	errorHandler = require('errorhandler'),
+	bodyParser = require('body-parser'),
+	routes = require('routes');
 
 let webClientConfigurationData = require('./webClientConfigurationData/webClientConfigurationData');
 let datasetPopulationMatrix = require('./datasetPopulationMatrix/datasetPopulationMatrix');
@@ -31,7 +31,7 @@ app.use(methodOverride());
 app.use(errorHandler());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+	extended: true
 }));
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -45,8 +45,8 @@ app.use('/ngeo/datasetSearchInfo/:datasetId', datasetSearchInfo);
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 let host = 'localhost';
 http.createServer(app).listen(app.get('port'), host, function () {
-    let port = app.get('port');
-    logger.info("Express server listening @ http://%s:%s", host, port);
+	let port = app.get('port');
+	logger.info("Express server listening @ http://%s:%s", host, port);
 
 });
 

@@ -7,29 +7,29 @@ let logger = require('../utils/logger');
  * Allows us to change quickly the implementation of xml2json parser
  */
 class Xml2JsonParser {
-    constructor() {}
+	constructor() {}
 
-    /**
-     * Parse the given xml
-     * @param {string} xml
-     *      Xml to parse
-     * @param {function} onSuccess
-     *      Success callback
-     * @param {function} onError
-     *      Error callback
-     */
-    parse(xml, onSuccess, onError) {
-        let startTime = Date.now();
-        let parser = new xml2js.Parser(function (result, error) {
-            logger.info('Time elapsed by expat lib : ', Date.now() - startTime);
-            if (!error) {
-                onSuccess(result);
-            } else {
-                onError('Error while parsing the xml', xml)
-            }
-        });
-        parser.parseString(xml);
-    }
+	/**
+	 * Parse the given xml
+	 * @param {string} xml
+	 *      Xml to parse
+	 * @param {function} onSuccess
+	 *      Success callback
+	 * @param {function} onError
+	 *      Error callback
+	 */
+	parse(xml, onSuccess, onError) {
+		let startTime = Date.now();
+		let parser = new xml2js.Parser(function (result, error) {
+			logger.info('Time elapsed by expat lib : ', Date.now() - startTime);
+			if (!error) {
+				onSuccess(result);
+			} else {
+				onError('Error while parsing the xml', xml)
+			}
+		});
+		parser.parseString(xml);
+	}
 }
 
 module.exports = new Xml2JsonParser();

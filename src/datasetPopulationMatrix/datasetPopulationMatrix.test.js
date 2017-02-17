@@ -17,25 +17,25 @@ let utils = require('../utils/utils');
 // UNIT test begin
 describe("IF-ngEO-datasetPopulationMatrix --> Unit test", function () {
 
-  it("should return the dataset population json file for the WEBC and verify some parameter in the json file", function (done) {
-    //stun the response by sending our test configuration file
-    let contents = fs.readFileSync('./test_data/datasets-test-file.json');
-    //parse it
-    let jsonContent = JSON.parse(contents);
+	it("should return the dataset population json file for the WEBC and verify some parameter in the json file", function (done) {
+		//stun the response by sending our test configuration file
+		let contents = fs.readFileSync('./test_data/datasets-test-file.json');
+		//parse it
+		let jsonContent = JSON.parse(contents);
 
-    //stub the response in order to send our test file
-    nock("http://localhost:3000")
-      .get('/ngeo/datasetPopulationMatrix')
-      .reply(200, jsonContent);
+		//stub the response in order to send our test file
+		nock("http://localhost:3000")
+			.get('/ngeo/datasetPopulationMatrix')
+			.reply(200, jsonContent);
 
-    server
-      .get('/ngeo/datasetPopulationMatrix')
-      .expect(200)
-      .end(function (err, res) {
-        let confData = JSON.parse(res.text);
-        //to be modified whenever we have another test file
-        assert.equal(confData.datasetpopulationmatrix.criteriaTitles.length, 6);
-        done();
-      });
-  })
+		server
+			.get('/ngeo/datasetPopulationMatrix')
+			.expect(200)
+			.end(function (err, res) {
+				let confData = JSON.parse(res.text);
+				//to be modified whenever we have another test file
+				assert.equal(confData.datasetpopulationmatrix.criteriaTitles.length, 6);
+				done();
+			});
+	})
 });

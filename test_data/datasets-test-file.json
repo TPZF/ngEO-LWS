@@ -1,37 +1,47 @@
 {
 	"datasetpopulationmatrix": {
-		"criteriaTitles": ["keyword", "mission", "name", "sensor","productType","sensorMode"],
-		"datasetPopulationValues": [["",
-		"REMOTE",
-		"AUX_Dynamic_Open",
-		"REMOTE",
-		"REMOTE",
-		"REMOTE",
-		"AUX_Dynamic_Open",
-		"0"],
-		["",
-		"REMOTE",
-		"NRT_Open",
-		"REMOTE",
-		"REMOTE",
-		"REMOTE",
-		"NRT_Open",
-		"31995"],
-		["",
-		"REMOTE",
-		"SMOS_Open",
-		"REMOTE",
-		"REMOTE",
-		"REMOTE",
-		"SMOS_Open",
-		"645104"],
-		["",
-		"REMOTE",
-		"Landsat5-7",
-		"REMOTE",
-		"REMOTE",
-		"REMOTE",
-		"Landsat57Merged",
-		"1081"]]
+		"criteriaTitles": ["keyword", "mission", "name", "sensor", "productType", "sensorMode"],
+		"datasetPopulationValues": [
+			[
+				"",
+				"REMOTE",
+				"AUX_Dynamic_Open",
+				"REMOTE",
+				"REMOTE",
+				"REMOTE",
+				"AUX_Dynamic_Open",
+				"0"
+			],
+			[
+				"",
+				"REMOTE",
+				"NRT_Open",
+				"REMOTE",
+				"REMOTE",
+				"REMOTE",
+				"NRT_Open",
+				"31995"
+			],
+			[
+				"",
+				"REMOTE",
+				"SMOS_Open",
+				"REMOTE",
+				"REMOTE",
+				"REMOTE",
+				"SMOS_Open",
+				"645104"
+			],
+			[
+				"",
+				"REMOTE",
+				"Landsat5-7",
+				"REMOTE",
+				"REMOTE",
+				"REMOTE",
+				"Landsat57Merged",
+				"1081"
+			]
+		]
 	}
 }
