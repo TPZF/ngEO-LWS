@@ -21,16 +21,16 @@ TBD
 - CD to this repository
 - Retrieve the project git in your repository by typing git clone `ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git`
 - Then do `npm install` and that is it as the **package.json** file contains already lib needed
-- `npm start` to start the localohist server listening at port 3000
+- `npm start` to start the localhost server listening at port 3000
 - open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
 
 ## Installation Troubleshootings
 If by installing node and npm you have troubleshootings by typing `npm -v`
-Then uninstall node
-In windows, go to **{user-home}\AppData\Roaming**
-and delete npm cache **npm** and **npm-cache**
-Do the same step on your favourite OS
-Reinstall node and normally all is well ;)
+
+- Then uninstall node
+- In windows, go to **{user-home}\AppData\Roaming** and delete npm cache **npm** and **npm-cache**
+- Do the same step on your favourite OS
+- Reinstall node and normally all is well ;)
 
 ## Dev Installation
 
