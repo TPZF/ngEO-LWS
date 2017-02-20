@@ -19,8 +19,11 @@ router.use(function timeLog(req, res, next) {
  */
 let buildResponse = function (datasetId, inputJson) {
 	let url = inputJson.Url[0]; // Take the first one by default(GET/bbox)
-	let availabilityParam = _.find(url['prm:Parameter'], function (item) {
-		return item['@'].name == "availabilityTime"
+	let startDateConf = _.find(url['prm:Parameter'], function (item) {
+		return item['@'].name == "start"
+	});
+	let stopDateConf = _.find(url['prm:Parameter'], function (item) {
+		return item['@'].name == "end"
 	});
 	let outputJson = {
 		"datasetSearchInfo": {
@@ -29,8 +32,8 @@ let buildResponse = function (datasetId, inputJson) {
 			"keywords": [], // TODO
 			"downloadOptions": [], // TODO
 			"attributes": [], // TODO
-			"startDate": availabilityParam['@'].minInclusive,
-			"endDate": availabilityParam['@'].maxInclusive
+			"startDate": startDateConf['@'].minInclusive,
+			"endDate": stopDateConf['@'].maxInclusive
 		}
 	};
 	return outputJson;
