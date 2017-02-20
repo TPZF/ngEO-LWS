@@ -1,10 +1,9 @@
-/**
+/*
  *	Use local configuration for the same purpose as on client side
  *	i.e. to map properties from file
  */
 let data = require('./catalogJsonMaper.json');
 let _ = require('lodash');
-let Xml2JsonParser = require('../utils/xml2jsonParser');
 let logger = require('./logger');
 
 let _getValue = function (object, property, defaultValue) {
@@ -212,19 +211,13 @@ module.exports = {
 	/**
 	 * Convert json to current ngeo WEBC format
 	 * 
-	 * @param {string} body
-	 *      Xml received from backend converted to json as string
+	 * @param {string} parsedJson
+	 *      Json in SX-CAT format
 	 * @return featureCollection
 	 *      Feature collection compatible with WEBC format
 	 */
-	convertToNgeoWebCFormat: function (body) {
-		let featureCollection;
-		Xml2JsonParser.parse(body, function (parsedJson) {
-			featureCollection = _convertBackendEntryIntoFeatureCollection(JSON.stringify(parsedJson))
-		}, function (errorMessage) {
-			featureCollection = [];
-		});
-		return featureCollection;
+	convertToNgeoWebCFormat: function (parsedJson) {
+		return _convertBackendEntryIntoFeatureCollection(JSON.stringify(parsedJson))
 	}
 
 };

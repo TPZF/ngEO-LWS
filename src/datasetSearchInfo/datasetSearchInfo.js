@@ -2,8 +2,7 @@ let request = require('request');
 let express = require('express');
 let _ = require('lodash');
 let Xml2JsonParser = require('../utils/xml2jsonParser');
-
-let backendUrl = 'https://sxcat.eox.at/opensearch/collections/';
+let collectionService = require('../collectionService/collectionService');
 
 let router = express.Router({
 	mergeParams: true
@@ -45,38 +44,30 @@ let buildResponse = function (datasetId, inputJson) {
  */
 router.get('/', function (req, res) {
 	let datasetId = req.params['datasetId'];
-	let datasetOsddUrl = backendUrl + datasetId;
-	request(datasetOsddUrl, function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			Xml2JsonParser.parse(body, function (result) {
-				// Used for debug
-				if (req.query.sxcat) {
-					res.send(result);
-				} else {
-					res.send(buildResponse(datasetId, result))
-				}
-			}, function (errorMessage) {
-				res.send(errorMessage);
-			});
-		} else {
-			res.send('Error on SX-CAT catalog');
+	collectionService.info(datasetId, {
+		onSuccess: (result) => {
+			// Used for debug
+			if (req.query.sxcat) {
+				res.send(result);
+			} else {
+				res.send(buildResponse(datasetId, result))
+			}
+		},
+		onError: (errorMessage) => {
+			res.send(errorMessage);
 		}
-	})
+	});
 });
 
 // Just for test, maybe description should be extracted using this link..
 router.get('/atom', function (req, res) {
 	let datasetId = req.params['datasetId'];
-	let datasetOsddUrl = backendUrl + datasetId + '/atom';
-	request(datasetOsddUrl, function (error, response, body) {
-		if (!error && response.statusCode == 200) {
-			Xml2JsonParser.parse(body, function (result) {
-				res.send(JSON.parse(result));
-			}, function (errorMessage) {
-				res.send(errorMessage);
-			});
-		} else {
-			res.send('Error on SX-CAT catalog');
+	collectionService.search(datasetId, {
+		onSuccess: (result) => {
+			res.send(JSON.parse(result));
+		},
+		onError: (errorMessage) => {
+			res.send(errorMessage);
 		}
 	});
 })

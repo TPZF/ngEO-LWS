@@ -28,24 +28,22 @@ router.get('/', function (req, res) {
 	let parsedUrl = url.parse(req.url);
 
 	// Retrieve collection url from collection service
-	let collectionSearchUrl = _.find(collectionService.collections, {id: req.params['fCollectionId']}).url + '/atom';
-	// Append search parameters coming from WEBC
-	let searchUrl = collectionSearchUrl + url.parse(req.url).search;
+	let collectionId = req.params['fCollectionId'];
 
 	// Make request (maybe move it to collection service later)
 	let startTime = Date.now();
-	request(searchUrl, function (error, response, body) {
-		logger.info("Time elapsed requesting backend \"" + searchUrl + "\" is : ", Date.now() - startTime);
-		if (!error && response.statusCode == 200) {
-			let geoJsonWebcData = configurationConverter.convertToNgeoWebCFormat(body);
+	collectionService.search(collectionId, {
+		params: url.parse(req.url).search,
+		onSuccess: (result) => {
+			let geoJsonWebcData = configurationConverter.convertToNgeoWebCFormat(result);
 			if (geoJsonWebcData) {
 				res.send(geoJsonWebcData);
 			} else {
 				res.status(404).send("Some inconsistency with response received from the backend");
 			}
-		} else {
-			logger.info("There was an error retrieving data from backend " + error);
-			res.status(response.statusCode).send("There was an error retriving data from backend");
+		},
+		onError: (errorMessage) => {
+			res.status(500).send(errorMessage);
 		}
 	});
 });
