@@ -1,6 +1,6 @@
-## Synopsis
+# ngEO-LWS
 
-ngEO-Light Query Server (ngeo-LWS) is the light web server is the project to replace the ngEO-WS only implementing functionality which is needed for hosting the ngEO-client and interfacing with SX-CAT and potentially other external catalogues.
+ngEO-Light Query Server (ngeo-LWS) is the project to replace the ngEO-WS by implementing the functionalities which are needed for hosting the ngEO-client and interfacing with SX-CAT and potentially other external catalogues.
 It is not expected to interface with other components such as the ngEO controller or hosted processing facilities.
 
 ## Code Example
@@ -19,8 +19,8 @@ TBD
 - npm version 4.1.2 (for windows installation it is already contained in)
 - Create a repository where you want to place your dev folder
 - CD to this repository
-- Retrieve the project git in your repository by typing git clone `ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git`
-- Then do `npm install` and that is it as the **package.json** file contains already lib needed
+- Retrieve the project git in your repository by typing `git clone ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git`
+- Then do `npm install` and that is it as the **package.json** file contains already all required libraries
 - `npm start` to start the localhost server listening at port 3000
 - open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
 
@@ -34,7 +34,7 @@ If by installing node and npm you have troubleshootings by typing `npm -v`
 
 ## Dev Installation
 
-TO DO
+TODO
 
 ## API Reference
 
