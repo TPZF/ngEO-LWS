@@ -22,6 +22,7 @@ let webClientConfigurationData = require('./webClientConfigurationData/webClient
 let datasetPopulationMatrix = require('./datasetPopulationMatrix/datasetPopulationMatrix');
 let productSearch = require('./productSearch/productSearch');
 let datasetSearchInfo = require('./datasetSearchInfo/datasetSearchInfo');
+let datasetAuthorization = require('./datasetAuthorization/datasetAuthorization');
 
 let app = express();
 
@@ -40,6 +41,7 @@ app.use('/ngeo/datasetPopulationMatrix', datasetPopulationMatrix);
 //search product here by taking in account the dataset we want to search on the backend
 app.use('/ngeo/catalogue/:fCollectionId/search/', productSearch);
 app.use('/ngeo/datasetSearchInfo/:datasetId', datasetSearchInfo);
+app.use('/ngeo/datasetAuthorization', datasetAuthorization);
 
 
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
