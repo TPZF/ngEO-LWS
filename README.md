@@ -55,4 +55,4 @@ TBD
 
 ## License
 
-MIT
+Licensed under LGPLv3
