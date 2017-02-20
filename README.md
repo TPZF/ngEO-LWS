@@ -19,7 +19,7 @@ TBD
 - npm version 4.1.2 (for windows installation it is already contained in)
 - Create a repository where you want to place your dev folder
 - CD to this repository
-- Retrieve the project git in your repository by typing `git clone ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git`
+- Retrieve the project git in your repository by typing `git clone https://github.com/TPZF/ngEO-LWS.git`
 - Then do `npm install` and that is it as the **package.json** file contains already all required libraries
 - `npm start` to start the localhost server listening at port 3000
 - open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
@@ -38,7 +38,7 @@ TODO
 
 ## API Reference
 
-agile dashbord, docs .. can be found @ https://tuleap.telespazio.fr/plugins/git/ngeo-lws/Ngeo-LWS
+TODO
 
 ## Tests
 
@@ -46,7 +46,7 @@ Type `npm test`
 
 ## Troubleshootings
 
-TBD
+TODO
 
 ## Contributors
 
