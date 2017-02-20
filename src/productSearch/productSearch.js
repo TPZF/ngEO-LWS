@@ -1,6 +1,9 @@
 let logger = require('../utils/logger');
 let request = require('request');
 let express = require('express');
+let collectionService = require('../collectionService/collectionService');
+let url = require('url');
+let _ = require('lodash');
 
 let util = require('util');
 let configurationConverter = require('../utils/backendConfigurationConverter');
@@ -10,28 +13,7 @@ let router = express.Router({
 	mergeParams: true
 });
 
-let backendUrl = "https://sxcat.eox.at/opensearch/collections/";
 //let queryPathUrl = "/atom?count=50&offset=900&bbox=&grel=&start=1990-01-01T00:00:00.000Z&end=2003-12-31T23:59:59.000Z&trel=&platformSerialIdentifier=&instrumentShortName=&wrsLongitudeGrid=&wrsLatitudeGrid=&availabilityTime=";
-
-
-/**
- * Given a request, trasnform its query string to query string to send to the backend
- * @return
- *      the query string that we have to send to the backend
- */
-let _getQueryPath = function (req) {
-	let queryPath;
-	if (req && req.query) {
-		queryPath = "?"
-		let qArray = req.query;
-		for (key in qArray) {
-			queryPath = queryPath + key + "=" + qArray[key] + "&";
-		}
-		//supress the last & character we have added
-		queryPath = queryPath.substring(0, queryPath.length - 1);
-	}
-	return queryPath;
-}
 
 // 'https://sxcat.eox.at/opensearch/collections/Landsat57Merged/atom?count=50&offset=900&bbox=&grel=&start=1990-01-01T00:00:00.000Z&end=2003-12-31T23:59:59.000Z&trel=&platformSerialIdentifier=&instrumentShortName=&wrsLongitudeGrid=&wrsLatitudeGrid=&availabilityTime=',
 
@@ -43,12 +25,17 @@ router.use(function timeLog(req, res, next) {
 
 // define the home page route
 router.get('/', function (req, res) {
-	//TODO in the future the base backend url shall be dynamically taken from the osdx document (maybe shall be saved in a conf file, to be ckecked in the furure the best way to do that)
-	let theSearchUrl = backendUrl + req.params['fCollectionId'] + "/atom" + _getQueryPath(req);
-	//logger.info("The url to target on backend is: " + theSearchUrl);
+	let parsedUrl = url.parse(req.url);
+
+	// Retrieve collection url from collection service
+	let collectionSearchUrl = _.find(collectionService.collections, {id: req.params['fCollectionId']}).url + '/atom';
+	// Append search parameters coming from WEBC
+	let searchUrl = collectionSearchUrl + url.parse(req.url).search;
+
+	// Make request (maybe move it to collection service later)
 	let startTime = Date.now();
-	request(theSearchUrl, function (error, response, body) {
-		logger.info("Time elapsed requesting backend \"" + theSearchUrl + "\" is : ", Date.now() - startTime);
+	request(searchUrl, function (error, response, body) {
+		logger.info("Time elapsed requesting backend \"" + searchUrl + "\" is : ", Date.now() - startTime);
 		if (!error && response.statusCode == 200) {
 			let geoJsonWebcData = configurationConverter.convertToNgeoWebCFormat(body);
 			if (geoJsonWebcData) {
