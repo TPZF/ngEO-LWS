@@ -107,8 +107,8 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
 
 	for (let i = 0; i < arrList.length; i = i + 2) {
 		let coord = [];
-		coord[0] = arrList[i + 1];
-		coord[1] = arrList[i];
+		coord[0] = parseFloat(arrList[i + 1]);
+		coord[1] = parseFloat(arrList[i]);
 		geometry.coordinates[0].push(coord);
 	}
 
