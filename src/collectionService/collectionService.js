@@ -3,6 +3,7 @@ let request = require('request');
 let collectionsConf = require("./collections.json");
 let Collection = require('./collection');
 let Xml2JsonParser = require('../utils/xml2jsonParser');
+let logger = require('../utils/logger');
 
 /**
  * Collection service designed to manage the available collections on different backends
@@ -30,7 +31,10 @@ class CollectionService {
 	search(collectionId, options) {
 		let collection = this.getCollection(collectionId);
 		let searchUrl = options.params ? collection.url + '/atom' + options.params : collection.url + '/atom';
+		let startTime = Date.now();
+		logger.info(`Searching for backend with ${searchUrl}`);
 		request(searchUrl, function (error, response, body) {
+			logger.info(`Time elapsed searching on backend with ${searchUrl} took ${Date.now() - startTime} ms`);
 			if (!error && response.statusCode == 200) {
 				Xml2JsonParser.parse(body, options.onSuccess, options.onError);
 			} else {
