@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:prm="http://a9.com/-/spec/opensearch/extensions/parameters/1.0/" xmlns:eo="http://a9.com/-/spec/opensearch/extensions/eo/1.0/" xmlns:geo="http://a9.com/-/opensearch/extensions/geo/1.0/" xmlns:time="http://a9.com/-/opensearch/extensions/time/1.0/">
+  <ShortName>Collection Search</ShortName>
+  <Description>Search available collection products.</Description>
+  <SyndicationRight>open</SyndicationRight>
+  <AdultContent>false</AdultContent>
+  <InputEncoding>UTF-8</InputEncoding>
+  <OutputEncoding>UTF-8</OutputEncoding>
+  <Url type="application/atom+xml" prm:method="GET" prm:enctype="application/x-www-form-urlencoded" template="https://sxcat.eox.at/opensearch/collections/Landsat57Merged/atom?count={count?}&amp;offset={startIndex?}&amp;bbox={geo:box?}&amp;grel={geo:relation?}&amp;start={time:start?}&amp;end={time:end?}&amp;trel={time:relation?}&amp;platformSerialIdentifier={eo:platformSerialIdentifier?}&amp;instrumentShortName={eo:instrumentShortName?}&amp;wrsLongitudeGrid={eo:track?}&amp;wrsLatitudeGrid={eo:frame?}&amp;availabilityTime={eo:availabilityTime?}" rel="results" indexOffset="0" pageOffset="0">
+    <prm:Parameter name="count" value="{count}" minimum="0" maximum="1" maxInclusive="50" minInclusive="0"/>
+    <prm:Parameter name="offset" value="{startIndex}" minimum="0" maximum="1" minInclusive="0"/>
+    <prm:Parameter name="bbox" value="{geo:box}" minimum="0" maximum="1"/>
+    <prm:Parameter name="grel" value="{geo:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="disjoint" value="disjoint" />
+    </prm:Parameter>
+    <prm:Parameter name="start" value="{time:start}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:26Z" minInclusive="1990-03-02T09:32:53Z"/>
+    <prm:Parameter name="end" value="{time:end}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+    <prm:Parameter name="trel" value="{time:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="during" value="during" />
+      <prm:Option label="disjoint" value="disjoint" />
+      <prm:Option label="equals" value="equals" />
+    </prm:Parameter>
+    <prm:Parameter name="platformSerialIdentifier" value="{eo:platformSerialIdentifier}" minimum="0" maximum="1">
+      <prm:Option label="5" value="5" />
+      <prm:Option label="7" value="7" />
+    </prm:Parameter>
+    <prm:Parameter name="instrumentShortName" value="{eo:instrumentShortName}" minimum="0" maximum="1">
+      <prm:Option label="ETM" value="ETM" />
+      <prm:Option label="TM" value="TM" />
+    </prm:Parameter>
+    <prm:Parameter name="wrsLongitudeGrid" value="{eo:track}" minimum="0" maximum="1" maxInclusive="223" minInclusive="169"/>
+    <prm:Parameter name="wrsLatitudeGrid" value="{eo:frame}" minimum="0" maximum="1" maxInclusive="44" minInclusive="10"/>
+    <prm:Parameter name="availabilityTime" value="{eo:availabilityTime}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+  </Url>
+  <Url type="application/atom+xml" prm:method="POST" prm:enctype="application/x-www-form-urlencoded" template="https://sxcat.eox.at/opensearch/collections/Landsat57Merged/atom" rel="results" indexOffset="0" pageOffset="0">
+    <prm:Parameter name="count" value="{count}" minimum="0" maximum="1" maxInclusive="50" minInclusive="0"/>
+    <prm:Parameter name="offset" value="{startIndex}" minimum="0" maximum="1" minInclusive="0"/>
+    <prm:Parameter name="bbox" value="{geo:box}" minimum="0" maximum="1"/>
+    <prm:Parameter name="grel" value="{geo:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="disjoint" value="disjoint" />
+    </prm:Parameter>
+    <prm:Parameter name="start" value="{time:start}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:26Z" minInclusive="1990-03-02T09:32:53Z"/>
+    <prm:Parameter name="end" value="{time:end}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+    <prm:Parameter name="trel" value="{time:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="during" value="during" />
+      <prm:Option label="disjoint" value="disjoint" />
+      <prm:Option label="equals" value="equals" />
+    </prm:Parameter>
+    <prm:Parameter name="platformSerialIdentifier" value="{eo:platformSerialIdentifier}" minimum="0" maximum="1">
+      <prm:Option label="5" value="5" />
+      <prm:Option label="7" value="7" />
+    </prm:Parameter>
+    <prm:Parameter name="instrumentShortName" value="{eo:instrumentShortName}" minimum="0" maximum="1">
+      <prm:Option label="ETM" value="ETM" />
+      <prm:Option label="TM" value="TM" />
+    </prm:Parameter>
+    <prm:Parameter name="wrsLongitudeGrid" value="{eo:track}" minimum="0" maximum="1" maxInclusive="223" minInclusive="169"/>
+    <prm:Parameter name="wrsLatitudeGrid" value="{eo:frame}" minimum="0" maximum="1" maxInclusive="44" minInclusive="10"/>
+    <prm:Parameter name="availabilityTime" value="{eo:availabilityTime}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+  </Url>
+  <Url type="application/atom+xml" prm:method="GET" prm:enctype="application/x-www-form-urlencoded" template="https://sxcat.eox.at/opensearch/collections/Landsat57Merged/atom?count={count?}&amp;offset={startIndex?}&amp;geom={geo:geometry?}&amp;grel={geo:relation?}&amp;start={time:start?}&amp;end={time:end?}&amp;trel={time:relation?}&amp;platformSerialIdentifier={eo:platformSerialIdentifier?}&amp;instrumentShortName={eo:instrumentShortName?}&amp;wrsLongitudeGrid={eo:track?}&amp;wrsLatitudeGrid={eo:frame?}&amp;availabilityTime={eo:availabilityTime?}" rel="results" indexOffset="0" pageOffset="0">
+    <prm:Parameter name="count" value="{count}" minimum="0" maximum="1" maxInclusive="50" minInclusive="0"/>
+    <prm:Parameter name="offset" value="{startIndex}" minimum="0" maximum="1" minInclusive="0"/>
+    <prm:Parameter name="geom" value="{geo:geometry}" minimum="0" maximum="1"/>
+    <prm:Parameter name="grel" value="{geo:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="disjoint" value="disjoint" />
+    </prm:Parameter>
+    <prm:Parameter name="start" value="{time:start}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:26Z" minInclusive="1990-03-02T09:32:53Z"/>
+    <prm:Parameter name="end" value="{time:end}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+    <prm:Parameter name="trel" value="{time:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="during" value="during" />
+      <prm:Option label="disjoint" value="disjoint" />
+      <prm:Option label="equals" value="equals" />
+    </prm:Parameter>
+    <prm:Parameter name="platformSerialIdentifier" value="{eo:platformSerialIdentifier}" minimum="0" maximum="1">
+      <prm:Option label="5" value="5" />
+      <prm:Option label="7" value="7" />
+    </prm:Parameter>
+    <prm:Parameter name="instrumentShortName" value="{eo:instrumentShortName}" minimum="0" maximum="1">
+      <prm:Option label="ETM" value="ETM" />
+      <prm:Option label="TM" value="TM" />
+    </prm:Parameter>
+    <prm:Parameter name="wrsLongitudeGrid" value="{eo:track}" minimum="0" maximum="1" maxInclusive="223" minInclusive="169"/>
+    <prm:Parameter name="wrsLatitudeGrid" value="{eo:frame}" minimum="0" maximum="1" maxInclusive="44" minInclusive="10"/>
+    <prm:Parameter name="availabilityTime" value="{eo:availabilityTime}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+  </Url>
+  <Url type="application/atom+xml" prm:method="POST" prm:enctype="application/x-www-form-urlencoded" template="https://sxcat.eox.at/opensearch/collections/Landsat57Merged/atom" rel="results" indexOffset="0" pageOffset="0">
+    <prm:Parameter name="count" value="{count}" minimum="0" maximum="1" maxInclusive="50" minInclusive="0"/>
+    <prm:Parameter name="offset" value="{startIndex}" minimum="0" maximum="1" minInclusive="0"/>
+    <prm:Parameter name="geom" value="{geo:geometry}" minimum="0" maximum="1"/>
+    <prm:Parameter name="grel" value="{geo:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="disjoint" value="disjoint" />
+    </prm:Parameter>
+    <prm:Parameter name="start" value="{time:start}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:26Z" minInclusive="1990-03-02T09:32:53Z"/>
+    <prm:Parameter name="end" value="{time:end}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+    <prm:Parameter name="trel" value="{time:relation}" minimum="0" maximum="1">
+      <prm:Option label="intersects" value="intersects" />
+      <prm:Option label="contains" value="contains" />
+      <prm:Option label="during" value="during" />
+      <prm:Option label="disjoint" value="disjoint" />
+      <prm:Option label="equals" value="equals" />
+    </prm:Parameter>
+    <prm:Parameter name="platformSerialIdentifier" value="{eo:platformSerialIdentifier}" minimum="0" maximum="1">
+      <prm:Option label="5" value="5" />
+      <prm:Option label="7" value="7" />
+    </prm:Parameter>
+    <prm:Parameter name="instrumentShortName" value="{eo:instrumentShortName}" minimum="0" maximum="1">
+      <prm:Option label="ETM" value="ETM" />
+      <prm:Option label="TM" value="TM" />
+    </prm:Parameter>
+    <prm:Parameter name="wrsLongitudeGrid" value="{eo:track}" minimum="0" maximum="1" maxInclusive="223" minInclusive="169"/>
+    <prm:Parameter name="wrsLatitudeGrid" value="{eo:frame}" minimum="0" maximum="1" maxInclusive="44" minInclusive="10"/>
+    <prm:Parameter name="availabilityTime" value="{eo:availabilityTime}" minimum="0" maximum="1" maxInclusive="2003-04-24T09:56:54Z" minInclusive="1990-03-02T09:33:21Z"/>
+  </Url>
+<Query role="example"/>
+</OpenSearchDescription>
