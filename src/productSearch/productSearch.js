@@ -1,11 +1,10 @@
 let logger = require('../utils/logger');
-let request = require('request');
 let express = require('express');
 let collectionService = require('../collectionService/collectionService');
+let browseService = require('../browseService/browseService');
 let url = require('url');
 let _ = require('lodash');
 
-let util = require('util');
 let configurationConverter = require('../utils/backendConfigurationConverter');
 
 //the options here is to preserve  when express routes the url to preserver paramters
@@ -30,16 +29,17 @@ router.get('/', function (req, res) {
 	// Retrieve collection url from collection service
 	let collectionId = req.params['fCollectionId'];
 
-	// Make request (maybe move it to collection service later)
-	let startTime = Date.now();
+	// Search the available products on backend
 	collectionService.search(collectionId, {
 		params: url.parse(req.url).search,
 		onSuccess: (result) => {
 			let geoJsonWebcData = configurationConverter.convertToNgeoWebCFormat(result);
 			if (geoJsonWebcData) {
+				// Add browse information for converted collection
+				browseService.addBrowseInfo(collectionId, geoJsonWebcData);
 				res.send(geoJsonWebcData);
 			} else {
-				res.status(404).send("Some inconsistency with response received from the backend");
+				res.status(500).send("Some inconsistency with response received from the backend");
 			}
 		},
 		onError: (errorMessage) => {
