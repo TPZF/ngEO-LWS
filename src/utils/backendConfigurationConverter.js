@@ -124,13 +124,16 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
  */
 let _convertBackendEntryIntoFeatureCollection = function (repJson) {
 	let startTime = new Date();
-	//for the moment replace all the xmlns in hard coded manner so we have a json file compatoble direct with webc response by just doing some
-	//replacement at some place
+	//for the moment replace all the xmlns in hardcoded manner so we have a json file compatible directly with webc protocol by just removing namespaces
 	repJson = repJson.replace(/os\:|dc\:|georss\:|media\:|eop\:|ows\:|om\:|gml\:|xsi:\:|xlink\:|eo\:|geo\:|time\:|opt\:|sar\:/g, '')
 	let ojson = JSON.parse(repJson);
+	let entries = ojson['entry'];
+	let featureCollection = {
+		features: [],
+		properties: _.omit(ojson, ['@','entry','generator'])
+	};
+	
 	//convert the json into response compatible with webc format
-	let entries = ojson['entry']; // depending on expat lib
-	let featureCollection = {};
 	if (entries) {
 		let features = [];
 		for (i = 0; i < entries.length; i++) {
