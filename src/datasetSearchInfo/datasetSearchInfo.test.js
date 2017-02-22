@@ -7,11 +7,15 @@ let fs = require("fs");
 let app = require('../app');
 let server = supertest(app);
 
+/**
+ * Integration test using the real implementation of CollectionService
+ */
 describe("GET /datasetSearchInfo", function () {
 
 	let testCollectionId = 'Landsat57Merged';
 	beforeEach(function() {
-		// OpenSearch description document mock for 
+		// OpenSearch description document mock for Landsat57Merged (actually coming from SX-CAT)
+		// Mock it since it needed by collectionService
 		let mockOsdd = fs.readFileSync(`../test_data/${testCollectionId}-osdd.xml`);
 		nock('https://sxcat.eox.at')
 			.get(`/opensearch/collections/${testCollectionId}`)

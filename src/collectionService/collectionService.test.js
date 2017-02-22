@@ -8,7 +8,7 @@ describe("Collection service methods", function () {
 
 	let testCollectionId = 'Landsat57Merged';
 	it("should return the information about the given dataset/collection in parsed json format", function () {
-		// OpenSearch description document mock
+		// OpenSearch description document mock for Landsat57Merged (actually coming from SX-CAT)
 		let mockOsdd = fs.readFileSync(`../test_data/${testCollectionId}-osdd.xml`);
 		nock('https://sxcat.eox.at')
 			.get(`/opensearch/collections/${testCollectionId}`)
