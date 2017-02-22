@@ -116,46 +116,41 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
 }
 
 /**
- * Convert entries from backend format to featurecollection format compatible with web client known format
- * @param entries
- *		entries to convert 
- * @return
- *		the feature collection geojson object in webc known format	
+ * Convert a single entry to GeoJSON feature
  */
-let _convertBackendEntryIntoFeatureCollection = function (repJson) {
-	let startTime = new Date();
-	//for the moment replace all the xmlns in hardcoded manner so we have a json file compatible directly with webc protocol by just removing namespaces
-	repJson = repJson.replace(/os\:|dc\:|georss\:|media\:|eop\:|ows\:|om\:|gml\:|xsi:\:|xlink\:|eo\:|geo\:|time\:|opt\:|sar\:/g, '')
-	let ojson = JSON.parse(repJson);
-	let entries = ojson['entry'];
+let _convertEntryToFeature = function(entry) {
+	let feature = {};
+	feature.id = entry.id;
+	feature.type = "Feature";
+	feature.properties = entry;
+
+	let gmlfoi = entry.EarthObservation.featureOfInterest;
+	if (gmlfoi) {
+		feature.geometry = _convertGmlFpToInternalFp(gmlfoi);
+	}
+	return feature;
+}
+
+/**
+ * Convert entries from backend format to GeoJSON format compatible with WEBC
+ * 
+ * @param parsedJson
+ *		Backend XML response as json
+ * @return
+ *		The GeoJSON FeatureCollection object in webc known format
+ */
+let _convertEntriesIntoFeatureCollection = function (parsedJson) {
 	let featureCollection = {
 		features: [],
-		properties: _.omit(ojson, ['@','entry','generator'])
+		properties: _.omit(parsedJson, ['@','entry','generator'])
 	};
-	
-	//convert the json into response compatible with webc format
+
+	let entries = parsedJson['entry'];
 	if (entries) {
-		let features = [];
-		for (i = 0; i < entries.length; i++) {
-			let objectEntryToConvert = entries[i];
-			if (objectEntryToConvert) {
-				let feature = {};
-				feature.id = objectEntryToConvert.id;
-				feature.type = "Feature";
-				feature.properties = {};
-				for (key in objectEntryToConvert) {
-					feature.properties[key] = objectEntryToConvert[key];
-				}
-				let gmlfoi = objectEntryToConvert.EarthObservation.featureOfInterest;
-				if (gmlfoi) {
-					feature.geometry = _convertGmlFpToInternalFp(gmlfoi);
-				}
-				features.push(feature);
-			}
-		}
-		featureCollection.features = features;
+		entries.forEach((entry) => {
+			featureCollection.features.push(_convertEntryToFeature(entry));
+		});
 	}
-	logger.info('Our conversion from json to the webc format geojson data is : ', Date.now() - startTime);
 	return featureCollection;
 }
 
@@ -215,12 +210,18 @@ module.exports = {
 	 * Convert json to current ngeo WEBC format
 	 * 
 	 * @param {string} parsedJson
-	 *      Json in SX-CAT format
+	 *      Json search response in SX-CAT format
 	 * @return featureCollection
 	 *      Feature collection compatible with WEBC format
 	 */
 	convertToNgeoWebCFormat: function (parsedJson) {
-		return _convertBackendEntryIntoFeatureCollection(JSON.stringify(parsedJson))
+		let startTime = new Date();
+		//for the moment replace all the xmlns in hardcoded manner so we have a json file compatible directly with webc protocol by just removing namespaces
+		let stringJsonWithoutNamespaces = JSON.stringify(parsedJson).replace(/os\:|dc\:|georss\:|media\:|eop\:|ows\:|om\:|gml\:|xsi:\:|xlink\:|eo\:|geo\:|time\:|opt\:|sar\:/g, '');
+		parsedJson = JSON.parse(stringJsonWithoutNamespaces);
+		let result = _convertEntriesIntoFeatureCollection(parsedJson);
+		logger.info('Our conversion from json to the webc format geojson data is : ', Date.now() - startTime);
+		return result;
 	}
 
 };
