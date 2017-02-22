@@ -30,10 +30,10 @@ let buildParameter = function(parameter) {
 	} else if ( parameter['@'].minInclusive && parameter['@'].maxInclusive ) {
 		res = {
 			"id": parameter['@'].name,
-			"type": "Integer",
+			"type": parameter['@'].maximum == 1 ? "Integer" : "Range",
 			"rangeMinValue": parameter['@'].minInclusive,
 			"rangeMaxValue": parameter['@'].maxInclusive
-		}
+		};
 	}
 	return res;
 }

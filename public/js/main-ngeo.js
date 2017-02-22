@@ -11398,7 +11398,7 @@ $.widget("ui.dateRangeSlider", {
 	 */
 	show: function(callback){
 		var self = this;
-		// if ( !self.element.height() ) {
+		if ( !self.element.height() ) {
 			$(self.element).trigger('drs:show', []);
 			setTimeout(function(){
 				self.element.animate({
@@ -11409,7 +11409,7 @@ $.widget("ui.dateRangeSlider", {
 					self.trigger("drs:show");
 				});
 			}, 0);
-		// }
+		}
 	},
 
 	/**
