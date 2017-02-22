@@ -19,7 +19,7 @@ describe("IF-ngEO-datasetPopulationMatrix --> Unit test", function () {
 
 	it("should return the dataset population json file for the WEBC and verify some parameter in the json file", function (done) {
 		//stun the response by sending our test configuration file
-		let contents = fs.readFileSync('./test_data/datasets-test-file.json');
+		let contents = fs.readFileSync('../test_data/datasets-test-file.json');
 		//parse it
 		let jsonContent = JSON.parse(contents);
 

@@ -16,7 +16,7 @@ describe("IF-ngEO-productSearch --> Unit test", function () {
 
 	it("should return a search file in atom opensearch xml response, convert it into geojson webc compliant format and ensure that the number of product found in the stub xml file which are 10 are well processed as 10 geojson features, test also some mandatory parameters that a feature shall have", function (done) {
 		//stun the response by sending our test configuration file
-		let contents = fs.readFileSync('./test_data/backend-rep-Landsat57Merged-all-test-file.xml');
+		let contents = fs.readFileSync('../test_data/backend-rep-Landsat57Merged-all-test-file.xml');
 		//parse it
 		//let jsonContent = JSON.parse(contents);
 
