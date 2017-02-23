@@ -5,6 +5,10 @@
 // Change the working directory
 process.chdir(__dirname);
 
+// Add current directory path to avoid '../../../module' problem
+// @see https://gist.github.com/branneman/8048520
+require('app-module-path').addPath(__dirname);
+
 let express = require('express'),
 	http = require('http'),
 	path = require('path'),
