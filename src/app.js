@@ -18,11 +18,11 @@ let express = require('express'),
 	bodyParser = require('body-parser'),
 	routes = require('routes');
 
-let webClientConfigurationData = require('./webClientConfigurationData/webClientConfigurationData');
-let datasetPopulationMatrix = require('./datasetPopulationMatrix/datasetPopulationMatrix');
-let productSearch = require('./productSearch/productSearch');
-let datasetSearchInfo = require('./datasetSearchInfo/datasetSearchInfo');
-let datasetAuthorization = require('./datasetAuthorization/datasetAuthorization');
+let webClientConfigurationData = require('./routes/webClientConfigurationData/webClientConfigurationData');
+let datasetPopulationMatrix = require('./routes/datasetPopulationMatrix/datasetPopulationMatrix');
+let productSearch = require('./routes/productSearch/productSearch');
+let datasetSearchInfo = require('./routes/datasetSearchInfo/datasetSearchInfo');
+let datasetAuthorization = require('./routes/datasetAuthorization/datasetAuthorization');
 
 let app = express();
 

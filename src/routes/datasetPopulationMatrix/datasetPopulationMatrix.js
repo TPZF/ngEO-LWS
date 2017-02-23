@@ -5,8 +5,8 @@
 
 let express = require('express');
 let router = express.Router();
-let logger = require('../utils/logger');
-let collectionService = require('../collectionService/collectionService');
+let logger = require('../../utils/logger');
+let collectionService = require('../../services/collectionService/collectionService');
 
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
@@ -26,7 +26,7 @@ router.get('/', function (req, res) {
 		}
 	}
 
-	console.log(collectionService.collections);
+	//console.log(collectionService.collections);
 	collectionService.collections.forEach((collection) => {
 		
 		// Add some hardcoded values for now just to make things work..

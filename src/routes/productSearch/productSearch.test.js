@@ -1,13 +1,13 @@
 let supertest = require("supertest");
 let should = require("should");
-let logger = require('../utils/logger');
+let logger = require('../../utils/logger');
 let assert = require('assert');
-let utils = require('../utils/utils');
+let utils = require('../../utils/utils');
 let nock = require('nock');
 // This agent refers to PORT where program is runninng.
 let server = supertest("http://localhost:3000");
 
-let configurationConverter = require('../utils/backendConfigurationConverter');
+let configurationConverter = require('../../utils/backendConfigurationConverter');
 let fs = require("fs");
 
 // UNIT test begin

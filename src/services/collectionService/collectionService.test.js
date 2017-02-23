@@ -1,7 +1,7 @@
-let logger = require('../utils/logger');
+let logger = require('../../utils/logger');
 let should = require('should');
 let collectionService = require('./collectionService');
-let sxCat = require('../mockBackend/sxCat');
+let sxCat = require('../../mockBackend/sxCat');
 
 describe("Collection service methods", function () {
 

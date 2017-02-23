@@ -1,5 +1,5 @@
 let request = require("request");
-let Xml2JsonParser = require("../utils/xml2jsonParser");
+let Xml2JsonParser = require("../../utils/xml2jsonParser");
 
 /**
  * Collection class

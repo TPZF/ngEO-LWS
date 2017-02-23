@@ -1,5 +1,5 @@
 let xml2js = require('xml2js-expat');
-let logger = require('../utils/logger');
+let logger = require('./logger');
 
 /**
  * Xml parser class designed to create the abstraction between the 3rd party lib

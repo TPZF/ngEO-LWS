@@ -1,5 +1,5 @@
 let _ = require('lodash');
-let logger = require('../utils/logger');
+let logger = require('../../utils/logger');
 let browseConfiguration = require('./browseConfiguration.json');
 
 /**

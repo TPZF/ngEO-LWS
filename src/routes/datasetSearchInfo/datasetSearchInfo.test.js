@@ -1,10 +1,10 @@
 let supertest = require("supertest");
-let logger = require('../utils/logger');
+let logger = require('../../utils/logger');
 var should = require('should');
-let sxCat = require('../mockBackend/sxCat');
+let sxCat = require('../../mockBackend/sxCat');
 
 // Get & run server
-let app = require('../app');
+let app = require('../../app');
 let server = supertest(app);
 
 /**

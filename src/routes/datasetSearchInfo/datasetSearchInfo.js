@@ -1,6 +1,6 @@
 let express = require('express');
 let _ = require('lodash');
-let collectionService = require('../collectionService/collectionService');
+let collectionService = require('../../services/collectionService/collectionService');
 
 let router = express.Router({
 	mergeParams: true
@@ -18,7 +18,8 @@ router.use(function timeLog(req, res, next) {
 let buildParameter = function(parameter) {
 	let res;
 	if (parameter['prm:Option']) {
-		// Selectbox
+		// Checkboxes
+		// TODO: take minimum/maximum attributes into account
 		res = {
 			"id": parameter['@'].name,
 			"type": "List",
