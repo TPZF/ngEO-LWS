@@ -1,5 +1,5 @@
 let should = require('should');
-let collectionService = require('./collectionService');
+let collectionService = require('./index');
 let sxCat = require('../../mockBackend/sxCat');
 
 describe("Collection service methods", function () {

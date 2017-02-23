@@ -22,11 +22,11 @@ let express = require('express'),
 	bodyParser = require('body-parser'),
 	routes = require('routes');
 
-let webClientConfigurationData = require('./routes/webClientConfigurationData/webClientConfigurationData');
-let datasetPopulationMatrix = require('./routes/datasetPopulationMatrix/datasetPopulationMatrix');
-let productSearch = require('./routes/productSearch/productSearch');
-let datasetSearchInfo = require('./routes/datasetSearchInfo/datasetSearchInfo');
-let datasetAuthorization = require('./routes/datasetAuthorization/datasetAuthorization');
+let webClientConfigurationData = require('./routes/webClientConfigurationData');
+let datasetPopulationMatrix = require('./routes/datasetPopulationMatrix');
+let productSearch = require('./routes/productSearch');
+let datasetSearchInfo = require('./routes/datasetSearchInfo');
+let datasetAuthorization = require('./routes/datasetAuthorization');
 
 let app = express();
 

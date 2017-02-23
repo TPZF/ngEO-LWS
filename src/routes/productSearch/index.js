@@ -1,7 +1,7 @@
 let logger = require('utils/logger');
 let express = require('express');
-let collectionService = require('services/collectionService/collectionService');
-let browseService = require('services/browseService/browseService');
+let collectionService = require('services/collectionService');
+let browseService = require('services/browseService');
 let url = require('url');
 let _ = require('lodash');
 

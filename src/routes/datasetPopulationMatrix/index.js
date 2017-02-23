@@ -6,7 +6,7 @@
 let express = require('express');
 let router = express.Router();
 let logger = require('utils/logger');
-let collectionService = require('services/collectionService/collectionService');
+let collectionService = require('services/collectionService');
 
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
