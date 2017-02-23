@@ -3,6 +3,7 @@
  */
 
 let winston = require('winston');
+let Configuration = require('config');
 winston.emitErrs = true;
 
 let logger = new winston.Logger({
@@ -18,7 +19,7 @@ let logger = new winston.Logger({
 		//	 colorize: false
 		// }),
 		new winston.transports.Console({
-			level: 'debug',
+			level: Configuration.logger.level,
 			handleExceptions: true,
 			json: false,
 			colorize: true
