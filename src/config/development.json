@@ -1,0 +1,4 @@
+{
+    "browseConfigurationPath": "services/browseService/browseConfiguration.json",
+    "collectionPath": "services/collectionService/collections.json"
+}

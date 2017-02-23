@@ -1,17 +1,20 @@
 let _ = require('lodash');
 let logger = require('utils/logger');
-let browseConfiguration = require('./browseConfiguration.json');
+let Configuration = require('config');
 
 /**
  * Browse service adding the wms/wmts information to products
  */
 class BrowseService {
 
+	constructor() {
+		this.browseConfiguration = require(Configuration['browseConfigurationPath']);
+	}
 	/**
 	 * Add browse information for each feature related to the given collection identifier
 	 */
 	addBrowseInfo(collectionId, fc) {
-		let browseUrl = _.find(browseConfiguration, {id: collectionId}).url;
+		let browseUrl = _.find(this.browseConfiguration, {id: collectionId}).url;
 		if ( browseUrl ) {
 			fc.features.forEach((feature) => {
 				// Add a single browse for now

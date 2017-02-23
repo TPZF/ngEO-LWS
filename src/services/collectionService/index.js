@@ -1,9 +1,9 @@
 let _ = require('lodash');
 let request = require('request');
-let collectionsConf = require("./collections.json");
 let Collection = require('./collection');
 let Xml2JsonParser = require('utils/xml2jsonParser');
 let logger = require('utils/logger');
+let Configuration = require('config');
 
 /**
  * Collection service designed to manage the available collections on different backends
@@ -12,6 +12,7 @@ let logger = require('utils/logger');
 class CollectionService {
 	constructor() {
 		this.collections = [];
+		let collectionsConf = require(Configuration['collectionPath']);
 		// Create collection object from conf
 		collectionsConf.forEach((collection) => {
 			this.collections.push(new Collection(collection.url, collection.name));
