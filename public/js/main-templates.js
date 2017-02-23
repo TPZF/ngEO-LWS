@@ -583,11 +583,11 @@ __p+=' data-mini="true"/>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t';
  } 
 __p+='\r\n\r\n\t\t\t<!-- The criterion is an integer within a range  -->\t\r\n\t\t\t';
  } else if ((criterionType == 'integer' || criterionType == 'float') && criterion.rangeMinValue && criterion.rangeMaxValue) { 
-__p+='\t\r\n\t\t\t\t\t<label for="'+
+__p+='\t\r\n\t\t\t\t<label for="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '">'+
 ((__t=( label ))==null?'':__t)+
-'</label>\r\n\t    \t\t\t<input data-mini="true" name="'+
+'</label>\r\n    \t\t\t<input data-mini="true" name="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '" id="'+
 ((__t=( criterion.id ))==null?'':__t)+
@@ -596,7 +596,7 @@ __p+='\t\r\n\t\t\t\t\t<label for="'+
 '" max="'+
 ((__t=( criterion.rangeMaxValue ))==null?'':__t)+
 '" ';
- if (value) print('value='+value) 
+ if ( value ) print('value='+value); 
 __p+=' type="range">\r\n\r\n    \t\t<!-- The criterion is a range -->\r\n    \t\t';
  } else if ((criterionType == 'range') && criterion.rangeMinValue && criterion.rangeMaxValue) { 
 __p+='\t\r\n\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t    \t<div data-role="rangeslider" data-highlight="true" data-mini="true">\r\n\t\t\t\t        <label class="capitalize" for="'+
@@ -631,7 +631,7 @@ __p+='" name="'+
 ((__t=( criterion.rangeMaxValue ))==null?'':__t)+
 '" value="';
  value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) 
-__p+='">\r\n\t\t\t\t    </div>\r\n\t\t\t\t</div>\r\n\t\t\t<!-- The criterion is a float  -->\t\r\n\t\t\t';
+__p+='">\r\n\t\t\t\t    </div>\r\n\t\t\t\t</div>\r\n\r\n\t\t\t<!-- The criterion is a float  -->\t\r\n\t\t\t';
  } else if (criterionType == 'float' || criterion.type.toLowerCase() == 'integer') { 
 __p+='\t\r\n\t\t\t\r\n\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t\t\t<label class="capitalize" for="'+
 ((__t=( criterion.id ))==null?'':__t)+

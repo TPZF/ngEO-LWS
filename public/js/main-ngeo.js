@@ -8085,7 +8085,7 @@ module.exports = {
 					var browseLayer = _browseLayerMap[layerName];
 					if (browseLayer) {
 						var browseUrl = _getUrl(browseObject);
-						browseLayer.removeBrowse(browseUrl);
+						browseLayer.removeBrowse(feature, browseUrl);
 
 						if (browseLayer.isEmpty()) {
 							Map.removeLayer(browseLayer);

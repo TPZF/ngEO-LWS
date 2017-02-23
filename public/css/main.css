@@ -294,7 +294,7 @@ Red dot with number of features
 /* line 90, client/css/toolbar.less */
 .tb-button:hover > div,
 .tb-large-button > div {
-  color: #4e4e4e;
+  color: #9e9e9e;
 }
 /* line 95, client/css/toolbar.less */
 .toggle .tb-large-button {
