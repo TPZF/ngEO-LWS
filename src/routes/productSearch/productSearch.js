@@ -1,11 +1,11 @@
-let logger = require('../../utils/logger');
+let logger = require('utils/logger');
 let express = require('express');
-let collectionService = require('../../services/collectionService/collectionService');
-let browseService = require('../../services/browseService/browseService');
+let collectionService = require('services/collectionService/collectionService');
+let browseService = require('services/browseService/browseService');
 let url = require('url');
 let _ = require('lodash');
 
-let configurationConverter = require('../../utils/backendConfigurationConverter');
+let configurationConverter = require('utils/backendConfigurationConverter');
 
 //the options here is to preserve  when express routes the url to preserver paramters
 let router = express.Router({

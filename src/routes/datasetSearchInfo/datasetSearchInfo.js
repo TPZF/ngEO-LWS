@@ -1,6 +1,6 @@
 let express = require('express');
 let _ = require('lodash');
-let collectionService = require('../../services/collectionService/collectionService');
+let collectionService = require('services/collectionService/collectionService');
 
 let router = express.Router({
 	mergeParams: true

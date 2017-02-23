@@ -2,8 +2,8 @@ let _ = require('lodash');
 let request = require('request');
 let collectionsConf = require("./collections.json");
 let Collection = require('./collection');
-let Xml2JsonParser = require('../../utils/xml2jsonParser');
-let logger = require('../../utils/logger');
+let Xml2JsonParser = require('utils/xml2jsonParser');
+let logger = require('utils/logger');
 
 /**
  * Collection service designed to manage the available collections on different backends

@@ -1,4 +1,3 @@
-let logger = require('../../utils/logger');
 let should = require('should');
 let collectionService = require('./collectionService');
 let sxCat = require('../../mockBackend/sxCat');

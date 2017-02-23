@@ -10,9 +10,7 @@ let supertest = require("supertest");
 // This agent refers to PORT where program is runninng.
 let server = supertest("http://localhost:3000");
 
-let logger = require('../../utils/logger');
 let assert = require('assert');
-let utils = require('../../utils/utils');
 
 // UNIT test begin
 describe("IF-ngEO-datasetPopulationMatrix --> Unit test", function () {

@@ -1,5 +1,4 @@
 let supertest = require("supertest");
-let logger = require('../../utils/logger');
 var should = require('should');
 let sxCat = require('../../mockBackend/sxCat');
 
