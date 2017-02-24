@@ -553,21 +553,45 @@ __p+='\r\n\t\t   <!-- The criterion is an enumeration has multiple options so cr
  if (criterionType == 'list' || criterionType == 'string') { 
 __p+=' \r\n\t\t\t\t<!-- NGEO-2233: list and string must have possible values for now due to ease of configuration for Ops -->\r\n\t\t\t\t';
  if ( criterion.possibleValues && criterion.possibleValues.length > 0 ) { 
-__p+='\r\n\t\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t\t\t\t<fieldset data-role="controlgroup">\r\n\t\t\t\t\t\t\t<legend>'+
+__p+='\r\n\t\t\t\t\t';
+ if ( criterion.maxOccurs == 1 ) { 
+__p+='\r\n\t\t\t\t\t\t<label id="'+
 ((__t=( label ))==null?'':__t)+
-':</legend>\r\n\t\t\t\t\t\t\t';
+'_label" for="'+
+((__t=( criterion.id ))==null?'':__t)+
+'">'+
+((__t=( label ))==null?'':__t)+
+' : </label>\r\n\t\t\t\t\t\t<!-- Selectbox -->\r\n\t\t\t\t\t\t<select id="'+
+((__t=( criterion.id ))==null?'':__t)+
+'" data-mini="true"">\r\n\t\t\t\t\t\t\t<option value="">None</option>\r\n\t\t\t\t\t\t\t';
  _.each(criterion.possibleValues, function(possibleValue) { 
-__p+='\r\n\t\t\t\t\t\t\t\t<label>\r\n\t\t\t\t\t\t\t\t\t<!-- select the check box if value is defined -->\r\n\t\t\t\t\t\t\t\t\t<input type="checkbox" name="'+
+__p+='\r\n\t\t\t\t\t\t\t\t<option value="'+
+((__t=( possibleValue ))==null?'':__t)+
+'" ';
+ if ( value && value.indexOf(possibleValue) != -1) { print('selected'); } 
+__p+=' >'+
+((__t=( possibleValue ))==null?'':__t)+
+'</option>\r\n\t\t\t\t\t\t\t';
+ }); 
+__p+='\r\n\t\t\t\t\t\t</select>\r\n\t\t\t\t\t';
+ } else { 
+__p+='\r\n\t\t\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t\t\t\t\t<fieldset data-role="controlgroup">\r\n\t\t\t\t\t\t\t\t<legend>'+
+((__t=( label ))==null?'':__t)+
+':</legend>\r\n\t\t\t\t\t\t\t\t';
+ _.each(criterion.possibleValues, function(possibleValue) { 
+__p+='\r\n\t\t\t\t\t\t\t\t\t<label>\r\n\t\t\t\t\t\t\t\t\t\t<!-- select the check box if value is defined -->\r\n\t\t\t\t\t\t\t\t\t\t<input type="checkbox" name="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '" value="'+
 ((__t=( possibleValue ))==null?'':__t)+
 '" data-mini="true" ';
  if ( value && value.indexOf(possibleValue) != -1 ) print('checked="checked"'); 
-__p+=' />\r\n\t\t\t\t\t\t\t\t\t'+
+__p+=' />\r\n\t\t\t\t\t\t\t\t\t\t'+
 ((__t=( possibleValue ))==null?'':__t)+
-'\r\n\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t';
+'\r\n\t\t\t\t\t\t\t\t\t</label>\r\n\t\t\t\t\t\t\t\t';
  }); 
-__p+='\r\n\t\t\t\t\t\t</fieldset>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t';
+__p+='\r\n\t\t\t\t\t\t\t</fieldset>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t';
+ } 
+__p+='\r\n\t\t\t\t';
  } else { 
 __p+='\r\n\t\t\t\t\t<!-- The criterion has no possible values, show text field -->\r\n\t\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t\t\t\t<label class="capitalize" for="'+
 ((__t=( criterion.id ))==null?'':__t)+

@@ -13,18 +13,20 @@ router.use(function timeLog(req, res, next) {
  * Convert backend XML format to ngEO WEBC format
  * 
  * NB: Only range & list types are handled currently
- * TODO: Make distinction between checkbox & select box
  */
 let buildParameter = function(parameter) {
 	let res;
 	if (parameter['prm:Option']) {
-		// Checkboxes
-		// TODO: take minimum/maximum attributes into account
+		// Will be rendered as checkboxes in case when maxOccurs > 1, selectbox otherwise
+		// TODO: minOccurs isn't taken into account currently
 		res = {
 			"id": parameter['@'].name,
 			"type": "List",
-			"possibleValues": []
-		}
+			"possibleValues": [],
+			"minOccurs": parseInt(parameter['@'].minimum),
+			"maxOccurs": parseInt(parameter['@'].maximum)
+		};
+
 		parameter['prm:Option'].forEach( (option) => {
 			res.possibleValues.push(option['@'].value);
 		} );
