@@ -21,7 +21,8 @@ TBD
 - CD to this repository
 - Retrieve the project git in your repository by typing `git clone https://github.com/TPZF/ngEO-LWS.git`
 - Then do `npm install` and that is it as the **package.json** file contains already all required libraries
-- `npm start` to start the localhost server listening at port 3000
+- `npm start` to start on linux os the localhost server listening at port 3000
+- `npm run start-windows` to start on Windows os the localhost server listening at port 3000
 - open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
 
 ## Installation Troubleshootings
