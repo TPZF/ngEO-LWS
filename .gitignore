@@ -3,8 +3,9 @@ node_modules
 
 # Build directories
 
-# IDE
+# IDE/dev
 .vscode
+.map
 
 # Tests
 
