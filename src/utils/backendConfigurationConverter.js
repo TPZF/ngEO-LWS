@@ -73,17 +73,14 @@ let _convertEntriesIntoFeatureCollection = function (parsedJson) {
 }
 
 /**
- * Get namespaces declared in the input XML as an array with ":" at the end
+ * Extract all the declared namespaces in xml and add ':' at the end to simplify removing in tags
  */
-let _getNamespaces = function(parsedJson) {
-	let res = ['opt:','sar:']; // opt & sar aren't present in '@' but still need to be removed
-	Object.keys(parsedJson['@']).forEach(function(key) {
-		let namespace = key.split(':')[1];
-		if (namespace) {
-			res.push(namespace + ":");
-		}
-	})
-	return res;
+let _getNamespaces = function(parsedXml) {
+
+	let namespaceRegexp = new RegExp('xmlns[^"]+(?=":"http)','g');
+	return JSON.stringify(parsedXml).match(namespaceRegexp).map(item => {
+		return item.split(':')[1] + ":";
+	});
 }
 
 module.exports = {
@@ -99,8 +96,8 @@ module.exports = {
 	convertSearchResponse: function (parsedXml) {
 		let startTime = new Date();
 		// Replace all the xmlns so we have a json file compatible directly with webc protocol by just removing namespaces
-		let removeNamespacesRegExp = new RegExp(_getNamespaces(parsedXml).join('|'), "g")
-		let stringJsonWithoutNamespaces = JSON.stringify(parsedXml).replace(removeNamespacesRegExp, '');
+		let removeNamespacesFromTags = new RegExp(_getNamespaces(parsedXml).join('|'), "g")
+		let stringJsonWithoutNamespaces = JSON.stringify(parsedXml).replace(removeNamespacesFromTags, '');
 		let result = _convertEntriesIntoFeatureCollection(JSON.parse(stringJsonWithoutNamespaces));
 		logger.info('Our conversion from json to the webc format geojson data is : ', Date.now() - startTime);
 		return result;
