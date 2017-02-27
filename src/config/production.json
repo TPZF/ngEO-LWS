@@ -2,6 +2,7 @@
     "browseConfigurationPath": "services/browseService/browseConfiguration.json",
     "collectionPath": "services/collectionService/collections.json",
     "logger": {
-        "level": "warn"
+        "level": "warn",
+        "outputPath": "./ngeo.log"
     }
 }
