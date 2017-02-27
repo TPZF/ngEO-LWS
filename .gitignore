@@ -5,7 +5,7 @@ node_modules
 
 # IDE/dev
 .vscode
-.map
+public/**/*.map
 
 # Tests
 
