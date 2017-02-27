@@ -24,7 +24,7 @@
 				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"
 			}, {
 				"sTitle" : "Track",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#text"
+				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"
 			}, {
 				"sTitle" : "Polarisation Channels",
 				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationChannels"
@@ -39,7 +39,7 @@
 				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"
 			}, {
 				"sTitle" : "Frame",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid"
+				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"
 			}, {
 				"sTitle" : "Product",
 				"mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href"
@@ -48,13 +48,13 @@
 				"mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
 			}, {
 				"sTitle" : "Illumination Azimuth Angle",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle"
+				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#"
 			}, {
 				"sTitle" : "Illumination Zenith Angle",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle"
+				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#"
 			}, {
 				"sTitle" : "Illumination Elevation Angle",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle"
+				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#"
 			}, {
 				"sTitle" : "Timeliness",
 				"mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.timeliness"
