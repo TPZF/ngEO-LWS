@@ -1,87 +1,5 @@
-/*
- *	Use local configuration for the same purpose as on client side
- *	i.e. to map properties from file
- */
-let data = require('./catalogJsonMaper.json');
 let _ = require('lodash');
 let logger = require('./logger');
-
-let _getValue = function (object, property, defaultValue) {
-	if (object) {
-		let value = null;
-		let kv = property.split("="); // Split by "=" to handle arrays
-		if (kv.length == 2) {
-			// Array
-			value = _.find(object, function (item) {
-				return item[kv[0]] == kv[1];
-			});
-		} else {
-			// Object
-			console.log("prop searched is -->" + property);
-			value = object[property];
-		}
-
-		if (typeof value != 'undefined') {
-			console.log("not undefined " + value);
-			return value;
-		}
-	}
-	return defaultValue;
-}
-
-/**
- *	Helper imperative function to get a parameter from the configuration data
- *	(much faster than recursive one...)
- */
-let _get = function (object, path, defaultValue) {
-	let names = path.split('.');
-	let obj = object;
-	for (let i = 0; obj && i < names.length - 1; i++) {
-		obj = _getValue(obj, names[i]);
-	}
-
-	return _getValue(obj, names[names.length - 1], defaultValue);
-};
-
-/**
- *	Helper function to set a paramater on object
- *	Even if one parameter of the path doesn't exists, all the tree of objects
- *	will be created
- */
-let _set = function (object, path, value) {
-	let kvs = path.split(".");
-
-	let temp = object;
-	for (let i = 0; i < kvs.length - 1; i++) {
-		let kv = kvs[i];
-		let fieldValue = _get(temp, kv, null);
-		if (!fieldValue) {
-			// Field doesn't exists -> create one
-			let nObject = {};
-
-			// Check if next kv is an array element
-			if (kvs[i + 1].indexOf("=") > 0) {
-				nObject = [];
-			}
-
-			if (kv.indexOf("=") > 0) {
-				// Array containing the object
-				nObject[kv.split("=")[0]] = kv.split("=")[1];
-				temp.push(nObject);
-			} else {
-				// Object
-				temp[kv] = nObject;
-			}
-			temp = nObject;
-		} else {
-			// Field already exists pass to the new one
-			temp = fieldValue;
-		}
-	}
-
-	// Finally set the value
-	temp[kvs[kvs.length - 1]] = value;
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////specific converter from backend////////////////////////////////////////
@@ -154,72 +72,36 @@ let _convertEntriesIntoFeatureCollection = function (parsedJson) {
 	return featureCollection;
 }
 
+/**
+ * Get namespaces declared in the input XML as an array with ":" at the end
+ */
+let _getNamespaces = function(parsedJson) {
+	let res = ['opt:','sar:']; // opt & sar aren't present in '@' but still need to be removed
+	Object.keys(parsedJson['@']).forEach(function(key) {
+		let namespace = key.split(':')[1];
+		if (namespace) {
+			res.push(namespace + ":");
+		}
+	})
+	return res;
+}
+
 module.exports = {
 
-	// Get a configuration parameter
-	get: function (path, defaultValue) {
-		return data ? _get(data, path, defaultValue) : defaultValue;
-	},
-
 	/**
-	 *	Get mapped property for the given object
-	 *	Ex: with "propertyId": "path.in.the.object" defined in configuration.json
-	 *	and object = { path: { in: { the: { object: "someValue" } } } }
-	 *	By calling:
-	 *	>Configuration.getMappedProperty(object, "propertyId");
-	 *	You will get:
-	 *	>"someValue"
-	 *
-	 *	@param object
-	 *		Object from which you need to extract the property
-	 *	@param propertyId
-	 *		The property id which is defined in configuration.json in serverPropertyMapper object
-	 *	@param defaultValue
-	 *		The default value if the path wasn't found
-	 */
-	getMappedProperty: function (object, propertyId, defaultValue) {
-		let propertyPath = this.get("serverPropertyMapper." + propertyId);
-		if (propertyPath)
-			return _get(object, propertyPath, defaultValue);
-		else
-			return defaultValue;
-	},
-
-	/**
-	 *	Set mapped property
-	 *	@see getMappedProperty for more details
-	 */
-	setMappedProperty: function (object, propertyId, value) {
-		let propertyPath = this.get("serverPropertyMapper." + propertyId);
-		if (propertyPath) {
-			let parentPath = propertyPath.substr(propertyPath, propertyPath.lastIndexOf("."));
-			let prop = propertyPath.substr(propertyPath.lastIndexOf(".") + 1);
-			let parentValue = _get(object, parentPath, null);
-			if (parentValue) {
-				parentValue[prop] = value;
-			} else {
-				//console.warn(parentPath + " doesn't exist");
-				_set(object, propertyPath, value);
-			}
-		} else {
-			//console.warn(propertyId + " wasn't found in serverPropertyMapper");
-		}
-	},
-
-	/**
-	 * Convert json to current ngeo WEBC format
+	 * Convert parsed xml coming from search request to current ngeo WEBC format
 	 * 
-	 * @param {string} parsedJson
-	 *      Json search response in SX-CAT format
+	 * @param {Object} parsedXml
+	 *      XML search response in SX-CAT format as json
 	 * @return featureCollection
 	 *      Feature collection compatible with WEBC format
 	 */
-	convertToNgeoWebCFormat: function (parsedJson) {
+	convertSearchResponse: function (parsedXml) {
 		let startTime = new Date();
-		//for the moment replace all the xmlns in hardcoded manner so we have a json file compatible directly with webc protocol by just removing namespaces
-		let stringJsonWithoutNamespaces = JSON.stringify(parsedJson).replace(/os\:|dc\:|georss\:|media\:|eop\:|ows\:|om\:|gml\:|xsi:\:|xlink\:|eo\:|geo\:|time\:|opt\:|sar\:/g, '');
-		parsedJson = JSON.parse(stringJsonWithoutNamespaces);
-		let result = _convertEntriesIntoFeatureCollection(parsedJson);
+		// Replace all the xmlns so we have a json file compatible directly with webc protocol by just removing namespaces
+		let removeNamespacesRegExp = new RegExp(_getNamespaces(parsedXml).join('|'), "g")
+		let stringJsonWithoutNamespaces = JSON.stringify(parsedXml).replace(removeNamespacesRegExp, '');
+		let result = _convertEntriesIntoFeatureCollection(JSON.parse(stringJsonWithoutNamespaces));
 		logger.info('Our conversion from json to the webc format geojson data is : ', Date.now() - startTime);
 		return result;
 	}

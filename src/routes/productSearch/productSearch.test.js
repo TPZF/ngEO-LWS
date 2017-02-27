@@ -13,7 +13,7 @@ let fs = require("fs");
 let contents = fs.readFileSync('../test_data/backend-rep-Landsat57Merged-all-test-file.xml');
 
 let onSuccess = function (result)  {
-	let jsonProcessed = configurationConverter.convertToNgeoWebCFormat(result);
+	let jsonProcessed = configurationConverter.convertSearchResponse(result);
 	jsonProcessed.should.have.property('features').with.lengthOf(10);
 	for (var i = 0; i < jsonProcessed.features.length; i++) {
 		var aFeature = jsonProcessed.features[i];
