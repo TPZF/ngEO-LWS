@@ -76,7 +76,8 @@ let buildResponse = function (datasetId, inputJson) {
 			"downloadOptions": [], // TODO
 			"attributes": buildAttributes(url['prm:Parameter']),
 			"startDate": startDateConf['@'].minInclusive,
-			"endDate": stopDateConf['@'].maxInclusive
+			"endDate": stopDateConf['@'].maxInclusive,
+			"startIndex": parseInt(url['@'].indexOffset)
 		}
 	};
 	return outputJson;

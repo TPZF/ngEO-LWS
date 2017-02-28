@@ -24,8 +24,7 @@ router.use(function timeLog(req, res, next) {
 
 // define the home page route
 router.get('/', function (req, res) {
-	let parsedUrl = url.parse(req.url);
-
+	
 	// Retrieve collection url from collection service
 	let collectionId = req.params['fCollectionId'];
 

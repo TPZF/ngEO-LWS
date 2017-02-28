@@ -14,8 +14,10 @@ class CollectionService {
 		this.collections = [];
 		let collectionsConf = require(Configuration['collectionPath']);
 		// Create collection object from conf
-		collectionsConf.forEach((collection) => {
-			this.collections.push(new Collection(collection.url, collection.name));
+		collectionsConf.forEach((collectionConf) => {
+			let collection = new Collection(collectionConf.url, collectionConf.name);
+			this.collections.push(collection);
+			this.populateCollection(collection);
 		});
 	}
 
@@ -27,11 +29,35 @@ class CollectionService {
 	}
 
 	/**
+	 * Populate collection with osdd & totalResults
+	 */
+	populateCollection(collection) {
+		// Get osdd
+		request(collection.url, (error, response, body) => {
+			Xml2JsonParser.parse(body, (result) => {
+				collection.osdd = result;
+			});
+		});
+
+		// Make first search request just to retrieve the number of available products
+		request(collection.url + '/atom?count=1', (error, response, body) => {
+			Xml2JsonParser.parse(body, (result) => {
+				collection.totalResults = result['os:totalResults'];
+			});
+		});
+	}
+
+	/**
 	 * Make search on the given collection
 	 */
-	search(collectionId, options) {
+	search(collectionId, options = { params: "" }){
 		let collection = this.getCollection(collectionId);
-		let searchUrl = options.params ? collection.url + '/atom' + options.params : collection.url + '/atom';
+
+		// Replace "startIndex" param by "offset" due to osdd of SX-CAT
+		// TODO: use collection special method later to extract the name in more generic way
+		options.params = options.params.replace('startIndex', 'offset');
+		
+		let searchUrl = collection.url + '/atom' + options.params;
 		let startTime = Date.now();
 		logger.info(`Searching for backend with ${searchUrl}`);
 		request(searchUrl, function (error, response, body) {

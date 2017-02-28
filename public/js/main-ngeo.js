@@ -4277,7 +4277,8 @@ var Dataset = Backbone.Model.extend({
 		datasetId: "",
 		startDate: null,
 		endDate: null,
-		validityEndDate: null
+		validityEndDate: null,
+		startIndex: 1
 	},
 
 	initialize: function() {
@@ -4347,6 +4348,10 @@ var Dataset = Backbone.Model.extend({
 			} else {
 				resp.validityEndDate = new Date(resp.endDate.getTime());
 				resp.validityEndDate.setUTCFullYear(resp.endDate.getUTCFullYear() + 5);
+			}
+
+			if ( response.datasetSearchInfo.startIndex ) {
+				resp.startIndex = response.datasetSearchInfo.startIndex;
 			}
 		}
 		return resp;
@@ -8922,16 +8927,27 @@ var FeatureCollection = function() {
 				this.addFeatures(_pageCache[this.currentPage]);
 			} else {
 				this.trigger('startLoading', this);
-				_fetch(1 + (this.currentPage - 1) * this.countPerPage, _url);
+				_fetch(this.getStartIndex() + (this.currentPage - 1) * this.countPerPage, _url);
 			}
 		}
+
 	};
 
 	// Append the given page to existing results
 	this.appendPage = function(page) {
 		this.currentPage = page;
 		this.trigger('startLoading', this);
-		_fetch(1 + (this.currentPage - 1) * this.countPerPage, _url);
+		_fetch(this.getStartIndex() + (this.currentPage - 1) * this.countPerPage, _url);
+	};
+
+	// Get start index according to current dataset
+	this.getStartIndex = function() {
+		if ( this.dataset ) {
+			// Backend dataset
+			return this.dataset.get('startIndex');
+		} else {
+			return 1; // Default start index according to OpenSearch spec
+		}
 	};
 
 	// Set the selection, replace the previous one

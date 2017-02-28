@@ -21,13 +21,6 @@ class Collection {
 
 		// Make object extendable
 		Object.assign(this, options);
-
-		// Make first search request just to retrieve the number of available products
-		request(this.url + '/atom?count=1', (error, response, body) => {
-			Xml2JsonParser.parse(body, (result) => {
-				this.totalResults = result['os:totalResults'];
-			});
-		});
 	}
 }
 
