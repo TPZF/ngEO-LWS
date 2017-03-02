@@ -43,7 +43,7 @@ let _convertEntryToFeature = function(entry) {
 	feature.properties = entry;
 
 	let gmlfoi = entry.EarthObservation.featureOfInterest;
-	if (gmlfoi) {
+	if (gmlfoi && gmlfoi.Footprint) {
 		feature.geometry = _convertGmlFpToInternalFp(gmlfoi);
 	}
 	return feature;
