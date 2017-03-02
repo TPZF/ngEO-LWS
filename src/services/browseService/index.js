@@ -14,15 +14,15 @@ class BrowseService {
 	 * Add browse information for each feature related to the given collection identifier
 	 */
 	addBrowseInfo(collectionId, fc) {
-		let browseUrl = _.find(this.browseConfiguration, {id: collectionId}).url;
-		if ( browseUrl ) {
+		let collectionBrowseConf = _.find(this.browseConfiguration, {id: collectionId});
+		if ( collectionBrowseConf ) {
 			fc.features.forEach((feature) => {
 				// Add a single browse for now
 				let browseInfo = [{
 					BrowseInformation: {
 						fileName: {
 							ServiceReference: {
-								'@href': browseUrl,
+								'@href': collectionBrowseConf.url,
 								'@title': collectionId
 							}
 						},
