@@ -65,9 +65,16 @@ let _convertEntriesIntoFeatureCollection = function (parsedJson) {
 
 	let entries = parsedJson['entry'];
 	if (entries) {
-		entries.forEach((entry) => {
+
+		// If there is only one feature, the entries is not an array but the literal object
+		if ( !Array.isArray(entries) ) {
 			featureCollection.features.push(_convertEntryToFeature(entry));
-		});
+		} else {
+			entries.forEach((entry) => {
+				featureCollection.features.push(_convertEntryToFeature(entry));
+			});
+		}
+
 	}
 	return featureCollection;
 }
