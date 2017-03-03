@@ -52,11 +52,10 @@ app.use('/ngeo/datasetAuthorization', datasetAuthorization);
 app.use('/ngeo/shopcarts', shopcarts);
 
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
-let host = 'localhost';
+let host = process.env.HOST || 'localhost';
 http.createServer(app).listen(app.get('port'), host, function () {
 	let port = app.get('port');
 	logger.info("Express server listening @ http://%s:%s", host, port);
-
 });
 
 module.exports = app;
