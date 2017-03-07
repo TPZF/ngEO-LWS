@@ -9,7 +9,7 @@ process.chdir(__dirname);
 // @see https://gist.github.com/branneman/8048520
 require('app-module-path').addPath(__dirname);
 
-let express = require('express')
+let express = require('express'),
 	configuration = require('./config'),
 	http = require('http'),
 	path = require('path'),
@@ -28,6 +28,7 @@ let datasetPopulationMatrix = require('./routes/datasetPopulationMatrix');
 let productSearch = require('./routes/productSearch');
 let datasetSearchInfo = require('./routes/datasetSearchInfo');
 let datasetAuthorization = require('./routes/datasetAuthorization');
+let shopcarts = require('./routes/shopcarts');
 
 let app = express();
 
@@ -47,7 +48,8 @@ app.use('/ngeo/datasetPopulationMatrix', datasetPopulationMatrix);
 app.use('/ngeo/catalogue/:fCollectionId/search/', productSearch);
 app.use('/ngeo/datasetSearchInfo/:datasetId', datasetSearchInfo);
 app.use('/ngeo/datasetAuthorization', datasetAuthorization);
-
+// shopcarts
+app.use('/ngeo/shopcarts', shopcarts);
 
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 let host = 'localhost';
