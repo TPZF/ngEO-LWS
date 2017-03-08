@@ -1,13 +1,11 @@
-	let express = require('express');
+let express = require('express');
 let logger = require('utils/logger');
-//let _ = require('lodash');
-
 let Configuration = require('../../config');
-
+let DatabaseService = require('services/databaseService');
 let MongoClient = require('mongodb').MongoClient;
 let ObjectId = require('mongodb').ObjectID;
 
-let url = Configuration.urlDataBase;
+let url = Configuration.database.connection.url;
 
 let router = express.Router({
 	mergeParams: true
@@ -18,161 +16,132 @@ router.use(function timeLog(req, res, next) {
 });
 
 /**
- * List
+ * List shopcarts
+ *
+ * @function router.get
+ * @param url - /ngeo/shopcarts/
+ * @param req - empty
+ * @param res - response
  */
 router.get('/', (req, res) => {
 
 	logger.debug('ShopCart list is calling');
 
-	let myDB = null;
+	// define call back function after lsiting shopcarts
+	// send response
+	let cbGetList = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			res.json({"shopCartList" : response.datas});
+		}
+	}
 
-	try {
-		// connect to mongodb
-		MongoClient.connect(url, (err,db) => {
-			if (err) throw err;
-			logger.debug('db connection ok');
-			myDB = db;
-			// find and return an array
-			let myCursor = myDB.collection('ShopCart').find().toArray((errDB, items) => {
-				if (errDB) throw errDB;
-				logger.debug('find all is done');
-				items.forEach((myItem, myIndex) => {
-					myItem.id = myItem._id;
-				});
-				res.json({"shopCartList" : items});
-				myDB.close();
-			});
-		});
-	}
-	catch(exc) {
-		if (myDB!==null) myDB.close();
-		res.status(400).send(exc);
-	}
+	// call list service
+	DatabaseService.list('ShopCart', cbGetList);
 
 });
 
 /**
  * Create a shopcart
+ *
+ * @function router.post
+ * @param url - /ngeo/shopcarts/
+ * @param req - request {createShopcart:{shocpart:{name,userId,isDefault}}}
+ * @param res - response
  */
 router.post('/', (req,res) => {
 
 	logger.debug('ShopCart create is calling');
 
+	// check if request is valid
 	if (!checkRequest(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
 
-	let myDB = null;
+	// define call back function after creating shop cart
+	// send response
+	let cbCreateShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			res.setHeader('Location', '/ngeo/shopcarts/' + response.datas.id)
+			res.status(201).json({"createShopcart" : {"shopcart": response.datas } });
+		}
+	};
 
-	try {
-		// connect to mongodb
-		MongoClient.connect(url, (errConnect, db) => {
-			if (errConnect) throw errConnect;
-			logger.debug('db connection ok');
-			myDB = db;
-			let myQuery = {
-				name: {
-					$eq: req.body.createShopcart.shopcart.name
-				},
-				userId: {
-					$eq : req.body.createShopcart.shopcart.userId
-				}
-			};
-			// findOne shopcart with that name for this user
-			myDB.collection('ShopCart').findOne(myQuery, (errFind, resultFind) => {
-				if (errFind) throw errFind;
-				logger.debug('findOne is done.');
-				if (resultFind) {
-					res.status(400).json('This shopcart already exists.');
-				} else {
-					// insert shopcart
-					myDB.collection('ShopCart').insertOne(req.body.createShopcart.shopcart, (errInsert, resultInsert) => {
-						if (errInsert) throw errInsert;
-						logger.debug('insertOne is done.');
-						myDB.close();
-						let idCreated = resultInsert.insertedId;
-						res.setHeader('Location', '/ngeo/shopcarts/' + idCreated)
-						res.status(201).json(idCreated);
-					})
-				}
-			});
-		});
-	}
-	catch(exc) {
-		if (myDB!==null) myDB.close();
-		res.status(400).send(exc);
-	}
+	// define insertedItem
+	let myInsertItem = req.body.createShopcart.shopcart;
+
+	// define query to find if item is already in database
+	let myQueryItemAlreadyExists = {
+		name: {
+			$eq: myInsertItem.name
+		},
+		userId: {
+			$eq : myInsertItem.userId
+		}
+	};
+
+	// call create service for database
+	DatabaseService.create('ShopCart', myInsertItem, myQueryItemAlreadyExists, cbCreateShopCart);
 	
 });
 
 /**
  * Update a shopcart
+ *
+ * @function router.put
+ * @param url - /ngeo/shopcarts/id
+ * @param req - request {createShopcart:{shocpart:{_id,id,name,userId,isDefault}}}
+ * @param res - response
  */
 router.put('/:shopcart_id', (req,res) => {
 
 	logger.debug('ShopCart update is calling');
 
+	// check if request is valid
 	if (!checkRequest(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
 
-	let myDB = null;
-	let idToUpdate = req.params.shopcart_id;
+	// updating item
+	let myUpdateItem = req.body.createShopcart.shopcart;
 
-	try {
-		// connect to mongodb
-		MongoClient.connect(url, (errConnect, db) => {
-			if (errConnect) throw errConnect;
-			logger.debug('db connection ok');
-			myDB = db;
-			let myQuery = {
-				"_id": {
-					$ne: ObjectId(idToUpdate)
-				},
-				"name": {
-					$eq: req.body.createShopcart.shopcart.name
-				},
-				"userId": {
-					$eq : req.body.createShopcart.shopcart.userId
-				}
-			};
-			// findOne shopcart with this name and userId but another id !
-			myDB.collection('ShopCart').findOne(myQuery, (errFind, resultFind) => {
-				if (errFind) throw errFind;
-				if (resultFind) {
-					res.status(400).json('ShopCart with this name already exists for another shopcart !');
-				} else {
-					// update if not found
-					let myFilter = {
-						"_id": ObjectId(idToUpdate)
-					};
-					let myUpdate = {
-						$set: {
-							"name": req.body.createShopcart.shopcart.name,
-							"isDefault": req.body.createShopcart.shopcart.isDefault
-						}
-					};
-					myDB.collection('ShopCart').updateOne(myFilter, myUpdate, (errUpdate, resultUpdate) => {
-						if (errUpdate) throw errUpdate;
-						myDB.close();
-						if (resultUpdate.modifiedCount === 0) {
-							res.status(404).json('Not found !');
-						} else if (resultUpdate.modifiedCount === 1) {
-							res.json('updated');
-						} else {
-							throw 'ShopCart id is not unique !';
-						}
-					});
-				}
-			});
-		})
-	}
-	catch(exc) {
-		if (myDB!==null) myDB.close();
-		res.status(400).send(exc);
-	}
+	// define query if item already exists
+	let myQueryItemAlreadyExists = {
+		"_id": {
+			$ne: ObjectId(myUpdateItem._id)
+		},
+		"name": {
+			$eq: myUpdateItem.name
+		},
+		"userId": {
+			$eq : myUpdateItem.userId
+		}
+	};
+
+	// define update query
+	let myQueryUpdate = {
+		$set: {
+			"name": myUpdateItem.name,
+			"isDefault": myUpdateItem.isDefault
+		}
+	};
+
+	// define callback function after updating shopcart
+	let cbUpdateShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			res.json({"createShopcart" : {"shopcart": response.datas } });
+		}
+	};
+					
+	// call update service
+	DatabaseService.update('ShopCart', myUpdateItem, myQueryItemAlreadyExists, myQueryUpdate, cbUpdateShopCart);
 	
 });
 
@@ -183,45 +152,117 @@ router.delete('/:shopcart_id', (req,res) => {
 
 	logger.debug('ShopCart delete is calling');
 
+	// check if request is valid
 	if (!checkRequest(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
 
-	let myDB = null;
 	let idToDelete = req.params.shopcart_id;
 
-	logger.debug('id = ' + idToDelete);
+	// define callback function after deleting shopcart
+	let cbDeleteShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			res.status(204).send();
+		}
+	};
+					
+	// call delete service
+	DatabaseService.delete('ShopCart', idToDelete, cbDeleteShopCart);
 
-	try {
-		// connect to mongodb
-		MongoClient.connect(url, (errConnect, db) => {
-			if (errConnect) throw errConnect;
-			logger.debug('db connection ok');
-			myDB = db;
-			let myFilter = {
-				"_id": ObjectId(idToDelete)
-			};
-			// deleteOne shopcart with that id
-			myDB.collection('ShopCart').deleteOne(myFilter, (errDelete, resultDelete) => {
-				if (errDelete) throw errDelete;
-				myDB.close();
-				if (resultDelete.deletedCount === 0) {
-					res.status(404).json('Not found !');
-				} else if (resultDelete.deletedCount === 1) {
-					logger.debug('204 - delete ok for ' + idToDelete);
-					res.status(204).send();
-				} else {
-					throw 'ShopCart id is not unique !';
+});
+
+/**
+ * Get features for a shopcart
+ */
+router.get('/:shopcart_id/search', (req,res) => {
+
+	logger.debug('ShopCart search features is calling');
+
+	if (!checkRequestFeatures(req)) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+
+	let idShopCart = req.params.shopcart_id;
+	let start = +req.params.startIndex - 1;
+	let count = +req.params.count;
+
+	let allFeatures = [];
+
+	let myQueryCriteria = {
+		"shopcart_id": {
+			$eq: idShopCart
+		}
+	};
+
+	let cbCountFeaturesInShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			res.json({
+				"features" : allFeatures,
+				"properties": {
+					"id": 'http://',
+					"totalResults": response.datas,
+					"startIndex": (start+1),
+					"itemsPerPage": count,
+					"updated": new Date().toISOString()
 				}
 			});
-			
-		})
+		}
+	};
+
+	let cbSearchFeaturesInShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			allFeatures = response.datas;
+			DatabaseService.count('Feature', myQueryCriteria, cbCountFeaturesInShopCart)
+		}
+	};
+
+	// call search service
+	DatabaseService.search('Feature', myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+
+});
+
+
+/**
+ * Post features on a shopcart
+ */
+router.post('/:shopcart_id/items', (req,res) => {
+
+	logger.debug('ShopCart add feature is calling');
+
+	if (!checkRequestFeatures(req)) {
+		res.status(400).json("Request is not valid");
+		return;
 	}
-	catch (exc) {
-		if (myDB!==null) myDB.close();
-		res.status(400).send(exc);
-	}
+
+	let idShopCart = req.params.shopcart_id;
+
+	let myInsertFeatures = req.body.body.shopCartItemAdding;
+	let maxItems = 0;
+
+	let cbCreateFeatureInShopCart = function(response) {
+		if (response.code !== 0) {
+
+		} else {
+			maxItems++;
+			if (myInsertFeatures.length === maxItems) {
+				logger.info('All is done !');
+				res.status(201).json('');
+			}
+		}
+	};
+
+	myInsertFeatures.forEach((item, index) => {
+		item.shopcart_id = idShopCart;
+		DatabaseService.create('Feature', item, myQueryItemAlreadyExists, cbCreateFeatureInShopCart);
+	});
 
 });
 
@@ -250,8 +291,37 @@ function checkRequest(request) {
 	if (((request.method === 'PUT') || (request.method === 'DELETE')) && (!patt.test(request.params.shopcart_id))) {
 		return false;
 	}
+	if ((request.method === 'PUT') && (req.body.createShopcart.shopcart.id != req.params.id)) {
+		return false;
+	}
 
 	return true;
+}
+
+// check request for features on shopcart
+function checkRequestFeatures(request) {
+	if (request.method==='POST') {
+		if (!request.params.shopcart_id) {
+			return false;
+		}
+		if (!checkParamId(request.params.shopcart_id)) {
+			return false;
+		}
+		if (!request.body.shopCartItemAdding) {
+			return false;
+		}
+		if (request.body.shopCartItemAdding.constructor !== Array) {
+			return false;
+		}
+	}
+	return true;
+}
+
+// check if param id is a string with 12 bytes
+// @return true or false
+function checkParamId(sId) {
+	let patt = new RegExp(/^[a-fA-F0-9]{24}$/);
+	return patt.test(sId);
 }
 
 
