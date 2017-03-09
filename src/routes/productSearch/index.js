@@ -30,7 +30,7 @@ router.get('/', function (req, res) {
 
 	// Search the available products on backend
 	collectionService.search(collectionId, {
-		params: url.parse(req.url).search,
+		params: url.parse(req.url).search ? url.parse(req.url).search : "",
 		onSuccess: (result) => {
 			let geoJsonWebcData = configurationConverter.convertSearchResponse(result);
 			if (geoJsonWebcData) {
