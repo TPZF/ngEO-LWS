@@ -194,6 +194,8 @@ header nav a:first-child {
   text-align: right;
   border-radius: 5px;
   font-size: 13px;
+  /* Highlighting issue on Safari */
+  -webkit-user-select: none;
 }
 /**
  * Toolbar
@@ -438,8 +440,10 @@ Red dot with number of features
   left: -400px;
   z-index: 10;
   bottom: 48px;
+  /* Highlighting issue on Safari */
+  -webkit-user-select: none;
 }
-/* line 34, client/css/panelManager.less */
+/* line 37, client/css/panelManager.less */
 #bottom-panel {
   border-left: 0;
   border-right: 0;
@@ -450,26 +454,28 @@ Red dot with number of features
   left: 0;
   right: 0;
   z-index: 11;
+  /* Highlighting issue on Safari */
+  -webkit-user-select: none;
 }
-/* line 47, client/css/panelManager.less */
+/* line 53, client/css/panelManager.less */
 #bottom-panel #table {
   vertical-align: top;
   top: 5px;
 }
-/* line 52, client/css/panelManager.less */
+/* line 58, client/css/panelManager.less */
 #bottom-panel #bottomDatasets {
   display: inline-block;
   width: 75%;
   overflow: hidden;
 }
-/* line 59, client/css/panelManager.less */
+/* line 65, client/css/panelManager.less */
 .panel-toolbar-bottom {
   position: absolute;
   right: 75px;
   bottom: 0;
   z-index: 1002;
 }
-/* line 66, client/css/panelManager.less */
+/* line 72, client/css/panelManager.less */
 .panel-toolbar-left {
   position: absolute;
   top: 40px;
@@ -783,8 +789,10 @@ Red dot with number of features
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
+  /* Highlighting issue on Safari */
+  -webkit-user-select: none;
 }
-/* line 21, client/css/mapPopup.less */
+/* line 24, client/css/mapPopup.less */
 #mapPopup .widget-content {
   -webkit-border-top-right-radius: 0;
   -webkit-border-bottom-right-radius: 0;
@@ -799,7 +807,7 @@ Red dot with number of features
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 26, client/css/mapPopup.less */
+/* line 29, client/css/mapPopup.less */
 .mapPopup p {
   margin: 3px;
   padding: 0;
@@ -808,25 +816,25 @@ Red dot with number of features
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* line 37, client/css/mapPopup.less */
+/* line 40, client/css/mapPopup.less */
 .ui-icon-save {
   background-image: url("../images/save.png");
 }
-/* line 43, client/css/mapPopup.less */
+/* line 46, client/css/mapPopup.less */
 .ui-icon-shop {
   background-image: url("../images/shop.png");
 }
-/* line 48, client/css/mapPopup.less */
+/* line 51, client/css/mapPopup.less */
 .ui-icon-browse {
   background: url("../images/browse.png") 50% 50% no-repeat;
   background-color: #252525;
 }
-/* line 52, client/css/mapPopup.less */
+/* line 55, client/css/mapPopup.less */
 .ui-icon-browse-multiple {
   background: url("../images/browse_multiple.png") 50% 50% no-repeat;
   background-color: #252525;
 }
-/* line 58, client/css/mapPopup.less */
+/* line 61, client/css/mapPopup.less */
 .ui-btn-active .ui-icon-browse {
   background-color: #395E7B !important;
 }
