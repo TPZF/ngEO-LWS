@@ -334,7 +334,7 @@ function checkRequest(request) {
 		return false;
 	}
 	// only for put method, check param id in uri and in datas
-	if ((request.method === 'PUT') && (req.body.createShopcart.shopcart.id != req.params.id)) {
+	if ((request.method === 'PUT') && (request.body.createShopcart.shopcart.id != request.params.id)) {
 		return false;
 	}
 
