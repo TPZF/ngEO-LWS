@@ -45,7 +45,6 @@ class MongoDBService {
 							dataBase.close();
 							let idCreated = resultInsert.insertedId;
 							myDocument.id = idCreated;
-							myDocument._id = idCreated;
 							return myCallbackFn({"code": 0, "datas": myDocument});
 						})
 					}
@@ -132,7 +131,7 @@ class MongoDBService {
 					} else {
 						// update if not found
 						let queryFindById = {
-							"_id": ObjectId(myDocument._id)
+							"_id": ObjectId(myDocument.id)
 						};
 						dataBase.collection(myCollection).updateOne(queryFindById, myQueryUpdate, (errUpdate, resultUpdate) => {
 							if (errUpdate) throw errUpdate;
@@ -144,8 +143,8 @@ class MongoDBService {
 							} else if (resultUpdate.modifiedCount === 1) {
 								return myCallbackFn({"code": 0, "datas": myDocument});
 							} else {
-								Logger.error('id not unique (' + myCollection + ',' + myDocument._id + ')');
-								throw '_id for this document is not unique ! (' + myDocument._id + ')';
+								Logger.error('id not unique (' + myCollection + ',' + myDocument.id + ')');
+								throw '_id for this document is not unique ! (' + myDocument.id + ')';
 							}
 						});
 					}
