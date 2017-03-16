@@ -5128,15 +5128,21 @@ var Map = require('map/map');
 var MapUtils = require('map/utils');
 var GeoJSONConverter = require('map/geojsonconverter');
 var Rectangle = require('map/rectangle');
+var degreeConvertor = require('map/degreeConvertor');
 
-// Utility method to transfrom from decimal degree to degree/minute/second
-var toDMS = function(dd) {
-	var deg = dd | 0; // truncate dd to get degrees
-	var frac = Math.abs(dd - deg); // get fractional part
-	var min = (frac * 60) | 0; // multiply fraction by 60 and truncate
-	var sec = (frac * 3600 - min * 60) | 0;
-	return deg + ":" + min + ":" + sec;
-};
+function isValidLon(lon) {
+	if (isNaN(lon))
+		return false;
+
+	return lon >= -180 && lon <= 180;
+}
+
+function isValidLat(lat) {
+	if (isNaN(lat))
+		return false;
+
+	return lat >= -90 && lat <= 90;
+}
 
 var numberToString = function(number, precision) {
 	if (typeof precision != 'undefined' && precision >= 0) {
@@ -5298,7 +5304,7 @@ var SearchArea = function() {
 		var coords = _feature.geometry.coordinates[0];
 		var text = "";
 		for (var i = 0; i < coords.length; i++) {
-			text += toDMS(coords[i][1]) + " " + toDMS(coords[i][0]) + "\n";
+			text += degreeConvertor.toDMS(coords[i][1], true, {positionFlag: 'number'}) + " " + degreeConvertor.toDMS(coords[i][0], false, {positionFlag: 'number'}) + "\n";
 		}
 		return text;
 	};
@@ -5389,21 +5395,20 @@ var SearchArea = function() {
 
 	// Import polygon from text
 	this.setPolygonFromText = function(text) {
-		var polygonRe = /\s*([-+]?)(\d+):(\d+):(\d+)\s+([-+]?)(\d+):(\d+):(\d+)/gm;
-		var match = polygonRe.exec(text);
-		if (!match) {
+
+		var coordinates = degreeConvertor.textToDecimalDegrees(text);
+		if ( coordinates.length == 0 ) {
 			this.empty();
 			return false;
 		}
-		var coordinates = [];
-		while (match) {
-			var lat = parseFloat(match[2]) + (parseFloat(match[3]) / 60.0) + (parseFloat(match[4]) / 3600.0);
-			var lon = parseFloat(match[6]) + (parseFloat(match[7]) / 60.0) + (parseFloat(match[8]) / 3600.0);
-			lat *= (match[1] == '-') ? -1.0 : 1.0;
-			lon *= (match[5] == '-') ? -1.0 : 1.0;
-			coordinates.push([lon, lat]);
-			match = polygonRe.exec(text);
+
+		// Validate lon/lat values
+		for ( var i=0; i<coordinates.length; i++ ) {
+			if ( !isValidLon(coordinates[i][0]) || !isValidLat(coordinates[i][1]) ) {
+				return false;
+			}
 		}
+		
 		// Close polygon if needed
 		if (coordinates[0][0] != coordinates[coordinates.length - 1][0] || coordinates[0][1] != coordinates[coordinates.length - 1][1]) {
 			coordinates.push(coordinates[0]);
@@ -6027,6 +6032,7 @@ module.exports = AdvancedSearchView;
 require.register("search/view/boxView", function(exports, require, module) {
 var Map = require('map/map');
 var RectangleHandler = require('map/rectangleHandler');
+var degreeConvertor = require('map/degreeConvertor');
 
 function isValidLon(lon) {
 	if (isNaN(lon))
@@ -6090,11 +6096,7 @@ var BoxView = Backbone.View.extend({
 					bbox.south = Math.max(bbox.south, -90);
 					bbox.north = Math.min(bbox.north, 90);
 					self.model.searchArea.setBBox(bbox);
-
-					self.$el.find("#west").val(bbox.west);
-					self.$el.find("#south").val(bbox.south);
-					self.$el.find("#east").val(bbox.east);
-					self.$el.find("#north").val(bbox.north);
+					self.updateInputs(bbox);
 
 					$button.removeAttr("disabled").button("refresh");
 				}
@@ -6105,25 +6107,15 @@ var BoxView = Backbone.View.extend({
 		//change the bbox in the model only and inly if it is valid
 		'blur input': function(event) {
 
-			var bbox = {
-				west: filterFloat(this.$el.find("#west").val()),
-				south: filterFloat(this.$el.find("#south").val()),
-				east: filterFloat(this.$el.find("#east").val()),
-				north: filterFloat(this.$el.find("#north").val())
-			};
-
-
+			var bbox = this.parseInputs();
 			if (isValidLon(bbox.west) && isValidLon(bbox.east) &&
 				isValidLat(bbox.south) && isValidLat(bbox.north)) {
 				this.model.searchArea.setBBox(bbox);
 			} else {
 				bbox = this.model.searchArea.getBBox();
-				this.$el.find("#west").val(bbox.west);
-				this.$el.find("#south").val(bbox.south);
-				this.$el.find("#east").val(bbox.east);
-				this.$el.find("#north").val(bbox.north);
 			}
-
+			
+			this.updateInputs(bbox);
 			this.parentView.updateSearchAreaLayer();
 
 		},
@@ -6146,13 +6138,43 @@ var BoxView = Backbone.View.extend({
 
 	},
 
+	// Update template inputs with the given bbox
+	updateInputs: function(bbox) {
+		this.$el.find("#west").val(degreeConvertor.toDMS(bbox.west, true, {positionFlag: "number"}));
+		this.$el.find("#south").val(degreeConvertor.toDMS(bbox.south, false, {positionFlag: "number"}));
+		this.$el.find("#east").val(degreeConvertor.toDMS(bbox.east, true, {positionFlag: "number"}));
+		this.$el.find("#north").val(degreeConvertor.toDMS(bbox.north, false, {positionFlag: "number"}));
+	},
+
+	// Get decimal value for the given input
+	getDecimal(value) {
+		if ( value.indexOf("°") >= 0 || value.indexOf("'") >= 0 || value.indexOf("\"") >= 0) {
+			return degreeConvertor.toDecimalDegrees(value);
+		} else {
+			return filterFloat(value);
+		}
+	},
+
+	// Parse input returning the bbox
+	parseInputs: function() {
+
+		var west = this.$el.find("#west").val();
+		var south = this.$el.find("#south").val();
+		var east = this.$el.find("#east").val();
+		var north = this.$el.find("#north").val();
+
+		return {
+			west: this.getDecimal(west),
+			south: this.getDecimal(south),
+			east: this.getDecimal(east),
+			north: this.getDecimal(north)
+		}
+	},
+
 	// Update from the model
 	updateFromModel: function() {
 		var bbox = this.model.searchArea.getBBox();
-		this.$el.find("#west").val(bbox.west);
-		this.$el.find("#south").val(bbox.south);
-		this.$el.find("#east").val(bbox.east);
-		this.$el.find("#north").val(bbox.north);
+		this.updateInputs(bbox);
 		
 		// Update useExtent according to model
 		// Used when clicked on "Get Criteria" importing the layer from gazetter
@@ -6201,12 +6223,7 @@ var BoxView = Backbone.View.extend({
 			this.activateUseExtent();
 		} else {
 
-			var bbox = {
-				west: filterFloat(this.$el.find("#west").val()),
-				south: filterFloat(this.$el.find("#south").val()),
-				east: filterFloat(this.$el.find("#east").val()),
-				north: filterFloat(this.$el.find("#north").val())
-			};
+			var bbox = this.parseInputs();
 			this.model.searchArea.setBBox(bbox);
 			this.parentView.updateSearchAreaLayer();
 		}
@@ -6234,10 +6251,7 @@ var BoxView = Backbone.View.extend({
 		};
 		this.model.searchArea.setBBox(bbox);
 
-		this.$el.find("#west").val(bbox.west);
-		this.$el.find("#south").val(bbox.south);
-		this.$el.find("#east").val(bbox.east);
-		this.$el.find("#north").val(bbox.north);
+		this.updateInputs(bbox);
 	}
 
 });
@@ -6352,6 +6366,27 @@ var DatasetSelectionView = Backbone.View.extend({
 		// Click on search
 		"click #dsSearch": function(event) {
 			SearchResults.launch(DatasetSearch);
+		},
+
+		'keyup [data-type="search"]' : 'filterDatasets',
+		'change [data-type="search"]': 'filterDatasets'
+	},
+
+	/**
+	 *	Filter dataset based on input
+	 */
+	filterDatasets: function(event) {
+		var filter = $(event.target).val();
+
+		// Set all datasets to visible
+		var $liArray = this.$el.find('#datasetList li').removeClass('ui-screen-hidden')
+
+		if ( filter != "" ) {
+			// Hide all datasets with names which doesn't correspond to filter
+			$liArray
+				.find('.name')
+				.filter(function(index, item) { return $(item).text().indexOf(filter) == -1; }).parent()
+				.addClass('ui-screen-hidden');
 		}
 	},
 
@@ -7047,6 +7082,7 @@ module.exports = OpenSearchURLView;
 require.register("search/view/polygonView", function(exports, require, module) {
 var Map = require('map/map');
 var PolygonHandler = require('map/polygonHandler');
+var degreeConvertor = require('map/degreeConvertor');
 
 /**
  * The PolygonView manages the view to define the search area as a polygon.
@@ -7085,16 +7121,40 @@ var PolygonView = Backbone.View.extend({
 		},
 
 		'change #polygontext': function(event) {
-			if (!this.model.searchArea.setPolygonFromText($(event.currentTarget).val())) {
+			var text = $(event.currentTarget).val();
+			if (/[a-zA-Z]+/.exec(text) || !this.model.searchArea.setPolygonFromText(text)) {
+				// Restore input
+				this.updateFromModel();
 				// Erase content
-				$(event.currentTarget).val('');
+				//$(event.currentTarget).val('');
 				this.$el.find('#polygonTextError')
-					.html("Please enter valid coordinates : D:M:S.")
+					.html("Please enter valid coordinates : D°M'S\"")
 					.show();
+			} else {
+				// Format the entered values to DMS (in case when decimal values were entred)
+				// NB: can't use update from model due to precision issue...
+				var positions = text.trim().split('\n');
+				res = "";
+				for ( var i=0; i<positions.length; i++ ) {
+					var position = positions[i].split(" ");
+					res += this.getDMS(position[0] + " ");
+					res += this.getDMS(position[1]) + "\n";
+				}
+				this.$el.find('#polygontext').val(res);
 			}
 			this.parentView.updateSearchAreaLayer();
+
 		},
 
+	},
+
+	// Get DMS-formatted value
+	getDMS(value) {
+		if ( value.indexOf("°") >= 0 || value.indexOf("'") >= 0 || value.indexOf("\"") >= 0) {
+			return value;
+		} else {
+			return degreeConvertor.toDMS(value);
+		}
 	},
 
 	// Update from the model
@@ -7843,14 +7903,17 @@ var TimeExtentView = Backbone.View.extend({
 				endYear: stopDate.getFullYear(),
 				calDateList: keyDates
 			};
-			this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
-				calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - startDate.getFullYear()
-			})).datebox("refresh");
-			this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
-				calYearPickMin: stopDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - stopDate.getFullYear()
-			})).datebox("refresh");
+
+			if ( this.model.get("dateRange") ) {
+				this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
+					calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - startDate.getFullYear()
+				})).datebox("refresh");
+				this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
+					calYearPickMin: stopDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - stopDate.getFullYear()
+				})).datebox("refresh");
+			}
 		} else if (useTimeSlider) {
 			this.removeTimeSlider();
 		}
@@ -7920,14 +7983,16 @@ var TimeExtentView = Backbone.View.extend({
 		this.$fromDateInput.datebox("setTheDate", this.model.get("start"));
 		this.$toDateInput.datebox("setTheDate", this.model.get("stop"));
 
-		this.$fromDateInput.datebox("option", {
-			calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
-			calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
-		}).datebox("refresh");
-		this.$toDateInput.datebox("option", {
-			calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
-			calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
-		}).datebox("refresh");
+		if ( this.model.get("dateRange") ) {			
+			this.$fromDateInput.datebox("option", {
+				calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
+				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
+			}).datebox("refresh");
+			this.$toDateInput.datebox("option", {
+				calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
+				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
+			}).datebox("refresh");
+		}
 		//Uncomment to use back times
 		//		$('#fromTimeInput').val( this.model.get("startTime") );
 		//		$('#toTimeInput').val( this.model.get("stopTime") );

@@ -707,7 +707,7 @@ __p+='<fieldset id="toolsChoice" data-role="controlgroup" data-type="horizontal"
 ((__t=(searchArea.getBBox().north))==null?'':__t)+
 '">\r\n\t</div>\r\n\r\n\t<div id="mapExtent" data-role="fieldcontain">\r\n\t\t<label class="mapExtentCheckBoxLabel">Use map extent\r\n\t\t<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" ';
  if (attributes.useExtent) print('checked="checked"'); 
-__p+=' ></label>\r\n\t</div>\r\n\t<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>\r\n\r\n</div>\r\n\r\n<div id="polygon">\r\n\t<p id="polygonTextError"></p>\r\n\t<label>Enter coordinates:\r\n\t<textarea id="polygontext" rows="10"></textarea>\r\n\t</label>\r\n\t<button data-role="button" data-mini="true"  id="drawpolygon">Draw</button>\r\n</div>\r\n\r\n<div id="gazetteer">\r\n\t<input type="text" data-type="search" name="search" id="search-gazetteer" value="" />\r\n\t<div id="gazetteer-results"></div>\r\n</div>\r\n\r\n<div id="import">\r\n\t<!-- <input type="file" id="importFile"> -->\r\n\t<div id="dropZone">\r\n\t\tDrop a KML, GeoJSON or GML file\r\n\t</div>\r\n\t<p id="importMessage"></p>\r\n</div>\r\n';
+__p+=' ></label>\r\n\t</div>\r\n\t<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>\r\n\r\n</div>\r\n\r\n<div id="polygon">\r\n\t<label>Enter coordinates:\r\n\t<textarea id="polygontext" rows="10"></textarea>\r\n\t</label>\r\n\t<p id="polygonTextError"></p>\r\n\t<button data-role="button" data-mini="true"  id="drawpolygon">Draw</button>\r\n</div>\r\n\r\n<div id="gazetteer">\r\n\t<input type="text" data-type="search" name="search" id="search-gazetteer" value="" />\r\n\t<div id="gazetteer-results"></div>\r\n</div>\r\n\r\n<div id="import">\r\n\t<!-- <input type="file" id="importFile"> -->\r\n\t<div id="dropZone">\r\n\t\tDrop a KML, GeoJSON or GML file\r\n\t</div>\r\n\t<p id="importMessage"></p>\r\n</div>\r\n';
 }
 return __p;
 };
@@ -769,15 +769,15 @@ require.register("search/template/datasetsListContent_template", function(export
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='\r\n<ul id="datasetList" data-filter-theme="a" data-role="listview" data-filter="true" data-inset="true">\t\r\n\r\n\t';
+__p+='\r\n<!-- NGEOL-2: Manual filter input in order to filter on name only and not on count -->\r\n<input placeholder="Filter on dataset names..." data-type="search" class="ui-input-text ui-body-a">\r\n<ul id="datasetList" data-role="listview" data-inset="true">\t\r\n\r\n\t';
  _.each(datasets, function(dataset) { 
 __p+='\r\n\t\t<li  id="'+
 ((__t=( dataset.tagFriendlyId ))==null?'':__t)+
 '" data-datasetid="'+
 ((__t=( dataset.datasetId ))==null?'':__t)+
-'" data-mini="true" >\r\n\t\t\t<span class="ui-icon ui-icon-checkbox-off" />'+
+'" data-mini="true" >\r\n\t\t\t<span class="ui-icon ui-icon-checkbox-off" /><span class="name">'+
 ((__t=( dataset.name ))==null?'':__t)+
-'\r\n\t\t\t<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">'+
+'</span>\r\n\t\t\t<span class="ui-li-count ui-btn-up-c ui-btn-corner-all">'+
 ((__t=( dataset.itemsCount ))==null?'':__t)+
 '</span>\t\r\n\t\t</li> \r\n\t';
  }); 
