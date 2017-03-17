@@ -1828,7 +1828,11 @@ var ShopcartManagerView = Backbone.View.extend({
 			var self = this;
 			this.model.getCurrent().destroy()
 				.done(function() {
-					self.model.setCurrent(self.model.at(0));
+					if (self.model.length > 0) {
+						self.model.setCurrent(self.model.at(0));
+					} else {
+						self.model.setCurrent(null);
+					}
 					self.render();
 				})
 				.fail(function(xhr, textStatus, errorThrown) {
@@ -1973,9 +1977,9 @@ var _getValue = function(object, property, defaultValue) {
 		var kv = property.split("="); // Split by "=" to handle arrays
 		if (kv.length == 2) {
 			// Array
-			value = _.find(object, function(item) {
-				return item[kv[0]] == kv[1];
-			});
+			if (object[kv[0]] == kv[1]) {
+				return object;
+			}
 		} else {
 			// Object
 			value = object[property];
@@ -2109,6 +2113,7 @@ var configuration = {
 	 *	@see getMappedProperty for more
 	 */
 	setMappedProperty: function(object, propertyId, value) {
+
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
 		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
 		if (propertyPath) {
@@ -2133,7 +2138,20 @@ var configuration = {
 		var names = path.split('.');
 		var obj = object;
 		for (var i = 0; obj && i < names.length - 1; i++) {
-			obj = _getValue(obj, names[i]);
+			var nameKV = names[i].split('[]');
+			if (nameKV.length === 2) {
+				var obj2 = null;
+				for (var j=0; j<obj[nameKV[0]].length; j++) {
+					var obj2 = obj[nameKV[0]][j];
+					for (var k=i+1; obj2 && k < names.length -1; k++) {
+						obj2 = _getValue(obj2, names[k]);
+					}
+					if (obj2) {i=k; break;}
+				}
+				obj = obj2;
+			} else {
+				obj = _getValue(obj, names[i]);
+			}
 		}
 
 		return _getValue(obj, names[names.length - 1], defaultValue);
@@ -3674,69 +3692,6 @@ module.exports = {
 	}
 
 };
-});
-
-require.register("search/dateTimeWidget", function(exports, require, module) {
-var datetime_template = require('search/template/datetime_template');
-
-/**
- *	Date time widget
- *	@param options
- *		date: Date object to be modified
- *		keyDates: Key dates
- *		onUpdate: On update callback
- */
-var DateTimeWidget = function(options) {
-	var parentElement = $('<div id="dateTimeWidget">');
-
-	var datetime_content = $(datetime_template({
-		date: options.date,
-		keyDates: options.keyDates,
-		dateLabel: "Start date:",
-		timeLabel: "Start time:"
-	}));
-
-	$(datetime_content).appendTo(parentElement);
-
-	parentElement.appendTo('.ui-page-active');
-	parentElement.ngeowidget({
-		title: "Date time",
-		// Reinit the standing order when the widget is closed (FL: is it really needed?)
-		hide: function() {
-			console.log("date",parentElement.find('.dateInput').val());
-			console.log("time",parentElement.find('.timeInput').val());
-
-			var date = parentElement.find('.dateInput').val(); //.datebox("getTheDate").toISODateString()
-			var time = parentElement.find('.timeInput').val(); //.datebox("getTheDate").toISODateString(true).split(" ")[1];
-			var isoDateTime = date+"T"+time+":00.000Z";
-
-			if ( options.onUpdate ) {
-				options.onUpdate(Date.fromISOString(isoDateTime));
-			}
-			parentElement.remove();
-		}
-	});
-
-	/**
-	 *	Open the popup
-	 */
-	this.open = function() {
-
-		//trigger jqm styling
-		parentElement.ngeowidget("show");
-		parentElement.trigger("create");
-	};
-
-	/**
-	 *	For the moment not used since the popup can be 
-	 *	closed by clicking out side its content.
-	 */
-	this.close = function() {
-		parentElement.ngeowidget("hide");
-	};
-}
-
-module.exports = DateTimeWidget;
 });
 
 require.register("search/dsa", function(exports, require, module) {
@@ -5496,13 +5451,9 @@ Date.fromISOString = function(str) {
 };
 
 // Helper function to convert a date to an iso string, only the date part
-Date.prototype.toISODateString = function(withTime) {
-	var strDate = this.getUTCFullYear() + "-" + pad(this.getUTCMonth() + 1, 2) + "-" + pad(this.getUTCDate(), 2);
-		if (withTime)
-			strDate += " " + pad(this.getUTCHours(), 2) + ":" + pad(this.getUTCMinutes(),2) + ":" + pad(this.getUTCSeconds(), 2)
-	return strDate;
+Date.prototype.toISODateString = function() {
+	return this.getUTCFullYear() + "-" + pad(this.getUTCMonth() + 1, 2) + "-" + pad(this.getUTCDate(), 2);
 };
- 
 
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
@@ -10274,7 +10225,7 @@ var Shopcart = Backbone.Model.extend({
     	Load the shopcart content
 	*/
 	loadContent: function() {
-		this.featureCollection.search(this.url() + '/search?format=json');
+		this.featureCollection.search(this.url() + '/items/?format=json');
 	},
 
 
@@ -10292,10 +10243,19 @@ var Shopcart = Backbone.Model.extend({
 			var feature = features[i];
 			var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
 			if (feature.properties && productUrl && isNotPlanned(feature)) {
-				itemsToAdd.push({
-					shopcartId: this.id,
-					product: productUrl
-				});
+				var myFeature = {
+					id: feature.id,
+					type: feature.type,
+					geometry: feature.geometry,
+					bbox: feature.bbox,
+					properties: feature.properties
+				};
+				myFeature.properties.shopcart_id = this.id;
+				myFeature.properties.productUrl = productUrl;
+				itemsToAdd.push(myFeature);
+				// update for webc
+				feature.properties.shopcart_id = this.id;
+				feature.properties.productUrl = productUrl;
 				productUrls.push(productUrl);
 			}
 		}
@@ -10325,7 +10285,7 @@ var Shopcart = Backbone.Model.extend({
 				var itemsAddedResponse = data.shopCartItemAdding;
 				for (var i = 0; i < itemsAddedResponse.length; i++) {
 
-					var indexOfProductUrls = productUrls.indexOf(itemsAddedResponse[i].product);
+					var indexOfProductUrls = productUrls.indexOf(itemsAddedResponse[i].properties.productUrl);
 					if (indexOfProductUrls >= 0 && indexOfProductUrls < features.length) {
 
 						// Clone the feature to be different from the selected one
@@ -10407,8 +10367,8 @@ var Shopcart = Backbone.Model.extend({
 		var self = this;
 		return $.ajax({
 
-			url: this.url() + '/items',
-			type: 'DELETE',
+			url: this.url() + '/items/delete',
+			type: 'POST',
 			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify({
@@ -10570,7 +10530,7 @@ var ShopcartCollection = Backbone.Collection.extend({
 	 *	Set the current shopcart 
 	 */
 	setCurrent: function(current) {
-		if (current != this._current) {
+		if (current != this._current && current !== null) {
 			var prevCurrent = this._current;
 			this._current = current;
 			this.trigger('change:current', this._current, prevCurrent);
