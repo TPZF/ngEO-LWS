@@ -1,5 +1,5 @@
 let express = require('express');
-let logger = require('utils/logger');
+let Logger = require('utils/logger');
 let Configuration = require('../../config');
 let DatabaseService = require('services/databaseService');
 let MongoClient = require('mongodb').MongoClient;
@@ -25,7 +25,7 @@ router.use(function timeLog(req, res, next) {
  */
 router.get('/', (req, res) => {
 
-	logger.debug('ShopCart list is calling');
+	Logger.debug('ShopCart list is calling');
 
 	// define call back function after lsiting shopcarts
 	// send response
@@ -47,7 +47,7 @@ router.get('/', (req, res) => {
  */
 router.get('/:shopcart_id/items', (req,res) => {
 
-	logger.debug('ShopCart search features is calling');
+	Logger.debug('ShopCart search features is calling');
 
 	if (!checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
@@ -99,7 +99,7 @@ router.get('/:shopcart_id/items', (req,res) => {
  */
 router.post('/', (req,res) => {
 
-	logger.debug('ShopCart create is calling');
+	Logger.debug('ShopCart create is calling');
 
 	// check if request is valid
 	if (!checkRequest(req)) {
@@ -141,7 +141,7 @@ router.post('/', (req,res) => {
  */
 router.post('/:shopcart_id/items', (req,res) => {
 
-	logger.debug('ShopCart add feature is calling');
+	Logger.debug('ShopCart add feature is calling');
 
 	if (!checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
@@ -160,7 +160,7 @@ router.post('/:shopcart_id/items', (req,res) => {
 		}
 		maxItems++;
 		if (myInsertFeatures.length === maxItems) {
-			logger.info('All is done !');
+			Logger.debug('All is done !');
 			res.status(201).json({"shopCartItemAdding": myNewInsertFeatures});
 		}
 	};
@@ -189,10 +189,8 @@ router.post('/:shopcart_id/items', (req,res) => {
  */
 router.post('/:shopcart_id/items/delete', (req,res) => {
 
-	logger.debug('ShopCart delete features is calling');
+	Logger.debug('ShopCart delete features is calling');
 
-	console.log(req);
-	
 	if (!checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
 		return;
@@ -206,7 +204,7 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
 	let cbDeleteFeatureInShopCart = function(response) {
 		maxItems++;
 		if (myDeletedFeatures.length === maxItems) {
-			logger.info('All is done !');
+			Logger.info('All is done !');
 			res.status(200).json({"shopCartItemRemoving": myDeletedFeatures});
 		}
 	};
@@ -232,7 +230,7 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
  */
 router.put('/:shopcart_id', (req,res) => {
 
-	logger.debug('ShopCart update is calling');
+	Logger.debug('ShopCart update is calling');
 
 	// check if request is valid
 	if (!checkRequest(req)) {
@@ -283,7 +281,7 @@ router.put('/:shopcart_id', (req,res) => {
  */
 router.delete('/:shopcart_id', (req,res) => {
 
-	logger.debug('ShopCart delete is calling');
+	Logger.debug('ShopCart delete is calling');
 
 	// check if request is valid
 	if (!checkRequest(req)) {
@@ -312,29 +310,36 @@ function checkRequest(request) {
 	// only for put and post methods
 	if ((request.method === 'POST') || (request.method==='PUT')) {
 		if (!request.body.createShopcart) {
+			Logger.debug('no create shopcart action');
 			return false;
 		}
 		if (!request.body.createShopcart.shopcart) {
+			Logger.debug('no shopcart item');
 			return false;
 		}
 		if (!request.body.createShopcart.shopcart.name) {
+			Logger.debug('no name for shopcart');
 			return false;
 		}
 		if (request.body.createShopcart.shopcart.name==='') {
+			Logger.debug('name for shopcart is empty');
 			return false;
 		}
 	}
 	// only for put and delete methods, check param id
 	if (((request.method === 'PUT') || (request.method === 'DELETE')) && !(request.params.shopcart_id)) {
+		Logger.debug('no shopcart id');
 		return false;
 	}
 	// only for put and delete methods, check param id if 12 bytes
 	let patt = new RegExp(/^[a-fA-F0-9]{24}$/);
 	if (((request.method === 'PUT') || (request.method === 'DELETE')) && (!patt.test(request.params.shopcart_id))) {
+		Logger.debug('no valid shopcart id');
 		return false;
 	}
 	// only for put method, check param id in uri and in datas
-	if ((request.method === 'PUT') && (request.body.createShopcart.shopcart.id != request.params.id)) {
+	if ((request.method === 'PUT') && (request.body.createShopcart.shopcart.id != request.params.shopcart_id)) {
+		Logger.debug('no matching shopcart ids');
 		return false;
 	}
 
@@ -345,21 +350,27 @@ function checkRequest(request) {
 function checkRequestFeatures(request) {
 	if (request.method==='POST') {
 		if (!request.params.shopcart_id) {
+			Logger.debug('no shopcart id');
 			return false;
 		}
 		if (!checkParamId(request.params.shopcart_id)) {
+			Logger.debug('no valid shopcart id');
 			return false;
 		}
 		if (request.originalUrl.lastIndexOf('/delete') < 0 && !request.body.shopCartItemAdding) {
+			Logger.debug('no shopCartItemAdding action');
 			return false;
 		}
 		if (request.originalUrl.lastIndexOf('/delete') < 0 && request.body.shopCartItemAdding.constructor !== Array) {
+			Logger.debug('no array in shopCartItemAdding');
 			return false;
 		}
 		if (request.originalUrl.lastIndexOf('/delete') >= 0 && !request.body.shopCartItemRemoving) {
+			Logger.debug('no shopCartItemRemoving action');
 			return false;
 		}
 		if (request.originalUrl.lastIndexOf('/delete') >= 0 && request.body.shopCartItemRemoving.constructor !== Array) {
+			Logger.debug('no array in shopCartItemRemoving');
 			return false;
 		}
 	}

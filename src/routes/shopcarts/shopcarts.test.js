@@ -15,25 +15,50 @@ let assert = require('assert');
 // UNIT test begin
 describe("IF-ngEO-shopcarts --> Unit test", function () {
 
-	// it("should return the dataset population json file for the WEBC and verify some parameter in the json file", function (done) {
-	// 	//stun the response by sending our test configuration file
-	// 	let contents = fs.readFileSync('../test_data/datasets-test-file.json');
-	// 	//parse it
-	// 	let jsonContent = JSON.parse(contents);
+	it("should return shopcarts list", function (done) {
+		//stun the response by sending our test configuration file
+		let contents = fs.readFileSync('../test_data/shopcarts-test-file.json');
+		//parse it
+		let jsonContent = JSON.parse(contents);
 
-	// 	//stub the response in order to send our test file
-	// 	nock("http://localhost:3000")
-	// 		.get('/ngeo/datasetPopulationMatrix')
-	// 		.reply(200, jsonContent);
+		//stub the response in order to send our test file
+		nock("http://localhost:3000")
+			.get('/ngeo/shopcarts')
+			.reply(200, jsonContent);
 
-	// 	server
-	// 		.get('/ngeo/datasetPopulationMatrix')
-	// 		.expect(200)
-	// 		.end(function (err, res) {
-	// 			let confData = JSON.parse(res.text);
-	// 			//to be modified whenever we have another test file
-	// 			assert.equal(confData.datasetpopulationmatrix.criteriaTitles.length, 6);
-	// 			done();
-	// 		});
-	// })
+		server
+			.get('/ngeo/shopcarts')
+			.expect(200)
+			.end(function (err, res) {
+				let resData = JSON.parse(res.text);
+				//assert.equal(resData.shopCartList, true);
+				expect(resData).to.have.property('shopCartList');
+				expect(resData.shopCartList).to.have.length(2);
+				done();
+			});
+	});
+
+	it("should return items in a shopcart", function (done) {
+		//stun the response by sending our test configuration file
+		let contents = fs.readFileSync('../test_data/shopcart-58bee5f4ff0431114c5e1e40-test-file.json');
+		//parse it
+		let jsonContent = JSON.parse(contents);
+
+		//stub the response in order to send our test file
+		nock("http://localhost:3000")
+			.get('/ngeo/shopcarts/58bee5f4ff0431114c5e1e40/items/?format=json&count=50&startIndex=1')
+			.reply(200, jsonContent);
+
+		server
+			.get('/ngeo/shopcarts/58bee5f4ff0431114c5e1e40/items/?format=json&count=50&startIndex=1')
+			.expect(200)
+			.end(function (err, res) {
+				let resData = JSON.parse(res.text);
+				//assert.equal(resData.shopCartList, true);
+				expect(resData).to.have.property('type');
+				expect(resData).to.have.property('features');
+				expect(resData.features).to.have.length(4);
+				done();
+			});
+	})
 });
