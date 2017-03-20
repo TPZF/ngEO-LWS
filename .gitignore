@@ -1,6 +1,10 @@
 # Node
 node_modules
 
+#MongoDB
+.mongodb/data/*
+.mongodb/log/*
+
 # Build directories
 
 # IDE/dev
