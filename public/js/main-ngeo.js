@@ -1999,7 +1999,7 @@ var configuration = {
 	url: '../conf',
 
 	// The base server url
-	baseServerUrl: '/ngeo',
+	baseServerUrl: '/ngeo-qs/ngeo',
 
 	// The server host name
 	serverHostName: window.location.protocol + '//' + window.location.host,
