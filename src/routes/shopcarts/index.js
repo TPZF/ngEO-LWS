@@ -291,12 +291,25 @@ router.delete('/:shopcart_id', (req,res) => {
 
 	let idToDelete = req.params.shopcart_id;
 
+	// define callback function after deleting all features in shopcart
+	let cbDeleteAllFeaturesInShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			res.status(204).send();
+		}
+	};
+
 	// define callback function after deleting shopcart
 	let cbDeleteShopCart = function(response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			res.status(204).send();
+			// delete cascade features link to this shopcart
+			let myQueryDelete = {
+				"properties.shopcart_id": idToDelete
+			};
+			DatabaseService.deleteCascade('Feature', myQueryDelete, cbDeleteAllFeaturesInShopCart);
 		}
 	};
 					

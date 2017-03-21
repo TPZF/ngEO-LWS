@@ -43,6 +43,17 @@ class DataBaseService {
 	}
 
 	/**
+	 * Delete documents
+	 * 
+	 * @function deleteCascade
+	 * @param myCollection - collection in mongodb
+	 * @param myQueryCriterias - json query for find documents to delete
+	 * @param myCallbackFn - callback function 
+	 */
+	deleteCascade(myCollection, myQueryCriterias, myCallbackFn) {
+		this.service.deleteCascade(myCollection, myQueryCriterias, myCallbackFn);
+	}
+	/**
 	 * Update a document
 	 * 
 	 * @function update

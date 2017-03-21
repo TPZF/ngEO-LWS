@@ -103,6 +103,39 @@ class MongoDBService {
 	}
 
 	/**
+	 * Delete documents on cascade
+	 * 
+	 * @function deleteCascade
+	 * @param myCollection - collection in mongodb
+	 * @param myQueryCriterias - json query to fon documents to delete
+	 * @param myCallbackFn - callback function 
+	 */
+	deleteCascade(myCollection, myQueryCriterias, myCallbackFn) {
+
+		let dataBase = null;
+		
+		try {
+			// connect to mongodb
+			MongoClient.connect(this.databaseConnnection.url, (errConnect, db) => {
+				if (errConnect) throw errConnect;
+				Logger.debug('db connection ok');
+				dataBase = db;
+				// deleteMany documents with this criteria
+				dataBase.collection(myCollection).deleteMany(myQueryCriterias, (errDelete, resultDelete) => {
+					if (errDelete) throw errDelete;
+					Logger.debug('deleteMany is done');
+					dataBase.close();
+					return myCallbackFn({"code": 0, "datas": null});
+				});				
+			})
+		}
+		catch (exc) {
+			if (dataBase!==null) dataBase.close();
+			return myCallbackFn({"code": 400, "datas": exc});
+		}
+
+	}
+	/**
 	 * Update a document
 	 * 
 	 * @function update
