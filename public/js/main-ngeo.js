@@ -1993,13 +1993,31 @@ var _getValue = function(object, property, defaultValue) {
 	return defaultValue;
 };
 
+/**
+ * Buil base server url with window.location.pathname
+ */
+var _builBaseServerUrl = function() {
+	// from pathname like /proxy-path/sec/ get /proxy-path
+	// and set baseServerUrl to /proxy-path/ngeo
+	var pathItems = window.location.pathname.split('/');
+	var baseProxyPath = '';
+	if (pathItems.length > 0) {
+		for (var i=0; i<pathItems.length; i++) {
+			if (pathItems[i]!=='sec' && pathItems[i]!=='') {
+				baseProxyPath = baseProxyPath + '/' + pathItems[i];
+			}
+		}
+	}
+	return baseProxyPath + '/ngeo';
+};
+
 var configuration = {
 
 	// The base url to retreive the configurations
 	url: '../conf',
 
 	// The base server url
-	baseServerUrl: '/ngeo',
+	baseServerUrl: _builBaseServerUrl(),
 
 	// The server host name
 	serverHostName: window.location.protocol + '//' + window.location.host,
@@ -3653,19 +3671,6 @@ module.exports = {
 			var sharedUrl = window.location.search.substr(sharedUrlIndex + "sharedUrl=".length);
 			sharedUrl = decodeURIComponent(sharedUrl);
 			window.location = sharedUrl;
-		}
-
-		// from pathname like /proxy-path/sec/ get /proxy-path
-		// and set baseServerUrl to /proxy-path/ngeo
-		var pathItems = window.location.pathname.split('/');
-		var baseProxyPath = '';
-		if (pathItems.length > 0) {
-			for (var i=0; i<pathItems.length; i++) {
-				if (pathItems[i]!=='sec' && pathItems[i]!=='') {
-					baseProxyPath = baseProxyPath + '/' + pathItems[i];
-				}
-			}
-			Configuration.baseServerUrl = baseProxyPath + '/ngeo';
 		}
 
 		/**
