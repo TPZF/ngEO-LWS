@@ -7,6 +7,9 @@ class Configuration {
 			case 'development':
 				Object.assign(this, require('./development'));
 				break;
+			case 'test':
+				Object.assign(this, require('./test'));
+				break;
 			case 'production':
 				Object.assign(this, require('./production'));
 				console.log(this);

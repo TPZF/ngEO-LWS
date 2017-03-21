@@ -29,7 +29,11 @@
     "winston": "^2.3.1"
   },
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha \"src/**/*.test.js\" --reporter spec",
+
+    "pretest": "mongod --config ./.mongodb/conf/mongod.conf --fork",
+    "test": "NODE_ENV=test node ./node_modules/mocha/bin/mocha \"src/**/*.test.js\" --reporter spec",
+    "posttest": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
+    
     "prestart": "mongod --config ./.mongodb/conf/mongod.conf --fork",
     "start": "NODE_ENV=development node src/app.js",
     "stop": "mongo admin --eval 'db.shutdownServer()' > /dev/null",

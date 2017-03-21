@@ -267,7 +267,7 @@ router.put('/:shopcart_id', (req,res) => {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			res.json({"createShopcart" : {"shopcart": response.datas } });
+			res.status(200).json({"createShopcart" : {"shopcart": response.datas } });
 		}
 	};
 					

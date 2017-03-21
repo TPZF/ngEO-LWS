@@ -1,64 +1,146 @@
 /**
- * Unit test file for service web dataset poupulation matrix to populate available dataset
- * It allow to test the REST service and the dataset poupulation matrix to populate available dataset
+ * Unit test file for service web Shopcarts
+ * It allow to test the REST service and the mongodb database
+ * 1 - Create
+ * 2 - List
+ * 3 - Update
+ * 4 - Delete
+ * 5 - List (empty)
  */
-let nock = require('nock');
-let expect = require('chai').expect;
-//used to read the JSON file
-let fs = require("fs");
-let supertest = require("supertest");
-// This agent refers to PORT where program is runninng.
-let server = supertest("http://localhost:3000");
-
+let should = require('should');
 let assert = require('assert');
+let request = require("supertest");
 
-// UNIT test begin
-describe("IF-ngEO-shopcarts --> Unit test", function () {
+let app = require('../../app');
 
-	it("should return shopcarts list", function (done) {
-		//stun the response by sending our test configuration file
-		let contents = fs.readFileSync('../test_data/shopcarts-test-file.json');
-		//parse it
-		let jsonContent = JSON.parse(contents);
+describe('Web services', function() {
 
-		//stub the response in order to send our test file
-		nock("http://localhost:3000")
-			.get('/ngeo/shopcarts')
-			.reply(200, jsonContent);
-
-		server
-			.get('/ngeo/shopcarts')
-			.expect(200)
-			.end(function (err, res) {
-				let resData = JSON.parse(res.text);
-				//assert.equal(resData.shopCartList, true);
-				expect(resData).to.have.property('shopCartList');
-				expect(resData.shopCartList).to.have.length(2);
-				done();
-			});
+	before(function(done) {
+		// if you want to pass parameters before testing
+		done();
 	});
 
-	it("should return items in a shopcart", function (done) {
-		//stun the response by sending our test configuration file
-		let contents = fs.readFileSync('../test_data/shopcart-58bee5f4ff0431114c5e1e40-test-file.json');
-		//parse it
-		let jsonContent = JSON.parse(contents);
+	describe('ShopCarts', function () {
 
-		//stub the response in order to send our test file
-		nock("http://localhost:3000")
-			.get('/ngeo/shopcarts/58bee5f4ff0431114c5e1e40/items/?format=json&count=50&startIndex=1')
-			.reply(200, jsonContent);
+		var idShopCart = 0;
 
-		server
-			.get('/ngeo/shopcarts/58bee5f4ff0431114c5e1e40/items/?format=json&count=50&startIndex=1')
-			.expect(200)
-			.end(function (err, res) {
-				let resData = JSON.parse(res.text);
-				//assert.equal(resData.shopCartList, true);
-				expect(resData).to.have.property('type');
-				expect(resData).to.have.property('features');
-				expect(resData.features).to.have.length(4);
+		// create a shopcart
+		it('/POST shopcarts', function(done) {
+
+			var datas = {
+				createShopcart: {
+					shopcart: {
+						name: 'test 001',
+						isDefault: false,
+						userId: 'anonymous'
+					}
+				}
+			}
+
+			request(app)
+			.post('/ngeo/shopcarts')
+			.send(datas)
+			.expect(201)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				if (err) throw err;
+				should(res.body).be.a.Object();
+				should(res.body).have.property('createShopcart');
+				should(res.body.createShopcart).have.property('shopcart');
+				should(res.body.createShopcart.shopcart).have.property('_id');
+				idShopCart = res.body.createShopcart.shopcart._id;
+				should(res.body.createShopcart.shopcart).have.property('name');
 				done();
 			});
-	})
+
+		});
+
+		// list shopcart
+		it('/GET shopcarts (1 item)', function(done) {
+
+			request(app)
+			.get('/ngeo/shopcarts')
+			.send()
+			.expect(200)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				if (err) throw err;
+				should(res.body).be.a.Object();
+				should(res.body).have.property('shopCartList');
+				should(res.body.shopCartList).be.a.Array();
+				res.body.shopCartList.should.have.length(1);
+				res.body.shopCartList[0]._id.should.be.equal(idShopCart);
+				done();
+			});
+
+		});
+
+		// update a shopcart
+		it('/PUT shopcarts', function(done) {
+
+			var datas = {
+				createShopcart: {
+					shopcart: {
+						_id: idShopCart,
+						id: idShopCart,
+						name: 'test 002',
+						isDefault: false,
+						userId: 'anonymous'
+					}
+				}
+			}
+			
+			request(app)
+			.put('/ngeo/shopcarts/' + idShopCart)
+			.send(datas)
+			.expect(200)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				if (err) throw err;
+				should(res.body).be.a.Object();
+				should(res.body).have.property('createShopcart');
+				should(res.body.createShopcart).have.property('shopcart');
+				should(res.body.createShopcart.shopcart).have.property('_id');
+				should(res.body.createShopcart.shopcart).have.property('name');
+				res.body.createShopcart.shopcart.name.should.be.equal('test 002');
+				done();
+			});
+
+		});
+
+		// delete a shopcart
+		it('/DELETE shopcarts', function(done) {
+
+			request(app)
+			.delete('/ngeo/shopcarts/' + idShopCart)
+			.send()
+			.expect(204)
+			.end(function(err,res) {
+				if (err) throw err;
+				done();
+			});
+
+		});
+
+		// list shopcart
+		it('/GET shopcarts (no item)', function(done) {
+
+			request(app)
+			.get('/ngeo/shopcarts')
+			.send()
+			.expect(200)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				if (err) throw err;
+				should(res.body).be.a.Object();
+				should(res.body).have.property('shopCartList');
+				should(res.body.shopCartList).be.a.Array();
+				res.body.shopCartList.should.have.length(0);
+				done();
+			});
+
+		});
+
+	});
+
 });
