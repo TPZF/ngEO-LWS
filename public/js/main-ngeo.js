@@ -1999,7 +1999,7 @@ var configuration = {
 	url: '../conf',
 
 	// The base server url
-	baseServerUrl: '/ngeo-qs/ngeo',
+	baseServerUrl: '/ngeo',
 
 	// The server host name
 	serverHostName: window.location.protocol + '//' + window.location.host,
@@ -3653,6 +3653,19 @@ module.exports = {
 			var sharedUrl = window.location.search.substr(sharedUrlIndex + "sharedUrl=".length);
 			sharedUrl = decodeURIComponent(sharedUrl);
 			window.location = sharedUrl;
+		}
+
+		// from pathname like /proxy-path/sec/ get /proxy-path
+		// and set baseServerUrl to /proxy-path/ngeo
+		var pathItems = window.location.pathname.split('/');
+		var baseProxyPath = '';
+		if (pathItems.length > 0) {
+			for (var i=0; i<pathItems.length; i++) {
+				if (pathItems[i]!=='sec' && pathItems[i]!=='') {
+					baseProxyPath = baseProxyPath + '/' + pathItems[i];
+				}
+			}
+			Configuration.baseServerUrl = baseProxyPath + '/ngeo';
 		}
 
 		/**
@@ -8280,21 +8293,26 @@ module.exports = {
 
 		// Create the results table view
 		var tableView = new SearchResultsTableView();
-		var isShopcartShared = (window.location.href.indexOf("shopcart") >= 0);
 		panelManager.bottom.addView(tableView);
 		tableView.render();
-		
+
+		// shopcartshared if 'shopcart' is in the url
+		var isShopcartShared = (window.location.href.indexOf("shopcart") >= 0);
+		/*
 		if ( !isShopcartShared ) {
 			// By default table view element is visible
 			// In case of shared shopcart, it's showTable method who takes care about view visibility
-			tableView.$el.css('display', 'block');
+			// tableView.$el.css('display', 'block');
 		}
+		*/
 
 		// In case of shopcart sharing we shouldn"t trigger a click event on search datasets at least first 3 sec 
 		// to ensure the display of shared shopcart content to user
+		/*
 		setTimeout(function() {
 			isShopcartShared = false;
 		}, 3000);
+		*/
 
 		// Create the GanttView (no Gantt view for now)
 		// var ganttView = new GanttView();
@@ -8815,10 +8833,13 @@ var FeatureCollection = function() {
 
 				// Relaunch a search on next page if there is still some results
 				/*if ( data.features.length == self.countPerPage ) {
-					self.fetch(startIndex + self.countPerPage, currentUrl);
+				 	self.fetch(startIndex + self.countPerPage, currentUrl);
 				} else {
-					self.trigger('endLoading');
+				 	self.trigger('endLoading');
 				}*/
+				if (data.features.length < 1) {
+					self.trigger('endLoading', 0);
+				}
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
 			if (jqXHR.status == 0) {
@@ -8847,7 +8868,15 @@ var FeatureCollection = function() {
 			self.features.push(feature);
 		}
 
-		self.trigger('add:features', features, self);
+		if (features.length > 0) {
+			// if lastPage = 0 (empty) => set to 1 (now not empty)
+			if (self.lastPage === 0) {
+				self.lastPage = 1;
+			}
+
+			self.trigger('add:features', features, self);
+		}
+
 	};
 
 	// Remove features from the collection
@@ -10034,6 +10063,7 @@ module.exports =  {
 	 *
 	 * @param element 	The root element of the data-services-area
 	 * @param router 	The data-services-area router
+	 * @param panelManager
 	 */
 	initialize: function(element, router, panelManager) {
 
@@ -10047,7 +10077,11 @@ module.exports =  {
 		
 		// Create the shopcart table view and add it to panel
 		var tableView = new ShopcartTableView();
-		panelManager.bottom.addView( tableView );		
+		panelManager.bottom.addView( tableView );
+		// display and set active by default
+		tableView.$el.css('display', 'block');
+		panelManager.bottom.setActiveView(tableView);
+
 		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
 			tableView.setShopcart(shopcart);
 			// Add shopcartView&tableView as a status to bottom bar
@@ -10087,12 +10121,14 @@ module.exports =  {
 			// Load content is not needed because it is already done by the shopcart widget when setCurrent is done
 			//shareShopcart.loadContent();
 			
+			/*
 			// Show the GUI once loaded
 			shareShopcart.on("add:features", function() {
 				// Toggle the shopcart button to be clicked
 				$("#shopcart").trigger('click');
 				panelManager.bottom.showTable();
 			});
+			*/
 		});
 		
 		// Subscribe add to shopcart
@@ -12723,7 +12759,8 @@ var StatusPanel = Backbone.View.extend({
 		}
 
 		// Show the status
-		status.$el.show();
+		//status.$el.show();
+		//status.views[0].$el.show();
 		$(status.activator).addClass('toggle');
 
 		// Manage active view : keep an active view if there is already one
@@ -12734,6 +12771,9 @@ var StatusPanel = Backbone.View.extend({
 				this.toggleView(status.views[0]);
 				this.activeView = status.views[0];
 			}
+		} else {
+			this.toggleView(status.views[0]);
+			this.activeView = status.views[0];
 		}
 
 		// Activate model for the views
@@ -12786,7 +12826,7 @@ var StatusPanel = Backbone.View.extend({
 		if ( status.model ) {
 
 			this.listenTo(status.model, "startLoading", function() {
-				$(status.activator).find('.nbFeatures').html("Searching..").addClass("pulsating");
+				$(status.activator).find('.nbFeatures').html("Searching...").addClass("pulsating");
 			});
 
 			// Update tiny red circle with number of features on search
@@ -12807,6 +12847,12 @@ var StatusPanel = Backbone.View.extend({
 				// Hide it only on first search, no need for pagination searches
 				if ( fc.currentPage == 0 ) {
 					$(status.activator).find('.nbFeatures').html("No search done");
+				}
+			});
+
+			this.listenTo(status.model, "endLoading", function(nbFeatures) {
+				if (typeof nbFeatures !== undefined && nbFeatures === 0) {
+					$(status.activator).find('.nbFeatures').removeClass("pulsating").html("No data to display");
 				}
 			});
 		}
@@ -12846,6 +12892,10 @@ var StatusPanel = Backbone.View.extend({
 	 */
 	removeStatus: function(activatorId) {
 		$(activatorId).remove();
+	},
+
+	setActiveView(view) {
+		this.activeView = view;
 	}
 
 });
