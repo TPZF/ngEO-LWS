@@ -48,6 +48,8 @@ TODO
 
 Type `npm test`
 
+**Don't start mongod before, test do it for you**
+
 ## Troubleshootings
 
 TODO
