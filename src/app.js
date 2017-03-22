@@ -36,7 +36,7 @@ let app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(methodOverride());
 app.use(errorHandler());
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
