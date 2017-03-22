@@ -48,7 +48,12 @@ TODO
 
 Type `npm test`
 
-**Don't start mongod before, test do it for you**
+**Don't start mongod before, command test does it for you**
+
+## Tests coverage
+
+Type `npm coverage`
+**Don't start mongod before, command coverage does it for you**
 
 ## Troubleshootings
 
