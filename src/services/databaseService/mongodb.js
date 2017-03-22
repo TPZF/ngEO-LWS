@@ -36,6 +36,7 @@ class MongoDBService {
 					if (errFind) throw errFind;
 					Logger.debug('findOne is done.');
 					if (resultFind) {
+						dataBase.close();
 						return myCallbackFn({"code": 400, "datas": 'This document already exists in collection ' + myCollection + '.'});
 					} else {
 						// insert document
@@ -160,6 +161,7 @@ class MongoDBService {
 					if (errFind) throw errFind;
 					Logger.debug('findOne is done');
 					if (resultFind) {
+						dataBase.close();
 						return myCallbackFn({"code": 400, "datas": 'A document with the same attributes already exists in collection ' + myCollection});
 					} else {
 						// update if not found
@@ -211,10 +213,10 @@ class MongoDBService {
 				let myCursor = dataBase.collection(myCollection).find().toArray((errFindAll, resultFindAll) => {
 					if (errFindAll) throw errFindAll;
 					Logger.debug('find all is done');
+					dataBase.close();
 					resultFindAll.forEach((_document, _index) => {
 						_document.id = _document._id;
 					});
-					dataBase.close();
 					return myCallbackFn({"code": 0, "datas": resultFindAll});
 				});
 			});
@@ -259,10 +261,10 @@ class MongoDBService {
 				.toArray((errFindAll, resultFindAll) => {
 					if (errFindAll) throw errFindAll;
 					Logger.debug('find all is done');
+					dataBase.close();
 					resultFindAll.forEach((_document, _index) => {
 						_document.id = _document._id;
 					});
-					dataBase.close();
 					return myCallbackFn({"code": 0, "datas": resultFindAll});
 				});
 			});
@@ -301,6 +303,7 @@ class MongoDBService {
 				.find(myQueryCriterias)
 				.count((errCount, value) => {
 					if (errCount) throw errCount;
+					Logger.debug('count is done');
 					dataBase.close();
 					return myCallbackFn({"code": 0, "datas": value});
 				});
