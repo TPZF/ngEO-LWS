@@ -190,10 +190,6 @@ class MongoDBService {
 		}
 	}
 
-	read(myEntityName, myEntityId) {
-
-	}
-
 	/**
 	 * List documents
 	 * 
@@ -218,8 +214,8 @@ class MongoDBService {
 					resultFindAll.forEach((_document, _index) => {
 						_document.id = _document._id;
 					});
-					return myCallbackFn({"code": 0, "datas": resultFindAll});
 					dataBase.close();
+					return myCallbackFn({"code": 0, "datas": resultFindAll});
 				});
 			});
 		}
@@ -266,8 +262,8 @@ class MongoDBService {
 					resultFindAll.forEach((_document, _index) => {
 						_document.id = _document._id;
 					});
-					return myCallbackFn({"code": 0, "datas": resultFindAll});
 					dataBase.close();
+					return myCallbackFn({"code": 0, "datas": resultFindAll});
 				});
 			});
 		}
@@ -305,6 +301,7 @@ class MongoDBService {
 				.find(myQueryCriterias)
 				.count((errCount, value) => {
 					if (errCount) throw errCount;
+					dataBase.close();
 					return myCallbackFn({"code": 0, "datas": value});
 				});
 			});
