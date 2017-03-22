@@ -35,9 +35,11 @@
     "posttest": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
     
     "prestart": "mongod --config ./.mongodb/conf/mongod.conf --fork",
-    "start": "NODE_ENV=development node src/app.js",
+    "start": "NODE_ENV=production node src/app.js",
+
     "stop": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
     "start-windows": "set NODE_ENV=development&&node src/app.js",
+
     "prestart-dev": "mongod --config ./.mongodb/conf/mongod.conf --fork",
     "start-dev": "NODE_ENV=development ./node_modules/.bin/nodemon src/app.js"
   },
