@@ -53,6 +53,7 @@ Type `npm test`
 ## Tests coverage
 
 Type `npm run coverage`
+
 **Don't start mongod before, command coverage does it for you**
 
 ## Troubleshootings
