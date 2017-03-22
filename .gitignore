@@ -10,5 +10,6 @@ node_modules
 public/**/*.map
 
 # Tests
+coverage/*
 
 # Mine
