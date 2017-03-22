@@ -8519,7 +8519,7 @@ var _onShowFeatures = function(features, fc) {
 	// Add browses for highlighted or selected features
 	for (var i = 0; i < features.length; i++) {
 		var feature = features[i];
-		if ( (fc.isHighlighted(feature) || fc.isSelected(feature)) && feature._browseShown) {
+		if (fc.isHighlighted(feature) || fc.isSelected(feature)) {
 			BrowsesManager.addBrowse(feature);
 		}
 	}
@@ -8553,12 +8553,11 @@ var _onSelectFeatures = function(features, fc) {
 		var feature = features[i];
 		if (fc.isHighlighted(feature)) {
 			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+			//display browse if feature is highlighted
+			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 		} else {
 			fc._footprintLayer.modifyFeaturesStyle([feature], "select");
 		}
-
-		if ( feature._browseShown )
-			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 	}
 	_updateFeaturesWithBrowse(features);
 };
@@ -8612,13 +8611,11 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 			var feature = features[i];
 			if (fc.isSelected(feature)) {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+				BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
 			}
-			if ( feature._browseShown )
-				BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
-
 			//HACK add feature collection since it does not contain the feature collection
 			feature._featureCollection = fc;
 			highlightedFeats.push(feature);
@@ -9044,6 +9041,7 @@ var FeatureCollection = function() {
 			this.highlights = features.slice(0);
 			// Trigger highlight event with features which belongs to "this" feature collection
 			this.trigger("highlightFeatures", _.intersection(features, this.features), prevHighlights, this);
+			this.showBrowses( _.intersection(features, this.features));
 			// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
 			for ( var x in this.children ) {
 				this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
@@ -13781,8 +13779,11 @@ var TableView = Backbone.View.extend({
 		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
 
 		// Layer browse visibility checkbox
-		var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+		/*
+		//var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+		var browseVisibilityClass = rowData.feature._featureCollection.isHighlighted(rowData.feature) ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
 		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
+		*/
 
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
@@ -14017,7 +14018,7 @@ var TableView = Backbone.View.extend({
 			$row.append('<th></th>');
 		}
 		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
-		$row.append('<th class="browseVisibility"></th>');
+		//$row.append('<th class="browseVisibility"></th>');
 
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
