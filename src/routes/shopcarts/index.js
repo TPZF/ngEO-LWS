@@ -334,15 +334,10 @@ function checkRequest(request) {
 			Logger.debug('no name for shopcart');
 			return false;
 		}
-		if (request.body.createShopcart.shopcart.name==='') {
+		if (request.body.createShopcart.shopcart.name.trim()==='') {
 			Logger.debug('name for shopcart is empty');
 			return false;
 		}
-	}
-	// only for put and delete methods, check param id
-	if (((request.method === 'PUT') || (request.method === 'DELETE')) && !(request.params.shopcart_id)) {
-		Logger.debug('no shopcart id');
-		return false;
 	}
 	// only for put and delete methods, check param id if 12 bytes
 	let patt = new RegExp(/^[a-fA-F0-9]{24}$/);

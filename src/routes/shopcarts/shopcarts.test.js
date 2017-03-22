@@ -46,7 +46,6 @@ describe('REST ShopCarts', function() {
 			.expect(201)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('createShopcart');
 				should(res.body.createShopcart).have.property('shopcart');
@@ -67,7 +66,6 @@ describe('REST ShopCarts', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('shopCartList');
 				should(res.body.shopCartList).be.a.Array();
@@ -99,7 +97,6 @@ describe('REST ShopCarts', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('createShopcart');
 				should(res.body.createShopcart).have.property('shopcart');
@@ -117,11 +114,7 @@ describe('REST ShopCarts', function() {
 			request(app)
 			.delete('/ngeo/shopcarts/' + idShopCart)
 			.send()
-			.expect(204)
-			.end(function(err,res) {
-				if (err) throw err;
-				done();
-			});
+			.expect(204, done);
 
 		});
 
@@ -134,7 +127,6 @@ describe('REST ShopCarts', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('shopCartList');
 				should(res.body.shopCartList).be.a.Array();
@@ -181,7 +173,6 @@ describe('REST ShopCarts', function() {
 			.expect(201)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('createShopcart');
 				should(res.body.createShopcart).have.property('shopcart');
@@ -202,7 +193,6 @@ describe('REST ShopCarts', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('type');
 				should(res.body.type).be.equal('FeatureCollection');
@@ -303,7 +293,6 @@ describe('REST ShopCarts', function() {
 			.expect(201)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('shopCartItemAdding');
 				should(res.body.shopCartItemAdding).be.a.Array();
@@ -379,7 +368,6 @@ describe('REST ShopCarts', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('shopCartItemRemoving');
 				should(res.body.shopCartItemRemoving).be.a.Array();
@@ -394,11 +382,7 @@ describe('REST ShopCarts', function() {
 			request(app)
 			.delete('/ngeo/shopcarts/' + idShopCart)
 			.send()
-			.expect(204)
-			.end(function(err,res) {
-				if (err) throw err;
-				done();
-			});
+			.expect(204, done);
 
 		});
 
@@ -411,7 +395,6 @@ describe('REST ShopCarts', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('shopCartList');
 				should(res.body.shopCartList).be.a.Array();
@@ -430,7 +413,6 @@ describe('REST ShopCarts', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				if (err) throw err;
 				should(res.body).be.a.Object();
 				should(res.body).have.property('type');
 				should(res.body.type).be.equal('FeatureCollection');
@@ -438,6 +420,192 @@ describe('REST ShopCarts', function() {
 				should(res.body.features).be.a.Array();
 				res.body.features.should.have.length(0);
 				done();
+			});
+
+		});
+	});
+
+	describe('ShopCarts - Catch errors', function() {
+
+		describe('POST /ngeo/shopcarts - create a shopcart', function() {
+
+			it('No create shopcart action', function(done) {
+
+				var datas = {
+					creatShopcart: {
+						shopcart: {
+							name: 'test 001',
+							isDefault: false,
+							userId: 'anonymous'
+						}
+					}
+				}
+
+				request(app)
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function(err,res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
+
+			});
+
+			it('No shopcart item', function(done) {
+
+				var datas = {
+					createShopcart: {
+						bidule: {
+							name: 'test 001',
+							isDefault: false,
+							userId: 'anonymous'
+						}
+					}
+				}
+
+				request(app)
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function(err,res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
+
+			});
+
+			it('No name for shopcart', function(done) {
+
+				var datas = {
+					createShopcart: {
+						shopcart: {
+							nom: 'test 001',
+							isDefault: false,
+							userId: 'anonymous'
+						}
+					}
+				}
+
+				request(app)
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function(err,res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
+
+			});
+
+			it('Name for shopcart is empty', function(done) {
+
+				var datas = {
+					createShopcart: {
+						shopcart: {
+							name: ' ',
+							isDefault: false,
+							userId: 'anonymous'
+						}
+					}
+				}
+
+				request(app)
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function(err,res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
+
+			});
+
+		});
+
+		describe('PUT /ngeo/shopcarts/:id - update a shopcart', function() {
+
+			it('No shopcart id', function(done) {
+
+				var datas = {
+					createShopcart: {
+						shopcart: {
+							_id: '58c26cd2907fc63264933802',
+							id: '58c26cd2907fc63264933802',
+							name: 'test 002',
+							isDefault: false,
+							userId: 'anonymous'
+						}
+					}
+				}
+				
+				request(app)
+				.put('/ngeo/shopcarts/')
+				.send(datas)
+				.expect(404, done);
+
+			});
+
+			it('No valid shopcart id', function(done) {
+
+				var datas = {
+					createShopcart: {
+						shopcart: {
+							_id: '58c26cd2907fc63264933802',
+							id: '58c26cd2907fc63264933802',
+							name: 'test 002',
+							isDefault: false,
+							userId: 'anonymous'
+						}
+					}
+				}
+				
+				request(app)
+				.put('/ngeo/shopcarts/45f45r78')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function(err,res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
+
+			});
+
+			it('No matching shopcart ids', function(done) {
+
+				var datas = {
+					createShopcart: {
+						shopcart: {
+							_id: '58c26cd2907fc63264933802',
+							id: '58c26cd2907fc63264933802',
+							name: 'test 002',
+							isDefault: false,
+							userId: 'anonymous'
+						}
+					}
+				}
+
+				request(app)
+				.put('/ngeo/shopcarts/58c26cd2907fc63264933800')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function(err,res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
+
 			});
 
 		});
