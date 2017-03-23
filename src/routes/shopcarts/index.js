@@ -1,11 +1,104 @@
 let express = require('express');
 let Logger = require('utils/logger');
+let _ = require('lodash');
+
 let Configuration = require('../../config');
 let DatabaseService = require('services/databaseService');
 let MongoClient = require('mongodb').MongoClient;
 let ObjectId = require('mongodb').ObjectID;
 
 let url = Configuration.database.connection.url;
+
+/**
+ * check request inputs (method, params, values, ...)
+ * @function _checkRequest
+ * @param request
+ * @return boolean
+ * @private
+ */
+function _checkRequest(request) {
+	// only for put and post methods
+	if ((request.method === 'POST') || (request.method==='PUT')) {
+		if (!request.body.createShopcart) {
+			Logger.debug('no create shopcart action');
+			return false;
+		}
+		if (!request.body.createShopcart.shopcart) {
+			Logger.debug('no shopcart item');
+			return false;
+		}
+		if (!request.body.createShopcart.shopcart.name) {
+			Logger.debug('no name for shopcart');
+			return false;
+		}
+		if (request.body.createShopcart.shopcart.name.trim()==='') {
+			Logger.debug('name for shopcart is empty');
+			return false;
+		}
+	}
+	// only for put and delete methods, check param id if 12 bytes
+	if (((request.method === 'PUT') || (request.method === 'DELETE')) && (!_checkParamId(request.params.shopcart_id))) {
+		Logger.debug('no valid shopcart id');
+		return false;
+	}
+	// only for put method, check param id in uri and in datas
+	if ((request.method === 'PUT') && (request.body.createShopcart.shopcart.id != request.params.shopcart_id)) {
+		Logger.debug('no matching shopcart ids');
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * check request inputs (method, params, values, ...) for features on shopcart
+ * @function _checkRequestFeatures
+ * @param request
+ * @return boolean
+ * @private
+ */
+function _checkRequestFeatures(request) {
+	if (request.method==='POST') {
+		if (!request.params.shopcart_id) {
+			Logger.debug('no shopcart id');
+			return false;
+		}
+		if (!_checkParamId(request.params.shopcart_id)) {
+			Logger.debug('no valid shopcart id');
+			return false;
+		}
+		if (request.originalUrl.lastIndexOf('/delete') < 0 && !request.body.shopCartItemAdding) {
+			Logger.debug('no shopCartItemAdding action');
+			return false;
+		}
+		if (request.originalUrl.lastIndexOf('/delete') < 0 && request.body.shopCartItemAdding.constructor !== Array) {
+			Logger.debug('no array in shopCartItemAdding');
+			return false;
+		}
+		if (request.originalUrl.lastIndexOf('/delete') >= 0 && !request.body.shopCartItemRemoving) {
+			Logger.debug('no shopCartItemRemoving action');
+			return false;
+		}
+		if (request.originalUrl.lastIndexOf('/delete') >= 0 && request.body.shopCartItemRemoving.constructor !== Array) {
+			Logger.debug('no array in shopCartItemRemoving');
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * check if param id is a string with 12 bytes
+ * @function _checkParamId
+ * @param sId
+ * @return boolean
+ * @private
+ */
+function _checkParamId(sId) {
+	let patt = new RegExp(/^[a-fA-F0-9]{24}$/);
+	return patt.test(sId);
+}
+
 
 let router = express.Router({
 	mergeParams: true
@@ -49,7 +142,7 @@ router.get('/:shopcart_id/items', (req,res) => {
 
 	Logger.debug('ShopCart search features is calling');
 
-	if (!checkRequestFeatures(req)) {
+	if (!_checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
@@ -102,7 +195,7 @@ router.post('/', (req,res) => {
 	Logger.debug('ShopCart create is calling');
 
 	// check if request is valid
-	if (!checkRequest(req)) {
+	if (!_checkRequest(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
@@ -143,7 +236,7 @@ router.post('/:shopcart_id/items', (req,res) => {
 
 	Logger.debug('ShopCart add feature is calling');
 
-	if (!checkRequestFeatures(req)) {
+	if (!_checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
@@ -191,21 +284,26 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
 
 	Logger.debug('ShopCart delete features is calling');
 
-	if (!checkRequestFeatures(req)) {
+	if (!_checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
 
 	let idShopCart = req.params.shopcart_id;
-
+	let myNewDeletedFeatures = [];
 	let myDeletedFeatures = req.body.shopCartItemRemoving;
 	let maxItems = 0;
 
 	let cbDeleteFeatureInShopCart = function(response) {
+		if (response.code === 0) {
+			myNewDeletedFeatures.push(_.filter(myDeletedFeatures, function(elem) {
+				return elem.id==response.datas;
+			}));
+		}
 		maxItems++;
 		if (myDeletedFeatures.length === maxItems) {
 			Logger.info('All is done !');
-			res.status(200).json({"shopCartItemRemoving": myDeletedFeatures});
+			res.status(200).json({"shopCartItemRemoving": myNewDeletedFeatures});
 		}
 	};
 
@@ -233,7 +331,7 @@ router.put('/:shopcart_id', (req,res) => {
 	Logger.debug('ShopCart update is calling');
 
 	// check if request is valid
-	if (!checkRequest(req)) {
+	if (!_checkRequest(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
@@ -284,7 +382,7 @@ router.delete('/:shopcart_id', (req,res) => {
 	Logger.debug('ShopCart delete is calling');
 
 	// check if request is valid
-	if (!checkRequest(req)) {
+	if (!_checkRequest(req)) {
 		res.status(400).json("Request is not valid");
 		return;
 	}
@@ -318,79 +416,19 @@ router.delete('/:shopcart_id', (req,res) => {
 
 });
 
+/**
+ * About : description of this API
+ *
+ * @function router.get
+ * @param url - /ngeo/shopcarts/about
+ * @param req - empty
+ * @param res - response
+ */
+router.get('/about', (req, res) => {
 
-function checkRequest(request) {
-	// only for put and post methods
-	if ((request.method === 'POST') || (request.method==='PUT')) {
-		if (!request.body.createShopcart) {
-			Logger.debug('no create shopcart action');
-			return false;
-		}
-		if (!request.body.createShopcart.shopcart) {
-			Logger.debug('no shopcart item');
-			return false;
-		}
-		if (!request.body.createShopcart.shopcart.name) {
-			Logger.debug('no name for shopcart');
-			return false;
-		}
-		if (request.body.createShopcart.shopcart.name.trim()==='') {
-			Logger.debug('name for shopcart is empty');
-			return false;
-		}
-	}
-	// only for put and delete methods, check param id if 12 bytes
-	let patt = new RegExp(/^[a-fA-F0-9]{24}$/);
-	if (((request.method === 'PUT') || (request.method === 'DELETE')) && (!patt.test(request.params.shopcart_id))) {
-		Logger.debug('no valid shopcart id');
-		return false;
-	}
-	// only for put method, check param id in uri and in datas
-	if ((request.method === 'PUT') && (request.body.createShopcart.shopcart.id != request.params.shopcart_id)) {
-		Logger.debug('no matching shopcart ids');
-		return false;
-	}
+	Logger.debug('About ShopCart is calling');
 
-	return true;
-}
-
-// check request for features on shopcart
-function checkRequestFeatures(request) {
-	if (request.method==='POST') {
-		if (!request.params.shopcart_id) {
-			Logger.debug('no shopcart id');
-			return false;
-		}
-		if (!checkParamId(request.params.shopcart_id)) {
-			Logger.debug('no valid shopcart id');
-			return false;
-		}
-		if (request.originalUrl.lastIndexOf('/delete') < 0 && !request.body.shopCartItemAdding) {
-			Logger.debug('no shopCartItemAdding action');
-			return false;
-		}
-		if (request.originalUrl.lastIndexOf('/delete') < 0 && request.body.shopCartItemAdding.constructor !== Array) {
-			Logger.debug('no array in shopCartItemAdding');
-			return false;
-		}
-		if (request.originalUrl.lastIndexOf('/delete') >= 0 && !request.body.shopCartItemRemoving) {
-			Logger.debug('no shopCartItemRemoving action');
-			return false;
-		}
-		if (request.originalUrl.lastIndexOf('/delete') >= 0 && request.body.shopCartItemRemoving.constructor !== Array) {
-			Logger.debug('no array in shopCartItemRemoving');
-			return false;
-		}
-	}
-	return true;
-}
-
-// check if param id is a string with 12 bytes
-// @return true or false
-function checkParamId(sId) {
-	let patt = new RegExp(/^[a-fA-F0-9]{24}$/);
-	return patt.test(sId);
-}
-
+	res.status(200).send("Description of shopcarts requests");
+});
 
 module.exports = router;

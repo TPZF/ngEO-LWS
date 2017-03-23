@@ -88,7 +88,7 @@ class MongoDBService {
 					if (resultDelete.deletedCount === 0) {
 						return myCallbackFn({"code": 404, "datas": 'Unable to find this document in collection ' + myCollection});
 					} else if (resultDelete.deletedCount === 1) {
-						return myCallbackFn({"code": 0, "datas": null});
+						return myCallbackFn({"code": 0, "datas": myDocumentId});
 					} else {
 						throw '_id for this document is not unique ! (' + myDocumentId + ')';
 					}
