@@ -104,6 +104,14 @@ class DataBaseService {
 		this.service.list(myCollection, myCallbackFn);
 	}
 
+	/**
+	 * @function checkParamId
+	 * @param {String} myStringId
+	 * @returns {boolean}
+	 */
+	checkParamId(myStringId) {
+		return this.service.checkParamId(myStringId);
+	}
 
 }
 

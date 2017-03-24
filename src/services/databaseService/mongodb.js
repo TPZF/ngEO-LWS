@@ -232,11 +232,11 @@ class MongoDBService {
 	 * Search documents
 	 * 
 	 * @function search
-	 * @param myCollection - collection in mongodb
-	 * @param myQueryCriterias - json query with criterias search
-	 * @param mySkip - skip documents
-	 * @param myLimit - limit number of documents
-	 * @param myCallbackFn - callback function 
+	 * @param {String} myCollection - collection in mongodb
+	 * @param {object} myQueryCriterias - json query with criterias search
+	 * @param {number} mySkip - skip documents
+	 * @param {number} myLimit - limit number of documents
+	 * @param {function} myCallbackFn - callback function 
 	 */
 	search(myCollection, myQueryCriterias, mySkip, myLimit, myCallbackFn) {
 
@@ -280,9 +280,9 @@ class MongoDBService {
 	 * Count documents
 	 * 
 	 * @function count
-	 * @param myCollection - collection in mongodb
-	 * @param myQueryCriterias - json query with criterias search
-	 * @param myCallbackFn - callback function 
+	 * @param {String} myCollection - collection in mongodb
+	 * @param {object} myQueryCriterias - json query with criterias search
+	 * @param {function} myCallbackFn - callback function 
 	 */
 	count(myCollection, myQueryCriterias, myCallbackFn) {
 
@@ -314,6 +314,17 @@ class MongoDBService {
 			return myCallbackFn({"code": 400, "datas": exc});
 		}
 
+	}
+
+	/**
+	 * check if param id is a string with 12 bytes
+	 * @function checkParamId
+	 * @param {String} myStringId
+	 * @returns {boolean}
+	 */
+	checkParamId(myStringId) {
+		let patt = new RegExp(/^[a-fA-F0-9]{24}$/);
+		return patt.test(myStringId);
 	}
 
 }

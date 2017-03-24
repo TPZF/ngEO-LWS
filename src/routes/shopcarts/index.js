@@ -1,13 +1,18 @@
+// CORE
 let express = require('express');
-let Logger = require('utils/logger');
 let _ = require('lodash');
-
-let Configuration = require('../../config');
-let DatabaseService = require('services/databaseService');
 let MongoClient = require('mongodb').MongoClient;
 let ObjectId = require('mongodb').ObjectID;
 
-let url = Configuration.database.connection.url;
+// UTILS
+let Logger = require('utils/logger');
+
+// SERVICES
+let DatabaseService = require('services/databaseService');
+
+// CONST
+let SHOPCARTNAME = 'ShopCart';
+let SHOPCARTFEATURENAME = 'ShopCartFeature';
 
 /**
  * check request inputs (method, params, values, ...)
@@ -19,30 +24,26 @@ let url = Configuration.database.connection.url;
 function _checkRequest(request) {
 	// only for put and post methods
 	if ((request.method === 'POST') || (request.method==='PUT')) {
-		if (!request.body.createShopcart) {
-			Logger.debug('no create shopcart action');
-			return false;
-		}
-		if (!request.body.createShopcart.shopcart) {
+		if (!request.body.shopcart) {
 			Logger.debug('no shopcart item');
 			return false;
 		}
-		if (!request.body.createShopcart.shopcart.name) {
+		if (!request.body.shopcart.name) {
 			Logger.debug('no name for shopcart');
 			return false;
 		}
-		if (request.body.createShopcart.shopcart.name.trim()==='') {
+		if (request.body.shopcart.name.trim()==='') {
 			Logger.debug('name for shopcart is empty');
 			return false;
 		}
 	}
 	// only for put and delete methods, check param id if 12 bytes
-	if (((request.method === 'PUT') || (request.method === 'DELETE')) && (!_checkParamId(request.params.shopcart_id))) {
+	if (((request.method === 'PUT') || (request.method === 'DELETE')) && (!DatabaseService.checkParamId(request.params.shopcart_id))) {
 		Logger.debug('no valid shopcart id');
 		return false;
 	}
 	// only for put method, check param id in uri and in datas
-	if ((request.method === 'PUT') && (request.body.createShopcart.shopcart.id != request.params.shopcart_id)) {
+	if ((request.method === 'PUT') && (request.body.shopcart.id != request.params.shopcart_id)) {
 		Logger.debug('no matching shopcart ids');
 		return false;
 	}
@@ -63,24 +64,24 @@ function _checkRequestFeatures(request) {
 			Logger.debug('no shopcart id');
 			return false;
 		}
-		if (!_checkParamId(request.params.shopcart_id)) {
+		if (!DatabaseService.checkParamId(request.params.shopcart_id)) {
 			Logger.debug('no valid shopcart id');
 			return false;
 		}
-		if (request.originalUrl.lastIndexOf('/delete') < 0 && !request.body.shopCartItemAdding) {
-			Logger.debug('no shopCartItemAdding action');
+		if (request.originalUrl.lastIndexOf('/delete') < 0 && !request.body.shopcartfeatures) {
+			Logger.debug('no shopcartfeatures action');
 			return false;
 		}
-		if (request.originalUrl.lastIndexOf('/delete') < 0 && request.body.shopCartItemAdding.constructor !== Array) {
-			Logger.debug('no array in shopCartItemAdding');
+		if (request.originalUrl.lastIndexOf('/delete') < 0 && request.body.shopcartfeatures.constructor !== Array) {
+			Logger.debug('no array in shopcartfeatures');
 			return false;
 		}
-		if (request.originalUrl.lastIndexOf('/delete') >= 0 && !request.body.shopCartItemRemoving) {
-			Logger.debug('no shopCartItemRemoving action');
+		if (request.originalUrl.lastIndexOf('/delete') >= 0 && !request.body.shopcartfeatures) {
+			Logger.debug('no shopcartfeatures action');
 			return false;
 		}
-		if (request.originalUrl.lastIndexOf('/delete') >= 0 && request.body.shopCartItemRemoving.constructor !== Array) {
-			Logger.debug('no array in shopCartItemRemoving');
+		if (request.originalUrl.lastIndexOf('/delete') >= 0 && request.body.shopcartfeatures.constructor !== Array) {
+			Logger.debug('no array in shopcartfeatures');
 			return false;
 		}
 	}
@@ -88,18 +89,8 @@ function _checkRequestFeatures(request) {
 }
 
 /**
- * check if param id is a string with 12 bytes
- * @function _checkParamId
- * @param sId
- * @return boolean
- * @private
+ * Define router
  */
-function _checkParamId(sId) {
-	let patt = new RegExp(/^[a-fA-F0-9]{24}$/);
-	return patt.test(sId);
-}
-
-
 let router = express.Router({
 	mergeParams: true
 });
@@ -108,6 +99,9 @@ router.use(function timeLog(req, res, next) {
 	next(); // make sure we go to the next routes and don't stop here
 });
 
+// ======================================================================
+//		SHOP CART
+// ======================================================================
 /**
  * List shopcarts
  *
@@ -126,59 +120,15 @@ router.get('/', (req, res) => {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			res.json({"shopCartList" : response.datas});
+			_.map(response.datas, function(item) {
+				delete item._id;
+			});
+			res.json({"shopcarts" : response.datas});
 		}
 	}
 
 	// call list service
-	DatabaseService.list('ShopCart', cbGetList);
-
-});
-
-/**
- * Get features for a shopcart
- */
-router.get('/:shopcart_id/items', (req,res) => {
-
-	Logger.debug('ShopCart search features is calling');
-
-	if (!_checkRequestFeatures(req)) {
-		res.status(400).json("Request is not valid");
-		return;
-	}
-
-	let idShopCart = req.params.shopcart_id;
-	let start = +req.params.startIndex - 1;
-	let count = +req.params.count;
-
-	let allFeatures = [];
-
-	let myQueryCriteria = {
-		"properties.shopcart_id": idShopCart
-	};
-
-	let cbCountFeaturesInShopCart = function(response) {
-		if (response.code !== 0) {
-			res.status(response.code).json(response.datas);
-		} else {
-			res.json({
-				"type": "FeatureCollection",
-				"features" : allFeatures
-			});
-		}
-	};
-
-	let cbSearchFeaturesInShopCart = function(response) {
-		if (response.code !== 0) {
-			res.status(response.code).json(response.datas);
-		} else {
-			allFeatures = response.datas;
-			DatabaseService.count('Feature', myQueryCriteria, cbCountFeaturesInShopCart)
-		}
-	};
-
-	// call search service
-	DatabaseService.search('Feature', myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+	DatabaseService.list(SHOPCARTNAME, cbGetList);
 
 });
 
@@ -187,7 +137,7 @@ router.get('/:shopcart_id/items', (req,res) => {
  *
  * @function router.post
  * @param url - /ngeo/shopcarts/
- * @param req - request {createShopcart:{shocpart:{name,userId,isDefault}}}
+ * @param req - request {shocpart:{name,userId,isDefault}}
  * @param res - response
  */
 router.post('/', (req,res) => {
@@ -206,13 +156,14 @@ router.post('/', (req,res) => {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
+			delete response.datas._id;
 			res.setHeader('Location', '/ngeo/shopcarts/' + response.datas.id)
-			res.status(201).json({"createShopcart" : {"shopcart": response.datas } });
+			res.status(201).json({"shopcart": response.datas });
 		}
 	};
 
 	// define insertedItem
-	let myInsertItem = req.body.createShopcart.shopcart;
+	let myInsertItem = req.body.shopcart;
 
 	// define query to find if item is already in database
 	let myQueryItemAlreadyExists = {
@@ -225,97 +176,8 @@ router.post('/', (req,res) => {
 	};
 
 	// call create service for database
-	DatabaseService.create('ShopCart', myInsertItem, myQueryItemAlreadyExists, cbCreateShopCart);
+	DatabaseService.create(SHOPCARTNAME, myInsertItem, myQueryItemAlreadyExists, cbCreateShopCart);
 	
-});
-
-/**
- * Create features on a shopcart
- */
-router.post('/:shopcart_id/items', (req,res) => {
-
-	Logger.debug('ShopCart add feature is calling');
-
-	if (!_checkRequestFeatures(req)) {
-		res.status(400).json("Request is not valid");
-		return;
-	}
-
-	let idShopCart = req.params.shopcart_id;
-
-	let myInsertFeatures = req.body.shopCartItemAdding;
-	let maxItems = 0;
-	let myNewInsertFeatures = [];
-
-	let cbCreateFeatureInShopCart = function(response) {
-		if (response.code === 0) {
-			myNewInsertFeatures.push(response.datas);
-		}
-		maxItems++;
-		if (myInsertFeatures.length === maxItems) {
-			Logger.debug('All is done !');
-			res.status(201).json({"shopCartItemAdding": myNewInsertFeatures});
-		}
-	};
-
-	if (myInsertFeatures.length == 0) {
-		res.status(200).json({"shopCartItemAdding": []});
-		return;
-	}
-
-	myInsertFeatures.forEach((item, index) => {
-		item.properties.shopcart_id = idShopCart;
-
-		// define query to find if item is already in database
-		let myQueryItemAlreadyExists = {
-			"properties.productUrl": item.properties.productUrl,
-			"properties.shopcart_id": item.properties.shopcart_id
-		};
-
-		DatabaseService.create('Feature', item, myQueryItemAlreadyExists, cbCreateFeatureInShopCart);
-	});
-
-});
-
-/**
- * Delete features for a shopcart
- */
-router.post('/:shopcart_id/items/delete', (req,res) => {
-
-	Logger.debug('ShopCart delete features is calling');
-
-	if (!_checkRequestFeatures(req)) {
-		res.status(400).json("Request is not valid");
-		return;
-	}
-
-	let idShopCart = req.params.shopcart_id;
-	let myNewDeletedFeatures = [];
-	let myDeletedFeatures = req.body.shopCartItemRemoving;
-	let maxItems = 0;
-
-	let cbDeleteFeatureInShopCart = function(response) {
-		if (response.code === 0) {
-			myNewDeletedFeatures.push(_.filter(myDeletedFeatures, function(elem) {
-				return elem.id==response.datas;
-			}));
-		}
-		maxItems++;
-		if (myDeletedFeatures.length === maxItems) {
-			Logger.info('All is done !');
-			res.status(200).json({"shopCartItemRemoving": myNewDeletedFeatures});
-		}
-	};
-
-	if (myDeletedFeatures.length == 0) {
-		res.status(200).json({"shopCartItemRemoving":[]});
-		return;
-	}
-
-	myDeletedFeatures.forEach((item, index) => {
-		DatabaseService.delete('Feature', item.id, cbDeleteFeatureInShopCart);
-	});
-
 });
 
 /**
@@ -323,7 +185,7 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
  *
  * @function router.put
  * @param url - /ngeo/shopcarts/id
- * @param req - request {createShopcart:{shocpart:{_id,id,name,userId,isDefault}}}
+ * @param req - request {shopcart:{_id,id,name,userId,isDefault}}
  * @param res - response
  */
 router.put('/:shopcart_id', (req,res) => {
@@ -337,7 +199,8 @@ router.put('/:shopcart_id', (req,res) => {
 	}
 
 	// updating item
-	let myUpdateItem = req.body.createShopcart.shopcart;
+	let myUpdateItem = req.body.shopcart;
+	myUpdateItem._id = myUpdateItem.id;
 
 	// define query if item already exists
 	let myQueryItemAlreadyExists = {
@@ -365,12 +228,13 @@ router.put('/:shopcart_id', (req,res) => {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			res.status(200).json({"createShopcart" : {"shopcart": response.datas } });
+			delete response.datas._id;
+			res.status(200).json({"shopcart": response.datas });
 		}
 	};
 					
 	// call update service
-	DatabaseService.update('ShopCart', myUpdateItem, myQueryItemAlreadyExists, myQueryUpdate, cbUpdateShopCart);
+	DatabaseService.update(SHOPCARTNAME, myUpdateItem, myQueryItemAlreadyExists, myQueryUpdate, cbUpdateShopCart);
 	
 });
 
@@ -407,12 +271,144 @@ router.delete('/:shopcart_id', (req,res) => {
 			let myQueryDelete = {
 				"properties.shopcart_id": idToDelete
 			};
-			DatabaseService.deleteCascade('Feature', myQueryDelete, cbDeleteAllFeaturesInShopCart);
+			DatabaseService.deleteCascade(SHOPCARTFEATURENAME, myQueryDelete, cbDeleteAllFeaturesInShopCart);
 		}
 	};
 					
 	// call delete service
-	DatabaseService.delete('ShopCart', idToDelete, cbDeleteShopCart);
+	DatabaseService.delete(SHOPCARTNAME, idToDelete, cbDeleteShopCart);
+
+});
+
+// ======================================================================
+//		SHOP CART FEATURES
+// ======================================================================
+/**
+ * Get features for a shopcart
+ */
+router.get('/:shopcart_id/items', (req,res) => {
+
+	Logger.debug('ShopCart search features is calling');
+
+	if (!_checkRequestFeatures(req)) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+
+	let idShopCart = req.params.shopcart_id;
+	let start = +req.params.startIndex - 1;
+	let count = +req.params.count;
+
+	let myQueryCriteria = {
+		"properties.shopcart_id": idShopCart
+	};
+
+	let cbSearchFeaturesInShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			_.map(response.datas, function(item) {
+				delete item._id;
+			});
+			res.json({
+				"type": "FeatureCollection",
+				"features" : response.datas
+			});
+		}
+	};
+
+	// call search service
+	DatabaseService.search(SHOPCARTFEATURENAME, myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+
+});
+
+/**
+ * Create features on a shopcart
+ */
+router.post('/:shopcart_id/items', (req,res) => {
+
+	Logger.debug('ShopCart add feature is calling');
+
+	if (!_checkRequestFeatures(req)) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+
+	let idShopCart = req.params.shopcart_id;
+
+	let myInsertFeatures = req.body.shopcartfeatures;
+	let maxItems = 0;
+	let myNewInsertFeatures = [];
+
+	let cbCreateFeatureInShopCart = function(response) {
+		if (response.code === 0) {
+			delete response.datas._id;
+			myNewInsertFeatures.push(response.datas);
+		}
+		maxItems++;
+		if (myInsertFeatures.length === maxItems) {
+			Logger.debug('All is done !');
+			res.status(201).json({"shopcartfeatures": myNewInsertFeatures});
+		}
+	};
+
+	if (myInsertFeatures.length == 0) {
+		res.status(200).json({"shopcartfeatures": []});
+		return;
+	}
+
+	myInsertFeatures.forEach((item, index) => {
+		item.properties.shopcart_id = idShopCart;
+
+		// define query to find if item is already in database
+		let myQueryItemAlreadyExists = {
+			"properties.productUrl": item.properties.productUrl,
+			"properties.shopcart_id": item.properties.shopcart_id
+		};
+
+		DatabaseService.create(SHOPCARTFEATURENAME, item, myQueryItemAlreadyExists, cbCreateFeatureInShopCart);
+	});
+
+});
+
+/**
+ * Delete features for a shopcart
+ */
+router.post('/:shopcart_id/items/delete', (req,res) => {
+
+	Logger.debug('ShopCart delete features is calling');
+
+	if (!_checkRequestFeatures(req)) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+
+	let idShopCart = req.params.shopcart_id;
+	let myNewDeletedFeatures = [];
+	let myDeletedFeatures = req.body.shopcartfeatures;
+	let maxItems = 0;
+
+	let cbDeleteFeatureInShopCart = function(response) {
+		if (response.code === 0) {
+			myNewDeletedFeatures.push(_.find(myDeletedFeatures, function(elem) {
+				return elem.id==response.datas;
+			}));
+		}
+		maxItems++;
+		if (myDeletedFeatures.length === maxItems) {
+			Logger.info('All is done !');
+			res.status(200).json({"shopcartfeatures": myNewDeletedFeatures});
+		}
+	};
+
+	if (myDeletedFeatures.length == 0) {
+		res.status(200).json({"shopcartfeatures":[]});
+		return;
+	}
+
+	myDeletedFeatures.forEach((item, index) => {
+		DatabaseService.delete(SHOPCARTFEATURENAME, item.id, cbDeleteFeatureInShopCart);
+	});
 
 });
 

@@ -2057,7 +2057,7 @@ var configuration = {
 					}
 				}),
 				$.ajax({
-					url: this.baseServerUrl + "/webClientConfigurationData",
+					url: this.serverHostName + this.baseServerUrl + "/webClientConfigurationData",
 					dataType: 'text',
 					success: function(data) {
 						externalData = data;
@@ -10211,11 +10211,9 @@ var Shopcart = Backbone.Model.extend({
 		Parse response from server
 	 */
 	parse: function(response) {
-
-		if (response.createShopcart && response.createShopcart.shopcart) {
-			return response.createShopcart.shopcart;
+		if (response.shopcart) {
+			return response.shopcart;
 		}
-
 		return response;
 	},
 
@@ -10241,9 +10239,7 @@ var Shopcart = Backbone.Model.extend({
 			params.contentType = 'application/json';
 
 			var createJSON = {
-				createShopcart: {
-					shopcart: this.attributes
-				}
+				shopcart: this.attributes
 			};
 			params.data = JSON.stringify(createJSON);
 		}
@@ -10308,20 +10304,20 @@ var Shopcart = Backbone.Model.extend({
 			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify({
-				'shopCartItemAdding': itemsToAdd
+				'shopcartfeatures': itemsToAdd
 			}),
 
 			success: function(data) {
 
 				// Check the response
-				if (!data.shopCartItemAdding || !_.isArray(data.shopCartItemAdding)) {
+				if (!data.shopcartfeatures || !_.isArray(data.shopcartfeatures)) {
 					Logger.error("Invalid response from server when adding shopcart items.");
 					return;
 				}
 
 				// Process reponse to see which items have been successfully added
 				var featuresAdded = [];
-				var itemsAddedResponse = data.shopCartItemAdding;
+				var itemsAddedResponse = data.shopcartfeatures;
 				for (var i = 0; i < itemsAddedResponse.length; i++) {
 
 					var indexOfProductUrls = productUrls.indexOf(itemsAddedResponse[i].properties.productUrl);
@@ -10411,20 +10407,20 @@ var Shopcart = Backbone.Model.extend({
 			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify({
-				shopCartItemRemoving: itemsToRemove
+				shopcartfeatures: itemsToRemove
 			}),
 
 			success: function(data) {
 
 				// Check the response is correct
-				if (!data.shopCartItemRemoving || !_.isArray(data.shopCartItemRemoving)) {
+				if (!data.shopcartfeatures || !_.isArray(data.shopcartfeatures)) {
 					Logger.error("Invalid response from server when removing shopcart items.");
 					return;
 				}
 
 				var removedItems = [];
-				for (var i = 0; i < data.shopCartItemRemoving.length; i++) {
-					removedItems.push(self._getFeatureFromShopcartItemId(data.shopCartItemRemoving[i].id));
+				for (var i = 0; i < data.shopcartfeatures.length; i++) {
+					removedItems.push(self._getFeatureFromShopcartItemId(data.shopcartfeatures[i].id));
 				}
 
 				// Check if items are correct
@@ -10471,7 +10467,7 @@ var Shopcart = Backbone.Model.extend({
 			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify({
-				'shopCartItemUpdating': itemsToUpdate
+				'shopcartfeatures': itemsToUpdate
 			}),
 			success: function(data) {
 				var response = data.items;
@@ -10550,9 +10546,9 @@ var ShopcartCollection = Backbone.Collection.extend({
 	 * Needed because the server response is not what is expected from Backbone
 	 */
 	parse: function(response) {
-		// Remove the shopCartList attributes from JSON
-		if (response.shopCartList) {
-			return response.shopCartList;
+		// Remove the shopcarts attributes from JSON
+		if (response.shopcarts) {
+			return response.shopcarts;
 		} else {
 			return [];
 		}

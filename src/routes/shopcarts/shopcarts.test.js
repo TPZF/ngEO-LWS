@@ -31,14 +31,12 @@ describe('REST ShopCarts', function() {
 		it('POST /ngeo/shopcarts - Create a shopcart', function(done) {
 
 			var datas = {
-				createShopcart: {
-					shopcart: {
-						name: 'test 001',
-						isDefault: false,
-						userId: 'anonymous'
-					}
+				shopcart: {
+					name: 'test 001',
+					isDefault: false,
+					userId: 'anonymous'
 				}
-			}
+			};
 
 			request(app)
 			.post('/ngeo/shopcarts')
@@ -47,11 +45,10 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('createShopcart');
-				should(res.body.createShopcart).have.property('shopcart');
-				should(res.body.createShopcart.shopcart).have.property('_id');
-				idShopCart = res.body.createShopcart.shopcart._id;
-				should(res.body.createShopcart.shopcart).have.property('name');
+				should(res.body).have.property('shopcart');
+				should(res.body.shopcart).have.property('id');
+				idShopCart = res.body.shopcart.id;
+				should(res.body.shopcart).have.property('name');
 				done();
 			});
 
@@ -67,10 +64,10 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('shopCartList');
-				should(res.body.shopCartList).be.a.Array();
-				res.body.shopCartList.should.have.length(1);
-				res.body.shopCartList[0]._id.should.be.equal(idShopCart);
+				should(res.body).have.property('shopcarts');
+				should(res.body.shopcarts).be.a.Array();
+				res.body.shopcarts.should.have.length(1);
+				res.body.shopcarts[0].id.should.be.equal(idShopCart);
 				done();
 			});
 
@@ -80,16 +77,13 @@ describe('REST ShopCarts', function() {
 		it('PUT /ngeo/shopcarts/:id - update shopcart', function(done) {
 
 			var datas = {
-				createShopcart: {
-					shopcart: {
-						_id: idShopCart,
-						id: idShopCart,
-						name: 'test 002',
-						isDefault: false,
-						userId: 'anonymous'
-					}
+				shopcart: {
+					id: idShopCart,
+					name: 'test 002',
+					isDefault: false,
+					userId: 'anonymous'
 				}
-			}
+			};
 			
 			request(app)
 			.put('/ngeo/shopcarts/' + idShopCart)
@@ -98,11 +92,10 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('createShopcart');
-				should(res.body.createShopcart).have.property('shopcart');
-				should(res.body.createShopcart.shopcart).have.property('_id');
-				should(res.body.createShopcart.shopcart).have.property('name');
-				res.body.createShopcart.shopcart.name.should.be.equal('test 002');
+				should(res.body).have.property('shopcart');
+				should(res.body.shopcart).have.property('id');
+				should(res.body.shopcart).have.property('name');
+				res.body.shopcart.name.should.be.equal('test 002');
 				done();
 			});
 
@@ -128,9 +121,9 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('shopCartList');
-				should(res.body.shopCartList).be.a.Array();
-				res.body.shopCartList.should.have.length(0);
+				should(res.body).have.property('shopcarts');
+				should(res.body.shopcarts).be.a.Array();
+				res.body.shopcarts.should.have.length(0);
 				done();
 			});
 
@@ -158,14 +151,12 @@ describe('REST ShopCarts', function() {
 		it('POST /ngeo/shopcarts - create a shopcart', function(done) {
 
 			var datas = {
-				createShopcart: {
-					shopcart: {
-						name: 'test 001',
-						isDefault: false,
-						userId: 'anonymous'
-					}
+				shopcart: {
+					name: 'test 001',
+					isDefault: false,
+					userId: 'anonymous'
 				}
-			}
+			};
 
 			request(app)
 			.post('/ngeo/shopcarts')
@@ -174,11 +165,10 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('createShopcart');
-				should(res.body.createShopcart).have.property('shopcart');
-				should(res.body.createShopcart.shopcart).have.property('_id');
-				idShopCart = res.body.createShopcart.shopcart._id;
-				should(res.body.createShopcart.shopcart).have.property('name');
+				should(res.body).have.property('shopcart');
+				should(res.body.shopcart).have.property('id');
+				idShopCart = res.body.shopcart.id;
+				should(res.body.shopcart).have.property('name');
 				done();
 			});
 
@@ -208,7 +198,7 @@ describe('REST ShopCarts', function() {
 		it('POST /ngeo/shopcarts/:id/items - add features in a shopcart', function(done) {
 
 			var datas = {
-				shopCartItemAdding: [
+				shopcartfeatures: [
 					{
 						"id": "https://sxcat.eox.at/opensearch/collections/Landsat57Merged/LS07_RKSE_ETM_GTC_1P_20030424T095626_20030424T095654_021404_0194_0021_C776",
 						"type": "Feature",
@@ -294,10 +284,10 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('shopCartItemAdding');
-				should(res.body.shopCartItemAdding).be.a.Array();
-				for (var n=0; n<res.body.shopCartItemAdding.length; n++) {
-					idFeatures.push(res.body.shopCartItemAdding[n].id);
+				should(res.body).have.property('shopcartfeatures');
+				should(res.body.shopcartfeatures).be.a.Array();
+				for (var n=0; n<res.body.shopcartfeatures.length; n++) {
+					idFeatures.push(res.body.shopcartfeatures[n].id);
 				}
 				done();
 			});
@@ -308,7 +298,7 @@ describe('REST ShopCarts', function() {
 		it('POST /ngeo/shopcarts/:id/items/delete - delete 2 features', function(done) {
 
 			var datas = {
-				shopCartItemRemoving: [
+				shopcartfeatures: [
 					{
 						"id": idFeatures[0],
 						"type": "Feature",
@@ -369,8 +359,8 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('shopCartItemRemoving');
-				should(res.body.shopCartItemRemoving).be.a.Array();
+				should(res.body).have.property('shopcartfeatures');
+				should(res.body.shopcartfeatures).be.a.Array();
 				done();
 			});
 
@@ -396,9 +386,9 @@ describe('REST ShopCarts', function() {
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
 				should(res.body).be.a.Object();
-				should(res.body).have.property('shopCartList');
-				should(res.body.shopCartList).be.a.Array();
-				res.body.shopCartList.should.have.length(0);
+				should(res.body).have.property('shopcarts');
+				should(res.body.shopcarts).be.a.Array();
+				res.body.shopcarts.should.have.length(0);
 				done();
 			});
 
@@ -429,42 +419,15 @@ describe('REST ShopCarts', function() {
 
 		describe('POST /ngeo/shopcarts - create a shopcart', function() {
 
-			it('No create shopcart action', function(done) {
-
-				var datas = {
-					creatShopcart: {
-						shopcart: {
-							name: 'test 001',
-							isDefault: false,
-							userId: 'anonymous'
-						}
-					}
-				}
-
-				request(app)
-				.post('/ngeo/shopcarts')
-				.send(datas)
-				.expect(400)
-				.expect('Content-Type', /json/)
-				.end(function(err,res) {
-					should(res.body).be.a.String();
-					should(res.body).be.equal('Request is not valid');
-					done();
-				});
-
-			});
-
 			it('No shopcart item', function(done) {
 
 				var datas = {
-					createShopcart: {
-						bidule: {
-							name: 'test 001',
-							isDefault: false,
-							userId: 'anonymous'
-						}
+					bidule: {
+						name: 'test 001',
+						isDefault: false,
+						userId: 'anonymous'
 					}
-				}
+				};
 
 				request(app)
 				.post('/ngeo/shopcarts')
@@ -482,14 +445,12 @@ describe('REST ShopCarts', function() {
 			it('No name for shopcart', function(done) {
 
 				var datas = {
-					createShopcart: {
-						shopcart: {
-							nom: 'test 001',
-							isDefault: false,
-							userId: 'anonymous'
-						}
+					shopcart: {
+						nom: 'test 001',
+						isDefault: false,
+						userId: 'anonymous'
 					}
-				}
+				};
 
 				request(app)
 				.post('/ngeo/shopcarts')
@@ -507,14 +468,12 @@ describe('REST ShopCarts', function() {
 			it('Name for shopcart is empty', function(done) {
 
 				var datas = {
-					createShopcart: {
-						shopcart: {
-							name: ' ',
-							isDefault: false,
-							userId: 'anonymous'
-						}
+					shopcart: {
+						name: ' ',
+						isDefault: false,
+						userId: 'anonymous'
 					}
-				}
+				};
 
 				request(app)
 				.post('/ngeo/shopcarts')
@@ -533,19 +492,16 @@ describe('REST ShopCarts', function() {
 
 		describe('PUT /ngeo/shopcarts/:id - update a shopcart', function() {
 
-			it('No shopcart id', function(done) {
+			it('No shopcart id in URL', function(done) {
 
 				var datas = {
-					createShopcart: {
-						shopcart: {
-							_id: '58c26cd2907fc63264933802',
-							id: '58c26cd2907fc63264933802',
-							name: 'test 002',
-							isDefault: false,
-							userId: 'anonymous'
-						}
+					shopcart: {
+						id: '58c26cd2907fc63264933802',
+						name: 'test 002',
+						isDefault: false,
+						userId: 'anonymous'
 					}
-				}
+				};
 				
 				request(app)
 				.put('/ngeo/shopcarts/')
@@ -557,16 +513,13 @@ describe('REST ShopCarts', function() {
 			it('No valid shopcart id', function(done) {
 
 				var datas = {
-					createShopcart: {
-						shopcart: {
-							_id: '58c26cd2907fc63264933802',
-							id: '58c26cd2907fc63264933802',
-							name: 'test 002',
-							isDefault: false,
-							userId: 'anonymous'
-						}
+					shopcart: {
+						id: '58c26cd2907fc63264933802',
+						name: 'test 002',
+						isDefault: false,
+						userId: 'anonymous'
 					}
-				}
+				};
 				
 				request(app)
 				.put('/ngeo/shopcarts/45f45r78')
@@ -584,16 +537,13 @@ describe('REST ShopCarts', function() {
 			it('No matching shopcart ids', function(done) {
 
 				var datas = {
-					createShopcart: {
-						shopcart: {
-							_id: '58c26cd2907fc63264933802',
-							id: '58c26cd2907fc63264933802',
-							name: 'test 002',
-							isDefault: false,
-							userId: 'anonymous'
-						}
+					shopcart: {
+						id: '58c26cd2907fc63264933802',
+						name: 'test 002',
+						isDefault: false,
+						userId: 'anonymous'
 					}
-				}
+				};
 
 				request(app)
 				.put('/ngeo/shopcarts/58c26cd2907fc63264933800')
