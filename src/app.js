@@ -29,6 +29,7 @@ let productSearch = require('./routes/productSearch');
 let datasetSearchInfo = require('./routes/datasetSearchInfo');
 let datasetAuthorization = require('./routes/datasetAuthorization');
 let shopcarts = require('./routes/shopcarts');
+let downloadManagers = require('./routes/downloadManagers');
 
 let app = express();
 
@@ -51,6 +52,8 @@ app.use('/ngeo/datasetSearchInfo/:datasetId', datasetSearchInfo);
 app.use('/ngeo/datasetAuthorization', datasetAuthorization);
 // shopcarts
 app.use('/ngeo/shopcarts', shopcarts);
+// DownloadManagers
+app.use('/ngeo/downloadManagers', downloadManagers);
 
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 let host = process.env.HOST || 'localhost';
