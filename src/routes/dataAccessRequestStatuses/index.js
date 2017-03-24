@@ -13,35 +13,6 @@ let DatabaseService = require('services/databaseService');
 // CONST
 let DATA_ACCESS_REQUEST_STATUS_NAME = 'DataAccessRequestStatus';
 
-/**
- * check request inputs (method, params, values, ...)
- * @function _checkRequest
- * @param request
- * @return boolean
- * @private
- */
-function _checkRequest(request) {
-	if (request.method === 'PUT') {
-		if (!request.body.simpledataaccessrequest) {
-			Logger.debug('no simpledataaccessrequest item');
-			return false;
-		}
-		if (!request.body.simpledataaccessrequest.name) {
-			Logger.debug('no name for simpledataaccessrequest');
-			return false;
-		}
-		if (request.body.simpledataaccessrequest.name.trim()==='') {
-			Logger.debug('name for simpledataaccessrequest is empty');
-			return false;
-		}
-		if (!request.body.simpledataaccessrequest.requestStage) {
-			Logger.debug('no requestStage for simpledataaccessrequest');
-			return false;
-		}
-	}
-	return true;
-}
-
 let router = express.Router({
 	mergeParams: true
 });
