@@ -8,7 +8,7 @@ let request = require("supertest");
 
 let app = require('../../app');
 
-describe('REST DownloadManagers', function() {
+describe('DownloadManagers', function() {
 
 	before(function(done) {
 		// if you want to pass parameters before testing
@@ -22,7 +22,7 @@ describe('REST DownloadManagers', function() {
 	 * 3 - Delete a downloadManager /DELETE
 	 * 4 - List (empty)
 	 */
-	describe('DownloadManagers', function () {
+	describe('Full story (Create, List, Delete)', function () {
 
 		var idDownloadManager = 0;
 

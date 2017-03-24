@@ -8,7 +8,7 @@ let request = require("supertest");
 
 let app = require('../../app');
 
-describe('REST ShopCarts', function() {
+describe('ShopCarts', function() {
 
 	before(function(done) {
 		// if you want to pass parameters before testing
@@ -23,7 +23,7 @@ describe('REST ShopCarts', function() {
 	 * 4 - Delete a shopcart /DELETE
 	 * 5 - List (empty)
 	 */
-	describe('ShopCarts', function () {
+	describe('Full story (Create, List, Update, Delete)', function () {
 
 		var idShopCart = 0;
 
@@ -130,7 +130,35 @@ describe('REST ShopCarts', function() {
 		});
 
 	});
+});
 
+describe('ShopCartFeatures', function() {
+
+	var idShopCart = 0;
+	var idFeatures = [];
+
+	before(function(done) {
+		// if you want to pass parameters before testing
+		// create a shopcart
+		var datas = {
+			shopcart: {
+				name: 'test 001',
+				isDefault: false,
+				userId: 'anonymous'
+			}
+		};
+
+		request(app)
+		.post('/ngeo/shopcarts')
+		.send(datas)
+		.expect(201)
+		.expect('Content-Type', /json/)
+		.end(function(err,res) {
+			idShopCart = res.body.shopcart.id;
+			done();
+		});
+
+	});
 
 	/*
 	 * Steps on this test
@@ -142,37 +170,8 @@ describe('REST ShopCarts', function() {
 	 * 6 - List shopcarts (empty)
 	 * 7 - List shopcart features (empty)
 	 */
-	describe('Features in ShopCart', function () {
+	describe('Full story (List, Add and Delete)', function () {
 
-		var idShopCart = 0;
-		var idFeatures = [];
-
-		// create a shopcart
-		it('POST /ngeo/shopcarts - create a shopcart', function(done) {
-
-			var datas = {
-				shopcart: {
-					name: 'test 001',
-					isDefault: false,
-					userId: 'anonymous'
-				}
-			};
-
-			request(app)
-			.post('/ngeo/shopcarts')
-			.send(datas)
-			.expect(201)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcart');
-				should(res.body.shopcart).have.property('id');
-				idShopCart = res.body.shopcart.id;
-				should(res.body.shopcart).have.property('name');
-				done();
-			});
-
-		});
 
 		// list shopcart features (empty)
 		it('GET /ngeo/shopcarts/:id/items - list features in a shopcart', function(done) {
@@ -365,6 +364,9 @@ describe('REST ShopCarts', function() {
 			});
 
 		});
+	});
+
+	describe('Delete shopcart... what about features ?', function() {
 
 		// delete a shopcart
 		it('DELETE /ngeo/shopcarts/:id - delete shopcart', function(done) {
@@ -373,24 +375,6 @@ describe('REST ShopCarts', function() {
 			.delete('/ngeo/shopcarts/' + idShopCart)
 			.send()
 			.expect(204, done);
-
-		});
-
-		// list shopcart
-		it('GET /ngeo/shopcarts - list shopcarts (no item)', function(done) {
-
-			request(app)
-			.get('/ngeo/shopcarts')
-			.send()
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcarts');
-				should(res.body.shopcarts).be.a.Array();
-				res.body.shopcarts.should.have.length(0);
-				done();
-			});
 
 		});
 
@@ -415,7 +399,7 @@ describe('REST ShopCarts', function() {
 		});
 	});
 
-	describe('ShopCarts - Catch errors', function() {
+	describe('Errors stories', function() {
 
 		describe('POST /ngeo/shopcarts - create a shopcart', function() {
 
