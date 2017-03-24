@@ -3,7 +3,7 @@ let Logger = require('utils/logger'),
 	ObjectId = require('mongodb').ObjectID;
 
 /**
- * Browse service adding the wms/wmts information to products
+ * 
  */
 class MongoDBService {
 

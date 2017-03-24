@@ -131,7 +131,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 
 	initialize: function() {
 		// The base url to retrieve the DARs'statuses list or submit DAR status changes
-		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatus';
+		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatuses';
 		this.listenTo(this, "error", this.onError);
 	},
 
@@ -2431,7 +2431,7 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
   */
  var SimpleDataAccessRequest = {
 
-   url: Configuration.baseServerUrl + "/simpleDataAccessRequest",
+   url: Configuration.baseServerUrl + "/simpleDataAccessRequests",
 
    name: "download",
 
@@ -2456,7 +2456,8 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
 	 *	Get dataset included in request
 	 */
 	getDataType: function() {
-		var datasetNameRegExp = new RegExp(/catalogue\/(\w+)\//);
+		//var datasetNameRegExp = new RegExp(/catalogue\/(\w+)\//);
+    var datasetNameRegExp = new RegExp(/products\/(\w+)\//);
 		var match = datasetNameRegExp.exec(this.productURLs[0]); // Take catalogue of first product for now
 		if ( match ) {
 			return match[1];
@@ -2472,7 +2473,7 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
 
      // The JSON to send to the server
      if (this.hostedProcessId) {
-       this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequest";
+       this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequests";
        var params = [];
        // Add hosted processing parameters
        for (var i = 0; i < this.productURLs.length; i++) {
@@ -2493,10 +2494,10 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
          }
        };
      } else {
-       this.url = Configuration.baseServerUrl + "/simpleDataAccessRequest";
+       this.url = Configuration.baseServerUrl + "/simpleDataAccessRequests";
 
        var request = {
-         SimpleDataAccessRequest: {
+         simpledataaccessrequest: {
            requestStage: this.requestStage,
            downloadLocation: this.downloadLocation,
            productURLs: [],
@@ -2505,12 +2506,12 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
        };
        // Add create bulk order if needed
        if (this.createBulkOrder) {
-         request.SimpleDataAccessRequest.createBulkOrder = true;
+         request.simpledataaccessrequest.createBulkOrder = true;
        }
 
        // Transform product URLs
        for (var i = 0; i < this.productURLs.length; i++) {
-         request.SimpleDataAccessRequest.productURLs.push({
+         request.simpledataaccessrequest.productURLs.push({
            productURL: this.productURLs[i]
          });
        }
