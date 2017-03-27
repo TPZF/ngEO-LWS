@@ -308,6 +308,8 @@ router.get('/:shopcart_id/items', (req,res) => {
 			res.status(response.code).json(response.datas);
 		} else {
 			_.map(response.datas, function(item) {
+				item.properties.shopcartItemId = item._id;
+				item.id = item._id;
 				delete item._id;
 			});
 			res.json({
@@ -359,7 +361,6 @@ router.post('/:shopcart_id/items', (req,res) => {
 
 	myInsertFeatures.forEach((item, index) => {
 		item.properties.shopcart_id = idShopCart;
-
 		// define query to find if item is already in database
 		let myQueryItemAlreadyExists = {
 			"properties.productUrl": item.properties.productUrl,
