@@ -9662,7 +9662,8 @@ var SearchResultsTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products
-		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
+		//do not display this button -> this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
+		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>');
 		this.downloadOptionsButton.button();
 		this.downloadOptionsButton.button('disable');
 
@@ -10718,9 +10719,10 @@ var ShopcartTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products
-		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
+		//do not display this button -> this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
+		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>');
 		this.downloadOptionsButton.button();
-		this.downloadOptionsButton.button('disable');
+		this.downloadOptionsButton.button('disable').hide();
 
 		this.downloadOptionsButton.click(function() {
 			var datasetId = self.model.getSelectionDatasetIds()[0]; // We are sure that there is only one dataset selected

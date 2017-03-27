@@ -757,7 +757,7 @@ __p+='<div class="sc-dataset-container" data-role="collapsible" data-content-the
 ((__t=( theme ))==null?'':__t)+
 '" data-mini="true">\n    <h3>'+
 ((__t=( name ))==null?'':__t)+
-'</h3>\n    <div>\n        <!--<div id="sc-advanced-container" data-role="collapsible" data-inset="false" data-mini="true">-->\n            <div class="optionsLabel">Advanced Criteria</div>\n            <div id="searchCriteria"></div>\n        <!-- </div> -->\n\n        <!-- <div id="sc-do-container" data-role="collapsible" data-inset="false" data-mini="true"> -->\n            <div class="optionsLabel">Download Options</div>\n            <div id="downloadOptions"></div>\n        <!-- </div> -->\n\n        <!-- NGEO-1849: hide open search url -->\n        <!-- <div id="osUrl" data-role="collapsible" data-inset="false" data-mini="true">\n            <h3>OpenSearch URL</h3>\n            <div>\n                <textarea data-role="none" class="ui-input-text ui-body-'+
+'</h3>\n    <div>\n        <!--<div id="sc-advanced-container" data-role="collapsible" data-inset="false" data-mini="true">-->\n            <div class="optionsLabel">Advanced Criteria</div>\n            <div id="searchCriteria"></div>\n        <!-- </div> -->\n\n        <!-- <div id="sc-do-container" data-role="collapsible" data-inset="false" data-mini="true"> -->\n            <div class="optionsLabel" style="display:none">Download Options</div>\n            <div id="downloadOptions" style="display:none"></div>\n        <!-- </div> -->\n\n        <!-- NGEO-1849: hide open search url -->\n        <!-- <div id="osUrl" data-role="collapsible" data-inset="false" data-mini="true">\n            <h3>OpenSearch URL</h3>\n            <div>\n                <textarea data-role="none" class="ui-input-text ui-body-'+
 ((__t=( theme ))==null?'':__t)+
 ' ui-corner-all ui-shadow-inset" id="osUrlText" cols="80" rows="5"></textarea>\n            </div>\n        </div> -->\n    </div>\n\n</div>';
 }
@@ -791,7 +791,7 @@ require.register("search/template/datasetsSelectionContent_template", function(e
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='\r\n<div id="ds-content">\r\n\r\n\t<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false" data-help="Filter the dataset list using various criterias.">\r\n\t   <h3>Keywords</h3>\r\n\t\t<div id="filters" class="ui-grid-a">\r\n\r\n\t\t\t';
+__p+='\r\n<div id="ds-content">\r\n\r\n\t<!--div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false" data-help="Filter the dataset list using various criterias.">\r\n\t   <h3>Keywords</h3>\r\n\t\t<div id="filters" class="ui-grid-a">\r\n\r\n\t\t\t';
  _.each( get("criterias"), function(criteria, i) { 
 __p+='\t\t\r\n\r\n\t\t\t\t';
  if (i%2 == 0) { 
@@ -805,7 +805,7 @@ __p+='\r\n\r\n\t\t\t\t<select id="criteria_'+
 ((__t=( i))==null?'':__t)+
 '" data-mini="true">\r\n\t\t\t\t</select>\r\n\t\t\t\t\t\r\n\t\t\t\t</div>\r\n\t\t\t';
  }); 
-__p+='\r\n\t\t</div>\r\n\t</div>\r\n\r\n\t<div id="datasetListContainer">\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div data-role="popup"  data-theme="e" id="dsPopupDescription">\r\n</div>\r\n\r\n<!-- Range isn\'t valid popup -->\r\n<div id="dateWarningPopup" data-theme="e" data-role="popup">\r\n\t<div data-role="header" class="ui-corner-top ui-content">\r\n\t\t<h1 class="ui-title">Warning</h1>\r\n\t</div>\r\n\t<div data-role="content" class="ui-corner-bottom ui-content">\r\n\t\tSearch date range is not correct\r\n\t</div>\r\n</div>\r\n\r\n\r\n<!-- The footer for buttons -->\r\n<div id="ds-footer">\r\n\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' id="dsSearch" >Search</button>\r\n</div>\r\n';
+__p+='\r\n\t\t</div>\r\n\t</div-->\r\n\r\n\t<div id="datasetListContainer">\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div data-role="popup"  data-theme="e" id="dsPopupDescription">\r\n</div>\r\n\r\n<!-- Range isn\'t valid popup -->\r\n<div id="dateWarningPopup" data-theme="e" data-role="popup">\r\n\t<div data-role="header" class="ui-corner-top ui-content">\r\n\t\t<h1 class="ui-title">Warning</h1>\r\n\t</div>\r\n\t<div data-role="content" class="ui-corner-bottom ui-content">\r\n\t\tSearch date range is not correct\r\n\t</div>\r\n</div>\r\n\r\n\r\n<!-- The footer for buttons -->\r\n<div id="ds-footer">\r\n\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' id="dsSearch" >Search</button>\r\n</div>\r\n';
 }
 return __p;
 };
