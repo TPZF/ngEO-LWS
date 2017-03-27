@@ -2424,6 +2424,7 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
  var Configuration = require('configuration');
  var SearchResults = require('searchResults/model/searchResults');
  var DataAccessRequest = require('dataAccess/model/dataAccessRequest');
+ var ShopCartCollection = require('shopcart/model/shopcartCollection');
 
  /**
   * This module deals with the creation and submission of simple data access requests 
@@ -2441,6 +2442,8 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
 
    totalSize: 0,
 
+   dataType: null,
+
    /**
     * Reset specific parameters of a simple DAR
     */
@@ -2456,14 +2459,7 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
 	 *	Get dataset included in request
 	 */
 	getDataType: function() {
-		//var datasetNameRegExp = new RegExp(/catalogue\/(\w+)\//);
-    var datasetNameRegExp = new RegExp(/products\/(\w+)\//);
-		var match = datasetNameRegExp.exec(this.productURLs[0]); // Take catalogue of first product for now
-		if ( match ) {
-			return match[1];
-		}
-		console.warn("Can't extract datatype from product url " + this.productURLs[0]);
-		return null;
+    return this.dataType;
 	},
 
    /**
@@ -2552,6 +2548,14 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
    setProducts: function(products) {
      this.productURLs = SearchResults.getProductUrls(products);
      this.rejectedProductsNB = products.length - this.productURLs.length;
+     // dataType = name of shopcart or catalog
+     if (_.find(products, function(product) {
+       return (typeof product.properties.shopcart_id !== 'undefined');
+      })) {
+      this.dataType = ShopCartCollection._current.get('name');
+     } else {
+       this.dataType = products[0].properties.originDatasetId;
+     }
    },
 
    /**
@@ -9239,13 +9243,7 @@ var FeatureCollection = function() {
 		}
 
 		// Otherwise extract the id from the feature
-		var re = /catalogue\/(\w+)\/search/;
-		var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-		var match = re.exec(productUrl);
-		if (match) {
-			return match[1];
-		}
-		return null;
+		return Configuration.getMappedProperty(feature, "originDatasetId", null);
 	};
 
 	/**
@@ -10670,8 +10668,11 @@ var ShopcartTableView = TableView.extend({
 		// Add possibility to update download options only
 		// if selected products are coming from the same dataset
 		if ( selectedDatasetIds.length == 1 ) {
+			/*
+			Inactive downloadOptions for the moment
 			this.downloadOptionsButton.attr("title", "Modify download options of selected products");
 			this.downloadOptionsButton.button('enable');
+			*/
 		} else {
 			this.downloadOptionsButton.attr("title", "You should select products coming from the same dataset");
 			this.downloadOptionsButton.button('disable');
