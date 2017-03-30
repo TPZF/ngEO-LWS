@@ -83,7 +83,6 @@ router.put('/', (req,res) => {
 	_.each(req.body.simpledataaccessrequest.productURLs, function(product) {
 		product.productStatus = 'NOT_STARTED';
 		product.percentageCompleted = '0';
-		product.expectedSize = '5000';
 		response.dataAccessRequestStatus.productStatuses.push(product);
 	});
 
