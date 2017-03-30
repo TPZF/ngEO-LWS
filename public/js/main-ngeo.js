@@ -2440,6 +2440,8 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
 
    productURLs: [],
 
+   productSizes: [],
+
    totalSize: 0,
 
    dataType: null,
@@ -2507,8 +2509,17 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
 
        // Transform product URLs
        for (var i = 0; i < this.productURLs.length; i++) {
+         var self = this;
+         var _findExpectedSize = _.find(this.productSizes, function(item) {
+           return item.productURL === self.productURLs[i];
+         });
+         var _expectedSize = "0";
+         if (_findExpectedSize) {
+           _expectedSize = _findExpectedSize.productSize;
+         }
          request.simpledataaccessrequest.productURLs.push({
-           productURL: this.productURLs[i]
+           productURL: this.productURLs[i],
+           expectedSize: _expectedSize
          });
        }
      }
@@ -2547,6 +2558,7 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
     */
    setProducts: function(products) {
      this.productURLs = SearchResults.getProductUrls(products);
+     this.productSizes = SearchResults.getProductSizes(products);
      this.rejectedProductsNB = products.length - this.productURLs.length;
      // dataType = name of shopcart or catalog
      if (_.find(products, function(product) {
@@ -2607,9 +2619,14 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
      // Calculate the total download estimated size  
      this.totalSize = 0;
      var productStatuses = dataAccessRequestStatus.productStatuses;
+     var aPromises = [];
      for (var i = 0; i < productStatuses.length; i++) {
-       if (productStatuses[i] && productStatuses[i].expectedSize) {
-         this.totalSize += parseInt(productStatuses[i].expectedSize);
+       var _expectedSize = _.find(this.productSizes, function(item) {
+         return item.productURL === productStatuses[i].productURL;
+       }).productSize;
+       if (_expectedSize) {
+          productStatuses[i].expectedSize = _expectedSize;
+          this.totalSize += parseInt(_expectedSize);
        }
      }
    }
@@ -9348,6 +9365,21 @@ var SearchResults = {
 		return productUrls;
 	},
 
+	/**
+	 * Get the product sizes of the features
+	 */
+	getProductSizes: function(features) {
+		var productSizes = [];
+		for (var i = 0; i < features.length; i++) {
+			var f = features[i];
+			var productUrl = Configuration.getMappedProperty(f, "productUrl", null);
+			var productSize = Configuration.getMappedProperty(f, "productSize", null);
+			if (productUrl && productSize) {
+				productSizes.push({productURL: productUrl, productSize: productSize});
+			}
+		}
+		return productSizes;
+	},
 	/**
 	 * The direct download uses the
 	 *   OLD FORMAT: eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl
