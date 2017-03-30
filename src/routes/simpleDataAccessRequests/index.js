@@ -96,6 +96,7 @@ router.put('/', (req,res) => {
 
 	// confirmation
 	if (req.body.simpledataaccessrequest.requestStage === 'confirmation') {
+		response.dataAccessRequestStatus.name = req.body.simpledataaccessrequest.name;
 		response.dataAccessRequestStatus.status=0;
 		// define call back function after creating
 		// send response
