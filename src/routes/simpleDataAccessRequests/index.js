@@ -71,12 +71,13 @@ router.put('/', (req,res) => {
 
 	let response = {
 		dataAccessRequestStatus: {
-	        "ID": "NO_ID-validation_stage",
-	        "type": "Simple Data Access Request",
-	        "status": 4,
-	        "message": "Data Access Request validated",
-	        "dlManagerId": req.body.simpledataaccessrequest.downloadLocation.DownloadManagerId,
-	        "productStatuses": []
+	        ID: "NO_ID-validation_stage",
+	        type: "Simple Data Access Request",
+	        status: 4,
+	        message: "Data Access Request validated",
+	        dlManagerId: req.body.simpledataaccessrequest.downloadLocation.DownloadManagerId,
+			downloadDirectory: req.body.simpledataaccessrequest.downloadLocation.DownloadDirectory,
+	        productStatuses: []
 	    }
 	};
 
