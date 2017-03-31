@@ -130,6 +130,150 @@ describe('ShopCarts', function() {
 		});
 
 	});
+
+	describe('Errors for POST /ngeo/shopcarts - create a shopcart', function() {
+
+		it('No shopcart item', function(done) {
+
+			var datas = {
+				bidule: {
+					name: 'test 001',
+					isDefault: false,
+					userId: 'anonymous'
+				}
+			};
+
+			request(app)
+			.post('/ngeo/shopcarts')
+			.send(datas)
+			.expect(400)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				should(res.body).be.a.String();
+				should(res.body).be.equal('Request is not valid');
+				done();
+			});
+
+		});
+
+		it('No name for shopcart', function(done) {
+
+			var datas = {
+				shopcart: {
+					nom: 'test 001',
+					isDefault: false,
+					userId: 'anonymous'
+				}
+			};
+
+			request(app)
+			.post('/ngeo/shopcarts')
+			.send(datas)
+			.expect(400)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				should(res.body).be.a.String();
+				should(res.body).be.equal('Request is not valid');
+				done();
+			});
+
+		});
+
+		it('Name for shopcart is empty', function(done) {
+
+			var datas = {
+				shopcart: {
+					name: ' ',
+					isDefault: false,
+					userId: 'anonymous'
+				}
+			};
+
+			request(app)
+			.post('/ngeo/shopcarts')
+			.send(datas)
+			.expect(400)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				should(res.body).be.a.String();
+				should(res.body).be.equal('Request is not valid');
+				done();
+			});
+
+		});
+
+	});
+
+	describe('Errors for PUT /ngeo/shopcarts/:id - update a shopcart', function() {
+
+		it('No shopcart id in URL', function(done) {
+
+			var datas = {
+				shopcart: {
+					id: '58c26cd2907fc63264933802',
+					name: 'test 002',
+					isDefault: false,
+					userId: 'anonymous'
+				}
+			};
+			
+			request(app)
+			.put('/ngeo/shopcarts/')
+			.send(datas)
+			.expect(404, done);
+
+		});
+
+		it('No valid shopcart id', function(done) {
+
+			var datas = {
+				shopcart: {
+					id: '58c26cd2907fc63264933802',
+					name: 'test 002',
+					isDefault: false,
+					userId: 'anonymous'
+				}
+			};
+			
+			request(app)
+			.put('/ngeo/shopcarts/45f45r78')
+			.send(datas)
+			.expect(400)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				should(res.body).be.a.String();
+				should(res.body).be.equal('Request is not valid');
+				done();
+			});
+
+		});
+
+		it('No matching shopcart ids', function(done) {
+
+			var datas = {
+				shopcart: {
+					id: '58c26cd2907fc63264933802',
+					name: 'test 002',
+					isDefault: false,
+					userId: 'anonymous'
+				}
+			};
+
+			request(app)
+			.put('/ngeo/shopcarts/58c26cd2907fc63264933800')
+			.send(datas)
+			.expect(400)
+			.expect('Content-Type', /json/)
+			.end(function(err,res) {
+				should(res.body).be.a.String();
+				should(res.body).be.equal('Request is not valid');
+				done();
+			});
+
+		});
+
+	});
+
 });
 
 describe('ShopCartFeatures', function() {
@@ -378,168 +522,18 @@ describe('ShopCartFeatures', function() {
 
 		});
 
-		// list shopcart features (empty)
-		it('GET /ngeo/shopcarts/:id/items - list features in a shopcart', function(done) {
+		// list shopcart features (not found)
+		it('GET /ngeo/shopcarts/:id/items - list features in a shopcart: not found', function(done) {
 
 			request(app)
 			.get('/ngeo/shopcarts/' + idShopCart + '/items')
 			.send()
-			.expect(200)
+			.expect(404)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('type');
-				should(res.body.type).be.equal('FeatureCollection');
-				should(res.body).have.property('features');
-				should(res.body.features).be.a.Array();
-				res.body.features.should.have.length(0);
+				should(res.body).be.a.String();
+				should(res.body).be.equal('Not found');
 				done();
-			});
-
-		});
-	});
-
-	describe('Errors stories', function() {
-
-		describe('POST /ngeo/shopcarts - create a shopcart', function() {
-
-			it('No shopcart item', function(done) {
-
-				var datas = {
-					bidule: {
-						name: 'test 001',
-						isDefault: false,
-						userId: 'anonymous'
-					}
-				};
-
-				request(app)
-				.post('/ngeo/shopcarts')
-				.send(datas)
-				.expect(400)
-				.expect('Content-Type', /json/)
-				.end(function(err,res) {
-					should(res.body).be.a.String();
-					should(res.body).be.equal('Request is not valid');
-					done();
-				});
-
-			});
-
-			it('No name for shopcart', function(done) {
-
-				var datas = {
-					shopcart: {
-						nom: 'test 001',
-						isDefault: false,
-						userId: 'anonymous'
-					}
-				};
-
-				request(app)
-				.post('/ngeo/shopcarts')
-				.send(datas)
-				.expect(400)
-				.expect('Content-Type', /json/)
-				.end(function(err,res) {
-					should(res.body).be.a.String();
-					should(res.body).be.equal('Request is not valid');
-					done();
-				});
-
-			});
-
-			it('Name for shopcart is empty', function(done) {
-
-				var datas = {
-					shopcart: {
-						name: ' ',
-						isDefault: false,
-						userId: 'anonymous'
-					}
-				};
-
-				request(app)
-				.post('/ngeo/shopcarts')
-				.send(datas)
-				.expect(400)
-				.expect('Content-Type', /json/)
-				.end(function(err,res) {
-					should(res.body).be.a.String();
-					should(res.body).be.equal('Request is not valid');
-					done();
-				});
-
-			});
-
-		});
-
-		describe('PUT /ngeo/shopcarts/:id - update a shopcart', function() {
-
-			it('No shopcart id in URL', function(done) {
-
-				var datas = {
-					shopcart: {
-						id: '58c26cd2907fc63264933802',
-						name: 'test 002',
-						isDefault: false,
-						userId: 'anonymous'
-					}
-				};
-				
-				request(app)
-				.put('/ngeo/shopcarts/')
-				.send(datas)
-				.expect(404, done);
-
-			});
-
-			it('No valid shopcart id', function(done) {
-
-				var datas = {
-					shopcart: {
-						id: '58c26cd2907fc63264933802',
-						name: 'test 002',
-						isDefault: false,
-						userId: 'anonymous'
-					}
-				};
-				
-				request(app)
-				.put('/ngeo/shopcarts/45f45r78')
-				.send(datas)
-				.expect(400)
-				.expect('Content-Type', /json/)
-				.end(function(err,res) {
-					should(res.body).be.a.String();
-					should(res.body).be.equal('Request is not valid');
-					done();
-				});
-
-			});
-
-			it('No matching shopcart ids', function(done) {
-
-				var datas = {
-					shopcart: {
-						id: '58c26cd2907fc63264933802',
-						name: 'test 002',
-						isDefault: false,
-						userId: 'anonymous'
-					}
-				};
-
-				request(app)
-				.put('/ngeo/shopcarts/58c26cd2907fc63264933800')
-				.send(datas)
-				.expect(400)
-				.expect('Content-Type', /json/)
-				.end(function(err,res) {
-					should(res.body).be.a.String();
-					should(res.body).be.equal('Request is not valid');
-					done();
-				});
-
 			});
 
 		});
