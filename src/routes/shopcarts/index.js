@@ -9,6 +9,7 @@ let Logger = require('utils/logger');
 
 // SERVICES
 let AuthenticationService = require('services/authenticationService');
+let AuthorizationService = require('services/authorizationService');
 let DatabaseService = require('services/databaseService');
 
 // CONST
@@ -87,47 +88,6 @@ function _checkRequestFeatures(request) {
 		}
 	}
 	return true;
-}
-
-/**
- * @function _checkAuthorization
- * @param {*} shopcart 
- * @private
- */
-function _checkAuthorization(req, res, shopcart) {
-	if (shopcart.userId !== AuthenticationService.getUserId(req)) {
-		return false;
-	}
-	return true;
-}
-
-/**
- * @function _checkAuthorizationById
- * @param {*} shopcartId 
- * @private
- */
-function _checkAuthorizationById(req, res, shopcartId, cbAfter) {
-	let cbAfterSearch = function(response) {
-		if (response.code !== 0) {
-			res.status(response.code).json(response.datas);
-			return;
-		}
-		if (response.datas.length !== 1) {
-			res.status(404).json('Not found');
-			return;
-		}
-		if (response.datas[0].userId !== AuthenticationService.getUserId(req)) {
-			res.status(401).json('Unauthorized');
-			return;
-		}
-		cbAfter();
-	}
-
-	let jsonQueryForfilter = {
-		_id: ObjectId(shopcartId)
-	};
-
-	DatabaseService.search(SHOPCARTNAME, jsonQueryForfilter, 0, 1, cbAfterSearch);
 }
 
 /**
@@ -255,7 +215,7 @@ router.put('/:shopcart_id', (req,res) => {
 	myUpdateItem._id = myUpdateItem.id;
 
 	// check authorization
-	if (!_checkAuthorization(req, res, myUpdateItem)) {
+	if (myUpdateItem.userId !== AuthenticationService.getUserId(req)) {
 		res.status(401).json('Unauthorized');
 		return;
 	}
@@ -334,7 +294,14 @@ router.delete('/:shopcart_id', (req,res) => {
 		DatabaseService.delete(SHOPCARTNAME, idToDelete, cbDeleteShopCart);
 	}
 
-	_checkAuthorizationById(req, res, idToDelete, cbAfterCheckAuthorization);
+	AuthorizationService.isAuthorized(
+		res, 
+		DatabaseService, 
+		SHOPCARTNAME, 
+		ObjectId(idToDelete), 
+		AuthenticationService.getUserId(req), 
+		cbAfterCheckAuthorization
+	);
 
 });
 
@@ -384,7 +351,14 @@ router.get('/:shopcart_id/items', (req,res) => {
 		DatabaseService.search(SHOPCARTFEATURENAME, myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
 	}
 
-	_checkAuthorizationById(req, res, idShopCart, cbAfterCheckAuthorization);
+	AuthorizationService.isAuthorized(
+		res, 
+		DatabaseService,
+		SHOPCARTNAME,
+		ObjectId(idShopCart),
+		AuthenticationService.getUserId(req),
+		cbAfterCheckAuthorization
+	);
 
 });
 
@@ -435,7 +409,15 @@ router.post('/:shopcart_id/items', (req,res) => {
 		});
 	}
 
-	_checkAuthorizationById(req, res, idShopCart, cbAfterCheckAuthorization);
+	AuthorizationService.isAuthorized(
+		res, 
+		DatabaseService,
+		SHOPCARTNAME,
+		ObjectId(idShopCart),
+		AuthenticationService.getUserId(req),
+		cbAfterCheckAuthorization
+	);
+
 });
 
 /**
@@ -479,7 +461,14 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
 		});
 	};
 
-	_checkAuthorizationById(req, res, idShopCart, cbAfterCheckAuthorization);
+	AuthorizationService.isAuthorized(
+		res, 
+		DatabaseService,
+		SHOPCARTNAME,
+		ObjectId(idShopCart),
+		AuthenticationService.getUserId(req),
+		cbAfterCheckAuthorization
+	);
 
 });
 
