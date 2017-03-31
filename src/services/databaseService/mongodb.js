@@ -172,14 +172,11 @@ class MongoDBService {
 							if (errUpdate) throw errUpdate;
 							Logger.debug('updateOne is done');
 							dataBase.close();
-							if (resultUpdate.modifiedCount === 0) {
-								Logger.debug('no modification');
+							if (resultUpdate.matchedCount !== 1) {
+								Logger.debug('unable to find');
 								return myCallbackFn({"code": 404, "datas": 'Unable to find this document in collection ' + myCollection});
-							} else if (resultUpdate.modifiedCount === 1) {
-								return myCallbackFn({"code": 0, "datas": myDocument});
 							} else {
-								Logger.error('id not unique (' + myCollection + ',' + myDocument.id + ')');
-								throw '_id for this document is not unique ! (' + myDocument.id + ')';
+								return myCallbackFn({"code": 0, "datas": myDocument});
 							}
 						});
 					}
