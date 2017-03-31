@@ -8,6 +8,7 @@ let ObjectId = require('mongodb').ObjectID;
 let Logger = require('utils/logger');
 
 // SERVICES
+let AuthenticationService = require('services/authenticationService');
 let DatabaseService = require('services/databaseService');
 
 // CONST
@@ -89,13 +90,56 @@ function _checkRequestFeatures(request) {
 }
 
 /**
+ * @function _checkAuthorization
+ * @param {*} shopcart 
+ * @private
+ */
+function _checkAuthorization(req, res, shopcart) {
+	if (shopcart.userId !== AuthenticationService.getUserId(req)) {
+		return false;
+	}
+	return true;
+}
+
+/**
+ * @function _checkAuthorizationById
+ * @param {*} shopcartId 
+ * @private
+ */
+function _checkAuthorizationById(req, res, shopcartId, cbAfter) {
+	let cbAfterSearch = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+			return;
+		}
+		if (response.datas.length !== 1) {
+			res.status(404).json('Not found');
+			return;
+		}
+		if (response.datas[0].userId !== AuthenticationService.getUserId(req)) {
+			res.status(401).json('Unauthorized');
+			return;
+		}
+		cbAfter();
+	}
+
+	let jsonQueryForfilter = {
+		_id: ObjectId(shopcartId)
+	};
+
+	DatabaseService.search(SHOPCARTNAME, jsonQueryForfilter, 0, 1, cbAfterSearch);
+}
+
+/**
  * Define router
  */
 let router = express.Router({
 	mergeParams: true
 });
 
-router.use(function timeLog(req, res, next) {
+router.use(function authenticate(req, res, next) {
+	// for all shopcarts request, authentication is required
+	AuthenticationService.isAuthenticated(req, res);
 	next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -114,9 +158,9 @@ router.get('/', (req, res) => {
 
 	Logger.debug('ShopCart list is calling');
 
-	// define call back function after lsiting shopcarts
+	// define call back function after listing shopcarts
 	// send response
-	let cbGetList = function(response) {
+	let cbAfterSearch = function(response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -127,8 +171,13 @@ router.get('/', (req, res) => {
 		}
 	}
 
+	// 
+	let jsonQueryForfilterOnUserId = {
+		userId: AuthenticationService.getUserId(req)
+	};
+
 	// call list service
-	DatabaseService.list(SHOPCARTNAME, cbGetList);
+	DatabaseService.search(SHOPCARTNAME, jsonQueryForfilterOnUserId, 0, 1000, cbAfterSearch);
 
 });
 
@@ -137,7 +186,7 @@ router.get('/', (req, res) => {
  *
  * @function router.post
  * @param url - /ngeo/shopcarts/
- * @param req - request {shocpart:{name,userId,isDefault}}
+ * @param req - request {shopcart:{name,userId,isDefault}}
  * @param res - response
  */
 router.post('/', (req,res) => {
@@ -164,15 +213,18 @@ router.post('/', (req,res) => {
 
 	// define insertedItem
 	let myInsertItem = req.body.shopcart;
+	if (!myInsertItem.userId) {
+		myInsertItem.userId = AuthenticationService.getUserId(req);
+	}
+	if (myInsertItem.userId !== AuthenticationService.getUserId(req)) {
+		res.status(401).json('Unauthorized');
+		return;
+	}
 
 	// define query to find if item is already in database
 	let myQueryItemAlreadyExists = {
-		name: {
-			$eq: myInsertItem.name
-		},
-		userId: {
-			$eq : myInsertItem.userId
-		}
+		name: myInsertItem.name,
+		userId: AuthenticationService.getUserId(req)
 	};
 
 	// call create service for database
@@ -202,17 +254,19 @@ router.put('/:shopcart_id', (req,res) => {
 	let myUpdateItem = req.body.shopcart;
 	myUpdateItem._id = myUpdateItem.id;
 
+	// check authorization
+	if (!_checkAuthorization(req, res, myUpdateItem)) {
+		res.status(401).json('Unauthorized');
+		return;
+	}
+
 	// define query if item already exists
 	let myQueryItemAlreadyExists = {
-		"_id": {
+		_id: {
 			$ne: ObjectId(myUpdateItem._id)
 		},
-		"name": {
-			$eq: myUpdateItem.name
-		},
-		"userId": {
-			$eq : myUpdateItem.userId
-		}
+		name: myUpdateItem.name,
+		userId: myUpdateItem.userId
 	};
 
 	// define update query
@@ -274,9 +328,13 @@ router.delete('/:shopcart_id', (req,res) => {
 			DatabaseService.deleteCascade(SHOPCARTFEATURENAME, myQueryDelete, cbDeleteAllFeaturesInShopCart);
 		}
 	};
-					
-	// call delete service
-	DatabaseService.delete(SHOPCARTNAME, idToDelete, cbDeleteShopCart);
+
+
+	let cbAfterCheckAuthorization = function() {
+		DatabaseService.delete(SHOPCARTNAME, idToDelete, cbDeleteShopCart);
+	}
+
+	_checkAuthorizationById(req, res, idToDelete, cbAfterCheckAuthorization);
 
 });
 
@@ -296,6 +354,7 @@ router.get('/:shopcart_id/items', (req,res) => {
 	}
 
 	let idShopCart = req.params.shopcart_id;
+
 	let start = +req.params.startIndex - 1;
 	let count = +req.params.count;
 
@@ -318,9 +377,14 @@ router.get('/:shopcart_id/items', (req,res) => {
 			});
 		}
 	};
+	
 
-	// call search service
-	DatabaseService.search(SHOPCARTFEATURENAME, myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+	let cbAfterCheckAuthorization = function() {
+		// call search service
+		DatabaseService.search(SHOPCARTFEATURENAME, myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+	}
+
+	_checkAuthorizationById(req, res, idShopCart, cbAfterCheckAuthorization);
 
 });
 
@@ -337,7 +401,6 @@ router.post('/:shopcart_id/items', (req,res) => {
 	}
 
 	let idShopCart = req.params.shopcart_id;
-
 	let myInsertFeatures = req.body.shopcartfeatures;
 	let maxItems = 0;
 	let myNewInsertFeatures = [];
@@ -359,17 +422,20 @@ router.post('/:shopcart_id/items', (req,res) => {
 		return;
 	}
 
-	myInsertFeatures.forEach((item, index) => {
-		item.properties.shopcart_id = idShopCart;
-		// define query to find if item is already in database
-		let myQueryItemAlreadyExists = {
-			"properties.productUrl": item.properties.productUrl,
-			"properties.shopcart_id": item.properties.shopcart_id
-		};
+	let cbAfterCheckAuthorization = function() {
+		myInsertFeatures.forEach((item, index) => {
+			item.properties.shopcart_id = idShopCart;
+			// define query to find if item is already in database
+			let myQueryItemAlreadyExists = {
+				"properties.productUrl": item.properties.productUrl,
+				"properties.shopcart_id": item.properties.shopcart_id
+			};
 
-		DatabaseService.create(SHOPCARTFEATURENAME, item, myQueryItemAlreadyExists, cbCreateFeatureInShopCart);
-	});
+			DatabaseService.create(SHOPCARTFEATURENAME, item, myQueryItemAlreadyExists, cbCreateFeatureInShopCart);
+		});
+	}
 
+	_checkAuthorizationById(req, res, idShopCart, cbAfterCheckAuthorization);
 });
 
 /**
@@ -407,9 +473,13 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
 		return;
 	}
 
-	myDeletedFeatures.forEach((item, index) => {
-		DatabaseService.delete(SHOPCARTFEATURENAME, item.id, cbDeleteFeatureInShopCart);
-	});
+	let cbAfterCheckAuthorization = function() {
+		myDeletedFeatures.forEach((item, index) => {
+			DatabaseService.delete(SHOPCARTFEATURENAME, item.id, cbDeleteFeatureInShopCart);
+		});
+	};
+
+	_checkAuthorizationById(req, res, idShopCart, cbAfterCheckAuthorization);
 
 });
 
