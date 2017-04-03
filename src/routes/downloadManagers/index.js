@@ -94,7 +94,7 @@ router.get('/', (req, res) => {
 	};
 
 	// call list service
-	DatabaseService.search(DOWNLOADMANAGERNAME, jsonQueryForfilterOnUserId, 0, 10000, cbAfterSearch);
+	DatabaseService.list(DOWNLOADMANAGERNAME, jsonQueryForfilterOnUserId, cbAfterSearch);
 
 });
 
@@ -216,7 +216,7 @@ router.get('/about', (req, res) => {
 
 	Logger.debug('About downloadManagers requests is calling');
 
-	res.status(200).send("Description of downloadManagers requests");
+	res.status(200).json("Description of downloadManagers requests");
 });
 
 module.exports = router;
