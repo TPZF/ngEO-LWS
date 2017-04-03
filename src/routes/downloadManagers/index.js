@@ -8,6 +8,8 @@ let _ = require('lodash');
 let Logger = require('utils/logger');
 
 // SERVICES
+let AuthenticationService = require('services/authenticationService');
+let AuthorizationService = require('services/authorizationService');
 let DatabaseService = require('services/databaseService');
 
 // CONST
@@ -55,6 +57,7 @@ let router = express.Router({
 
 // make sure we go to the next routes and don't stop here
 router.use(function timeLog(req, res, next) {
+	AuthenticationService.isAuthenticated(req, res);
 	next();
 });
 
@@ -72,7 +75,7 @@ router.get('/', (req, res) => {
 
 	// define call back function after listing downloadmanagers
 	// send response
-	let cbGetList = function(response) {
+	let cbAfterSearch = function(response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -85,8 +88,13 @@ router.get('/', (req, res) => {
 		}
 	}
 
+	// 
+	let jsonQueryForfilterOnUserId = {
+		userId: AuthenticationService.getUserId(req)
+	};
+
 	// call list service
-	DatabaseService.list(DOWNLOADMANAGERNAME, cbGetList);
+	DatabaseService.search(DOWNLOADMANAGERNAME, jsonQueryForfilterOnUserId, 0, 10000, cbAfterSearch);
 
 });
 
@@ -125,14 +133,18 @@ router.post('/', (req,res) => {
 	// define insertedItem
 	let myInsertItem = req.body.downloadmanager;
 
+	if (!myInsertItem.userId) {
+		myInsertItem.userId = AuthenticationService.getUserId(req);
+	}
+	if (myInsertItem.userId !== AuthenticationService.getUserId(req)) {
+		res.status(401).json('Unauthorized');
+		return;
+	}
+
 	// define query to find if item is already in database
 	let myQueryItemAlreadyExists = {
-		downloadManagerFriendlyName: {
-			$eq: myInsertItem.downloadManagerFriendlyName
-		},
-		userId: {
-			$eq : myInsertItem.userId
-		}
+		downloadManagerFriendlyName: myInsertItem.downloadManagerFriendlyName,
+		userId: myInsertItem.userId
 	};
 
 	// call create service for database
@@ -177,8 +189,19 @@ router.delete('/:downloadmanager_id', (req,res) => {
 		}
 	};
 					
-	// call delete service
-	DatabaseService.delete(DOWNLOADMANAGERNAME, idToDelete, cbDeleteDownloadManager);
+	let cbAfterCheckAuthorization = function() {
+		DatabaseService.delete(DOWNLOADMANAGERNAME, idToDelete, cbDeleteDownloadManager);
+	}
+
+	AuthorizationService.isAuthorized(
+		res, 
+		DatabaseService, 
+		DOWNLOADMANAGERNAME, 
+		ObjectId(idToDelete), 
+		AuthenticationService.getUserId(req), 
+		cbAfterCheckAuthorization
+	);
+
 
 });
 
