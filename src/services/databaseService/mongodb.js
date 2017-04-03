@@ -194,12 +194,16 @@ class MongoDBService {
 	 * 
 	 * @function list
 	 * @param myCollection - collection in mongodb
+	 * @param myQueryCriterias - json query to find documents
 	 * @param myCallbackFn - callback function 
 	 */
-	list(myCollection, myCallbackFn) {
+	list(myCollection, myQueryCriterias, myCallbackFn) {
 
 		let dataBase = null;
 
+		if (myQueryCriterias === null) {
+			myQueryCriterias = {};
+		}
 		try {
 			// connect to mongodb
 			MongoClient.connect(this.databaseConnnection.url, (errConnect,db) => {
@@ -207,7 +211,7 @@ class MongoDBService {
 				Logger.debug('db connection ok');
 				dataBase = db;
 				// find and return an array
-				let myCursor = dataBase.collection(myCollection).find().toArray((errFindAll, resultFindAll) => {
+				let myCursor = dataBase.collection(myCollection).find(myQueryCriterias).toArray((errFindAll, resultFindAll) => {
 					if (errFindAll) throw errFindAll;
 					Logger.debug('find all is done');
 					dataBase.close();
@@ -257,7 +261,7 @@ class MongoDBService {
 				.limit(myLimit)
 				.toArray((errFindAll, resultFindAll) => {
 					if (errFindAll) throw errFindAll;
-					Logger.debug('find all is done');
+					Logger.debug('search is done');
 					dataBase.close();
 					resultFindAll.forEach((_document, _index) => {
 						_document.id = _document._id;
