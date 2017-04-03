@@ -7,7 +7,7 @@
             "operationalMode": "IM",
             "productType": "TM__GTC_1P"
         },
-        "url": "http://ngeo-light.evo-pdgs.com:80/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Landsat"
+        "url": "http://brow02.ngeo.eox.at/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Landsat"
     },
     {
         "pattern": {
@@ -17,12 +17,22 @@
             "operationalMode": "*",
             "productType": "*"
         },
-        "url": "http://ngeo-light.evo-pdgs.com:80/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Landsat"
+        "url": "http://brow02.ngeo.eox.at/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Landsat"
     },
     {
         "pattern": {
             "plateformId": "Landsat"
         },
-        "url": "http://ngeo-light.evo-pdgs.com:80/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Landsat"
-    }
+        "url": "http://brow02.ngeo.eox.at/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Landsat"
+    },
+    {
+        "pattern": {
+            "plateformId": "WorldView",
+            "serialId": "2",
+            "shortName": "*",
+            "operationalMode": "*",
+            "productType": "*"
+        },
+        "url": "http://brow02.ngeo.eox.at/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=WorldView-2"
+    }    
 ]
