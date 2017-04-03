@@ -98,10 +98,11 @@ class DataBaseService {
 	 * 
 	 * @function list
 	 * @param myCollection - collection in mongodb
+	 * @param myQueryCriterias - jqon query for find documents
 	 * @param myCallbackFn - callback function 
 	 */
-	list(myCollection, myCallbackFn) {
-		this.service.list(myCollection, myCallbackFn);
+	list(myCollection, myQueryCriterias, myCallbackFn) {
+		this.service.list(myCollection, myQueryCriterias, myCallbackFn);
 	}
 
 	/**
