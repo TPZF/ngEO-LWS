@@ -99,6 +99,72 @@ router.get('/', (req, res) => {
 });
 
 /**
+ * Get one downloadManager
+ *
+ * @function router.get
+ * @param url - /ngeo/downloadManagers/:downloadManagerid
+ * @param req - request
+ * @param res - response
+ */
+router.get('/:downloadManagerid', (req, res) => {
+
+	Logger.debug('DownloadManagers get one is calling');
+
+	let idToGet = req.params['downloadManagerid'];
+
+	// define callback function after updating
+	let cbAfterUpdate = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			response.datas.downloadManagerId = response.datas.id;
+			delete response.datas._id;
+			delete response.datas.id;
+			res.status(200).json({"downloadmanager": response.datas });
+		}
+	};
+
+	// define call back function after get downloadmanager
+	// send response
+	let cbAfterList = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+			return;
+		}
+		if (response.datas.length !== 1) {
+			res.status(400).json('Bad request !');
+			return;
+		}
+		let downloadManager = response.datas[0];
+
+		// define query if item already exists
+		let myQueryItemAlreadyExists = {
+			_id: {
+				$ne: ObjectId(downloadManager._id)
+			},
+			downloadManagerFriendlyName: downloadManager.downloadManagerFriendlyName,
+			userId: downloadManager.userId
+		};
+
+		let myQueryUpdate = {
+			$set: {
+				"lastAccessDate": new Date().toISOString()
+			}
+		};
+		DatabaseService.update(DOWNLOADMANAGERNAME, downloadManager, myQueryItemAlreadyExists, myQueryUpdate, cbAfterUpdate);
+	}
+
+	// 
+	let jsonQueryForfilter = {
+		_id: ObjectId(idToGet),
+		userId: AuthenticationService.getUserId(req)
+	};
+
+	// call list service
+	DatabaseService.list(DOWNLOADMANAGERNAME, jsonQueryForfilter, cbAfterList);
+
+});
+/**
  * Create a DownloadManager
  *
  * @function router.post
