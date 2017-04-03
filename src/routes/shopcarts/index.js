@@ -137,7 +137,7 @@ router.get('/', (req, res) => {
 	};
 
 	// call list service
-	DatabaseService.search(SHOPCARTNAME, jsonQueryForfilterOnUserId, 0, 1000, cbAfterSearch);
+	DatabaseService.list(SHOPCARTNAME, jsonQueryForfilterOnUserId, cbAfterSearch);
 
 });
 
@@ -484,7 +484,7 @@ router.get('/about', (req, res) => {
 
 	Logger.debug('About ShopCart is calling');
 
-	res.status(200).send("Description of shopcarts requests");
+	res.status(200).json("Description of shopcarts requests");
 });
 
 module.exports = router;
