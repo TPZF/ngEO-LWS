@@ -96,7 +96,7 @@ class BrowseService {
 				}];
 				feature.properties.EarthObservation.result.EarthObservationResult.browse = browseInfo;
 			} else {
-				console.warn(`Cannot find the browse configuration for feature collection ${collectionId} with pattern `, this.extractFeatureProps(feature));
+				logger.warn(`Cannot find the browse configuration for feature collection ${collectionId} with pattern `, this.extractFeatureProps(feature));
 			}
 		});
 		logger.info(`Time elapsed to add browse information on every feature took ${Date.now() - startTime} ms`);
