@@ -34,5 +34,11 @@
             "productType": "*"
         },
         "url": "http://brow02.ngeo.eox.at/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=WorldView-2"
+    },
+    {
+        "pattern": {
+            "plateformId": "Envisat"
+        },
+        "url": "http://brow01.ngeo.eox.at/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=ENVISAT_ASAR_IMP_1P"
     }    
 ]
