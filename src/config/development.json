@@ -1,6 +1,7 @@
 {
     "browseConfigurationPath": "services/browseService/browseConfiguration.json",
-    "collectionPath": "services/collectionService/collections.json",
+    "collectionPath": "services/collectionService/collections-full.json",
+    "catalogPath": "services/catalogService/catalogs.json",
     "logger" : {
         "level": "debug"
     },
@@ -10,5 +11,10 @@
     		"username": "",
     		"password": ""
     	}
+    },
+    "opensearch" : {
+        "xmlnsParameter": "/opensearch/extensions/parameters/",
+        "xmlnsTime": "/opensearch/extensions/time/",
+        "identifier": "dc:identifier"
     }
 }
