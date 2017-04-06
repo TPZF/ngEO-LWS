@@ -53,7 +53,7 @@ describe('DataAccessRequestStatuses', function() {
 			.expect(200)
 			.expect('Content-Type', /json/)
 			.end(function(err,res) {
-				should(res.body).be.a.Object();
+				should(res.body).be.a.String();
 				done();
 			});
 
