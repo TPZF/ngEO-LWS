@@ -1,0 +1,12 @@
+[
+    {
+        "name": "SXCAT",
+        "url": "https://sxcat.eox.at/opensearch/atom?collection",
+        "fake": false
+    },
+    {
+        "name": "FEDEO",
+        "url": "http://fedeo.esa.int/opensearch/request/?httpAccept=application/atom%2Bxml&amp;parentIdentifier=EOP%3AESA%3AFEDEO%3ACOLLECTIONS&amp;uid=EOP%3ASSARA%3ASENTINEL-1",
+        "fake": false
+    }
+]
