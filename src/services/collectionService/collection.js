@@ -13,11 +13,19 @@ class Collection {
 	 * @param options
 	 * 		Possible options later: id, title, summary, updated, dc:identifier, link
 	 */
-	constructor(url, name, options) {
+	constructor(id, url, name, options) {
+		this.id = id;
 		this.url = url;
 		this.name = name;
-		// Predict the id for now
-		this.id = url.substr(url.lastIndexOf('/') + 1);
+
+		// default parameters, provided by webc
+		this.parameters = {
+			start: 'start', 
+			stop: 'end', 
+			startIndex: 'startIndex',
+			count: 'count',
+			bbox: 'bbox'
+		};
 
 		// Make object extendable
 		Object.assign(this, options);

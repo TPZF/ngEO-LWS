@@ -2,23 +2,70 @@ let _ = require('lodash');
 let request = require('request');
 let Collection = require('./collection');
 let Xml2JsonParser = require('utils/xml2jsonParser');
-let logger = require('utils/logger');
+let Logger = require('utils/logger');
 let Configuration = require('config');
+let CatalogService = require('../catalogService');
 
 /**
  * Collection service designed to manage the available collections on different backends
  * Currently initialized with configuration file, but in future will be probably absorbed by Catalog object
  */
 class CollectionService {
+
+	/**
+	 * 
+	 */
 	constructor() {
+		
+		let thisService = this;
 		this.collections = [];
-		let collectionsConf = require(Configuration['collectionPath']);
-		// Create collection object from conf
-		collectionsConf.forEach((collectionConf) => {
-			let collection = new Collection(collectionConf.url, collectionConf.name);
-			this.collections.push(collection);
-			this.populateCollection(collection);
-		});
+		let startTime = Date.now();
+
+		let cbAfterCatalogsPopulate = function() {
+
+			let endTime = Date.now();
+			Logger.info('Time to get populate for all catalogs : ' + (endTime - startTime) + ' ms');
+			startTime = endTime;
+
+			CatalogService.catalogs.forEach((catalog) => {
+				if (!catalog.collectionsSchema) { return;}
+				catalog.collectionsSchema.forEach((collectionSchema) => {
+					if (collectionSchema && collectionSchema.entry) {
+						if (!Array.isArray(collectionSchema.entry)) {
+							collectionSchema.entry = [collectionSchema.entry];
+						}
+						collectionSchema.entry.forEach((oneEntry) => {
+							// find url for getting opensearch description
+							let urlOSDD = _.find(oneEntry.link, function(lien) {
+								return (lien['@'].rel === 'search' && lien['@'].type === 'application/opensearchdescription+xml');
+							});
+							let url = urlOSDD ? urlOSDD['@'].href : oneEntry.id;
+							// find id
+							let idCollection = oneEntry[Configuration.opensearch.identifier];
+							if (!_.find(thisService.collections, function(item) {return item.id === idCollection})) {
+								// set collection object
+								let maCollection = new Collection(idCollection, url, oneEntry.title);
+								thisService.collections.push(maCollection);
+								// add other datas
+								thisService.populateCollection(maCollection);
+							}
+						});
+					} else {
+						Logger.error(`Unable to find collectionsSchema for catalog ${catalog.name}`);
+						Logger.debug(Array.isArray(collectionSchema.entry));
+					}
+				});
+			});
+		}
+
+		let cbAfterCatalogsGetTotal = function(catalogs) {
+			let endTime = new Date().getTime();
+			Logger.info('Time to get total results for all catalogs : ' + (endTime - startTime) + ' ms');
+			startTime = endTime;
+			CatalogService.populate(cbAfterCatalogsPopulate);
+
+		};
+		CatalogService.getTotal(cbAfterCatalogsGetTotal);
 	}
 
 	/**
@@ -32,17 +79,53 @@ class CollectionService {
 	 * Populate collection with osdd & totalResults
 	 */
 	populateCollection(collection) {
+		let service = this;
+		let startTime = Date.now();
 		// Get osdd
 		request(collection.url, (error, response, body) => {
 			Xml2JsonParser.parse(body, (result) => {
+				let endTime = Date.now();
+				Logger.info('Time to request and parse collection : ' + (endTime - startTime) + ' ms');
+				// put result in osdd attribute
 				collection.osdd = result;
-			});
-		});
-
-		// Make first search request just to retrieve the number of available products
-		request(collection.url + '/atom?count=1', (error, response, body) => {
-			Xml2JsonParser.parse(body, (result) => {
-				collection.totalResults = result['os:totalResults'];
+				// find node search request
+				let searchRequestDescription = service.findSearchRequestDescription(collection.id);
+				if (searchRequestDescription) {
+					// put url in url_search attribute
+					collection.url_search = searchRequestDescription['@'].template;
+					// create request to retrieve the number of available products
+					let urlCount = service.buildSearchRequestWithValue(collection.url_search, {count: 1});
+					// and make first search
+					request(urlCount, (error, response, body) => {
+						if (!body) {
+							Logger.info(`Remove collection ${collection.id} because no body response for totalResults`);
+							_.remove(service.collections, function(item) {
+								return item.id === collection.id;
+							});
+							return;
+						}
+						Xml2JsonParser.parse(body, (result) => {
+							Logger.debug(`Total results for ${collection.id} = ${result['os:totalResults']}`);
+							collection.totalResults = result['os:totalResults'];
+							// remove this collection from array if no results
+							if (!collection.totalResults || collection.totalResults < 1) {
+								collection.totalResults = '?';
+								/*
+								Logger.info(`Remove collection ${collection.id} because no results`);
+								_.remove(service.collections, function(item) {
+									return item.id === collection.id;
+								});
+								*/
+							}
+						});
+					});
+				} else {
+					// remove this collection from array if no searchRequestDescription
+					_.remove(service.collections, function(item) {
+						return item.id === collection.id;
+					});
+					Logger.error(`Unable to find searchRequestDescription for collection ${collection.id}`);
+				}
 			});
 		});
 	}
@@ -53,19 +136,29 @@ class CollectionService {
 	search(collectionId, options = { params: "" }){
 		let collection = this.getCollection(collectionId);
 
-		// Replace "startIndex" param by "offset" due to osdd of SX-CAT
-		// TODO: use collection special method later to extract the name in more generic way
-		options.params = options.params.replace('startIndex', 'offset');
+		// map params with those of collection
+		let searchParams = {};
 		
-		let searchUrl = collection.url + '/atom' + options.params;
+		for (var param in options.params) {
+			if (collection.parameters[param]) {
+				searchParams[collection.parameters[param]] = options.params[param];
+			}
+		}
+
+		let searchUrlRequest = this.buildSearchRequestWithParam(collection.url_search, searchParams);
+		// TODO remove it as soon as possible and find an other way
+		if (collection.id.indexOf('SSARA') !== -1) {
+			searchUrlRequest += 'recordSchema=om';
+		}
+
 		let startTime = Date.now();
-		logger.info(`Searching for backend with ${searchUrl}`);
-		request(searchUrl, function (error, response, body) {
-			logger.info(`Time elapsed searching on backend with ${searchUrl} took ${Date.now() - startTime} ms`);
+		Logger.info(`Searching for backend with ${searchUrlRequest}`);
+		request(searchUrlRequest, function (error, response, body) {
+			Logger.info(`Time elapsed searching on backend with ${searchUrlRequest} took ${Date.now() - startTime} ms`);
 			if (!error && response.statusCode == 200) {
 				Xml2JsonParser.parse(body, options.onSuccess, options.onError);
 			} else {
-				options.onError('Error while searching on ' + searchUrl);
+				options.onError('Error while searching on ' + searchUrlRequest);
 			}
 		});
 	}
@@ -74,7 +167,7 @@ class CollectionService {
 	 * Make an osdd request on the given collection
 	 */
 	info(collectionId, options) {
-		let collectionUrl = this.getCollection(collectionId).url;
+		let collectionUrl = this.getCollection(collectionId).url_osdd ? this.getCollection(collectionId).url_osdd : this.getCollection(collectionId).url;
 		request(collectionUrl, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				Xml2JsonParser.parse(body, options.onSuccess, options.onError);
@@ -82,6 +175,119 @@ class CollectionService {
 				options.onError('Error while making request ' + collectionUrl);
 			}
 		});
+	}
+
+	/**
+	 * find description of search request in osdd with criterias as :
+	 * 		type='application/atom+xml'
+	 * 		and get method if exists
+	 * @function findSearchRequestDescription
+	 * @param {*} collectionId 
+	 */
+	findSearchRequestDescription(collectionId) {
+		let jsonOSDD = this.getCollection(collectionId).osdd;
+		let paramTag = this.findTagByXmlns(jsonOSDD, Configuration.opensearch.xmlnsParameter);
+		let nodeFind = _.find(jsonOSDD.Url, function(item) {
+			if (item['@'].type === 'application/atom+xml') {
+				if (item['@'][paramTag+':method']) {
+					if (item['@'][paramTag+'method'].toLowerCase() === 'get') {
+						return true;
+					} else {
+						return false
+					}
+				} else {
+					return true;
+				}
+			} else {
+				return false;
+			}
+		});
+		return nodeFind;
+	}
+
+	/**
+	 * findTagByXmlns
+	 * @param {string} jsonOSDD 
+	 * @param {string} pathXmlns
+	 */
+	findTagByXmlns(jsonOSDD, pathXmlns) {
+		let result = '';
+		for (var node in jsonOSDD['@']) {
+			if (jsonOSDD['@'][node].indexOf(pathXmlns) >= 0) {
+				result = node.split(':')[1] + ':';
+				break;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * sample of myUrl
+	 * http://fedeo.esa.int/opensearch/request?httpAccept=application%2Fsru%2Bxml&amp;parentIdentifier=SMOS_Open&amp;query={searchTerms?}&amp;maximumRecords={count?}&amp;startRecord={startIndex?}&amp;startPage={startPage?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;uid={geo:uid?}&amp;lat={geo:lat?}&amp;lon={geo:lon?}&amp;radius={geo:radius?}&amp;name={geo:name?}&amp;startDate={time:start?}&amp;endDate={time:end?}&amp;orbitNumber={eo:orbitNumber?}&amp;acquisitionStation={eo:acquisitionStation?}&amp;track={eo:track?}&amp;frame={eo:frame?}&amp;cloudCover={eo:cloudCover?}&amp;illuminationAzimuthAngle={eo:illuminationAzimuthAngle?}&amp;illuminationElevationAngle={eo:illuminationElevationAngle?}&amp;productType={eo:productType?}&amp;instrument={eo:instrument?}&amp;sensorType={eo:sensorType?}&amp;productionStatus={eo:productionStatus?}&amp;acquisitionType={eo:acquisitionType?}&amp;orbitDirection={eo:orbitDirection?}&amp;swathIdentifier={eo:swathIdentifier?}&amp;processingCenter={eo:processingCenter?}&amp;sensorMode={eo:sensorMode?}&amp;acquisitionSubType={eo:acquisitionSubType?}&amp;polarisationMode={eo:polarisationMode?}&amp;polarisationChannels={eo:polarisationChannels?}&amp;recordSchema={sru:recordSchema?}
+	 * find params in myUrl by {value?}
+	 * and replace the value
+	 * @function buildSearchRequestWithValue
+	 * @param {string} myUrl 
+	 * @param {object} params 
+	 */
+	buildSearchRequestWithValue(myUrl, params) {
+		let result = '';
+		let uri = myUrl.substring(0, myUrl.indexOf('?'));
+		result += uri + '?';
+		myUrl = myUrl.substring(myUrl.indexOf('?')+1);
+		let itemsOfUrl = myUrl.split('&');
+		for (var i=0; i< itemsOfUrl.length; i++) {
+			if (itemsOfUrl[i].indexOf('=') === -1) {
+				result += itemsOfUrl[i] + '&';
+			} else {
+				let itemsOfParam = itemsOfUrl[i].split('=');
+				if (itemsOfParam[1].indexOf('{') === -1) {
+					result += itemsOfUrl[i] + '&';
+				} else {
+					let param = itemsOfParam[1].substring(1,itemsOfParam[1].length - 1);
+					if (param.indexOf('?')) {
+						param = param.substr(0, param.length - 1);
+					}
+					if (params[param]) {
+						result += itemsOfParam[0] + '=' + params[param] + '&';
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * sample of myUrl
+	 * http://fedeo.esa.int/opensearch/request?httpAccept=application%2Fsru%2Bxml&amp;parentIdentifier=SMOS_Open&amp;query={searchTerms?}&amp;maximumRecords={count?}&amp;startRecord={startIndex?}&amp;startPage={startPage?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;uid={geo:uid?}&amp;lat={geo:lat?}&amp;lon={geo:lon?}&amp;radius={geo:radius?}&amp;name={geo:name?}&amp;startDate={time:start?}&amp;endDate={time:end?}&amp;orbitNumber={eo:orbitNumber?}&amp;acquisitionStation={eo:acquisitionStation?}&amp;track={eo:track?}&amp;frame={eo:frame?}&amp;cloudCover={eo:cloudCover?}&amp;illuminationAzimuthAngle={eo:illuminationAzimuthAngle?}&amp;illuminationElevationAngle={eo:illuminationElevationAngle?}&amp;productType={eo:productType?}&amp;instrument={eo:instrument?}&amp;sensorType={eo:sensorType?}&amp;productionStatus={eo:productionStatus?}&amp;acquisitionType={eo:acquisitionType?}&amp;orbitDirection={eo:orbitDirection?}&amp;swathIdentifier={eo:swathIdentifier?}&amp;processingCenter={eo:processingCenter?}&amp;sensorMode={eo:sensorMode?}&amp;acquisitionSubType={eo:acquisitionSubType?}&amp;polarisationMode={eo:polarisationMode?}&amp;polarisationChannels={eo:polarisationChannels?}&amp;recordSchema={sru:recordSchema?}
+	 * find params in myUrl by param in each param={value?}
+	 * and replace the value
+	 * @function buildSearchRequestWithParam
+	 * @param {string} myUrl 
+	 * @param {object} params 
+	 */
+	buildSearchRequestWithParam(myUrl, params) {
+		let result = '';
+		let uri = myUrl.substring(0, myUrl.indexOf('?'));
+		result += uri + '?';
+		myUrl = myUrl.substring(myUrl.indexOf('?')+1);
+		let itemsOfUrl = myUrl.split('&');
+		for (var i=0; i< itemsOfUrl.length; i++) {
+			if (itemsOfUrl[i].indexOf('=') === -1) {
+				result += itemsOfUrl[i] + '&';
+			} else {
+				let itemsOfParam = itemsOfUrl[i].split('=');
+				if (itemsOfParam[1].indexOf('{') === -1) {
+					result += itemsOfUrl[i] + '&';
+				} else {
+					let param = itemsOfParam[0];
+					if (params[param]) {
+						result += itemsOfParam[0] + '=' + params[param] + '&';
+					}
+				}
+			}
+		}
+		return result;
 	}
 }
 
