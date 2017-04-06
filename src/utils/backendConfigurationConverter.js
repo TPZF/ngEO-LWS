@@ -19,7 +19,14 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
 	geometry.type = "Polygon";
 	geometry.coordinates = [];
 	geometry.coordinates[0] = [];
-	let poslist = gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMember.Polygon.exterior.LinearRing.posList;
+
+	let posList = '';
+	// TODO : find a generic way to retrieve posList
+	if (gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMember) {
+		poslist = gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMember.Polygon.exterior.LinearRing.posList;
+	} else {
+		poslist = gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMembers.Polygon.exterior.LinearRing.posList;
+	}
 
 	let arrList = poslist.split(" ", -1);
 
@@ -35,6 +42,7 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
 
 /**
  * Convert a single entry to GeoJSON feature
+ * if feature has no EarthObservation attribute, then remove it
  */
 let _convertEntryToFeature = function(entry) {
 	let feature = {};
@@ -45,6 +53,8 @@ let _convertEntryToFeature = function(entry) {
 	let eo = entry.EarthObservation;
 	if (eo && eo.featureOfInterest && eo.featureOfInterest.Footprint) {
 		feature.geometry = _convertGmlFpToInternalFp(eo.featureOfInterest);
+	} else {
+		feature = null;
 	}
 	return feature;
 }
@@ -68,10 +78,12 @@ let _convertEntriesIntoFeatureCollection = function (parsedJson) {
 
 		// If there is only one feature, the entries is not an array but the literal object
 		if ( !Array.isArray(entries) ) {
-			featureCollection.features.push(_convertEntryToFeature(entries));
+			let feat = _convertEntryToFeature(entries);
+			if (feat) {featureCollection.features.push(feat); }
 		} else {
 			entries.forEach((entry) => {
-				featureCollection.features.push(_convertEntryToFeature(entry));
+				let feat = _convertEntryToFeature(entry);
+				if (feat) {featureCollection.features.push(feat); }
 			});
 		}
 
