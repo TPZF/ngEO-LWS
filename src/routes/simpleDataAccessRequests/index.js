@@ -138,7 +138,7 @@ router.get('/about', (req, res) => {
 
 	Logger.debug('About simpleDataAccessRequests requests is calling');
 
-	res.status(200).send("Description of simpleDataAccessRequests requests");
+	res.status(200).json("Description of simpleDataAccessRequests requests");
 });
 
 module.exports = router;
