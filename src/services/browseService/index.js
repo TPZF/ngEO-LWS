@@ -82,8 +82,10 @@ class BrowseService {
 					BrowseInformation: {
 						fileName: {
 							ServiceReference: {
-								'@href': browseConf.url,
-								'@title': collectionId
+								'@' : {
+									'href': browseConf.url,
+									'title': collectionId
+								}
 							}
 						},
 						// Not used in WEBC anyway, tbr
