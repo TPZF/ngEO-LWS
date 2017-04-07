@@ -1,6 +1,7 @@
 let _ = require('lodash');
 let logger = require('utils/logger');
 let Configuration = require('config');
+let Utils = require('utils/utils');
 
 /**
  * Browse service adding the wms/wmts information to products
@@ -34,18 +35,17 @@ class BrowseService {
 	 * @param feature 
 	 */
 	extractFeatureProps(feature) {
+		let properties = null;
 		if ( feature.properties.EarthObservation ) {
-			// Could be empty when searching on feature without geometry... Clarify with catalog later..
-			return {
-				"plateformId": feature.properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName,//"Landsat",
-				"serialId": feature.properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier,//"5",
-				"shortName": feature.properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName,//"TM",
-				"operationalMode": feature.properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode,//"IM",
-				"productType": feature.properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType//"TM__GTC_1P"
+			properties = {
+				"plateformId": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName', '*'),//"Landsat",
+				"serialId": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier', '*'),//"5",
+				"shortName": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName', '*'),//"TM",
+				"operationalMode": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode', '*'),//"IM",
+				"productType": Utils.getFromPath(feature, 'properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType', '*')//"TM__GTC_1P"
 			}
-		} else {
-			return null;
 		}
+		return properties;
 	}
 
 	/**

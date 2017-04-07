@@ -1,5 +1,6 @@
 let _ = require('lodash');
 let logger = require('./logger');
+let Utils = require('./utils');
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////specific converter from backend////////////////////////////////////////
@@ -49,7 +50,7 @@ let _addProductInformationForFeature = function(feature) {
 		return feature;
 	} else {
 		// TODO define this from catalog configuration
-		let productUrl = _getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
+		let productUrl = Utils.getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
 		console.log(productUrl);
 		if (productUrl !== '') {
 			let product = {
@@ -134,59 +135,6 @@ let _getNamespaces = function(parsedXml) {
 		return item.split(':')[1] + ":";
 	});
 };
-
-/**
- * Helper recursive function to get a parameter from the configuration data
- */
-let _getValue = function(object, property, defaultValue) {
-	if (object) {
-		var value = null;
-		var kv = property.split("="); // Split by "=" to handle arrays
-		if (kv.length == 2) {
-			// Array
-			if (object[kv[0]] == kv[1]) {
-				return object;
-			}
-		} else {
-			// Object
-			value = object[property];
-		}
-
-		if (typeof value != 'undefined') {
-			return value;
-		}
-	}
-
-	return defaultValue;
-};
-
-/**
- *	Helper imperative function to get a parameter from the configuration data
- *	(much faster than recursive one...)
- */
-let _getFromPath = function(object, path, defaultValue) {
-	var names = path.split('.');
-	var obj = object;
-	for (var i = 0; obj && i < names.length - 1; i++) {
-		var nameKV = names[i].split('[]');
-		if (nameKV.length === 2) {
-			var obj2 = null;
-			for (var j=0; j<obj[nameKV[0]].length; j++) {
-				var obj2 = obj[nameKV[0]][j];
-				for (var k=i+1; obj2 && k < names.length -1; k++) {
-					obj2 = _getValue(obj2, names[k]);
-				}
-				if (obj2) {i=k; break;}
-			}
-			obj = obj2;
-		} else {
-			obj = _getValue(obj, names[i]);
-		}
-	}
-
-	return _getValue(obj, names[names.length - 1], defaultValue);
-};
-
 
 module.exports = {
 
