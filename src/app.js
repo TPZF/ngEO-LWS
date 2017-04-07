@@ -50,15 +50,11 @@ app.use('/ngeo/webClientConfigurationData', webClientConfigurationData);
 app.use('/ngeo/datasetPopulationMatrix', datasetPopulationMatrix);
 //search product here by taking in account the dataset we want to search on the backend
 app.use('/ngeo/catalogue/:fCollectionId/search/', productSearch);
-app.use('/ngeo/datasetSearchInfo/:datasetId', datasetSearchInfo);
+app.use('/ngeo/datasetSearchInfo', datasetSearchInfo);
 app.use('/ngeo/datasetAuthorization', datasetAuthorization);
-// shopcarts
 app.use('/ngeo/shopcarts', shopcarts);
-// DownloadManagers
 app.use('/ngeo/downloadManagers', downloadManagers);
-// simpleDataAccessRequests
 app.use('/ngeo/simpleDataAccessRequests', simpleDataAccessRequests);
-// dataAccessRequestStatuses
 app.use('/ngeo/dataAccessRequestStatuses', dataAccessRequestStatuses);
 
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
