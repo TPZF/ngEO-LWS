@@ -1,5 +1,6 @@
 let _ = require('lodash');
 let request = require('request');
+
 let Collection = require('./collection');
 let Xml2JsonParser = require('utils/xml2jsonParser');
 let Logger = require('utils/logger');
@@ -28,6 +29,13 @@ class CollectionService {
 			startTime = endTime;
 
 			CatalogService.catalogs.forEach((catalog) => {
+				if (catalog.fake) {
+					let fakeUrl = 'http://fedeo.esa.int/opensearch/description.xml?parentIdentifier=EOP:ESA:SCIHUB&amp;platform=SENTINEL-1&amp;sensorType=RADAR&amp;startDate=2014-04-03T00:00:00Z&amp;endDate= ';
+					let maFakeCollection = new Collection('FEDEO-SCI-HUB', fakeUrl, 'FEDEO-SCI-HUB');
+					thisService.collections.push(maFakeCollection);
+					// add other datas
+					thisService.populateCollection(maFakeCollection);
+				}
 				if (!catalog.collectionsSchema) { return;}
 				catalog.collectionsSchema.forEach((collectionSchema) => {
 					if (collectionSchema && collectionSchema.entry) {
@@ -88,20 +96,29 @@ class CollectionService {
 				Logger.info('Time to request and parse collection : ' + (endTime - startTime) + ' ms');
 				// put result in osdd attribute
 				collection.osdd = result;
+				let searchRequestDescription = {};
+
+				if (collection.id.indexOf('FEDEO') === 0) {
+					searchRequestDescription = {'@' : { template : 'https://fedeo.esa.int/opensearch/request?httpAccept=application%2Fatom%2Bxml&parentIdentifier=EOP:ESA:SCIHUB&startPage={startPage?}&startRecord={startIndex?}&maximumRecords={count?}&uid={geo:uid?}&startDate={time:start?}&endDate={time:end?}&bbox={geo:box?}&geometry={geo:geometry?}&creationDate={eo:creationDate?}&platform=SENTINEL-1&polarisationChannels={eo:polarisationChannels?}&orbitDirection={eo:orbitDirection?}&orbitNumber={eo:orbitNumber?}&productType={eo:productType?}&sensorMode={eo:sensorMode?}&processingLevel={eo:processingLevel?}&swathIdentifier={eo:swathIdentifier?}&username=' + Configuration.fedeo.username + '&password=' + Configuration.fedeo.password + '&recordSchema={sru:recordSchema?}&name={geo:name?}&lat={geo:lat?}&lon={geo:lon?}&radius={geo:radius?}' }};
+				} else {
+					searchRequestDescription = service.findSearchRequestDescription(collection.id);
+				}
 				// find node search request
-				let searchRequestDescription = service.findSearchRequestDescription(collection.id);
 				if (searchRequestDescription) {
 					// put url in url_search attribute
 					collection.url_search = searchRequestDescription['@'].template;
 					// create request to retrieve the number of available products
 					let urlCount = service.buildSearchRequestWithValue(collection.url_search, {count: 1});
+					// disable unauthorized tls
+					process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 					// and make first search
 					request(urlCount, (error, response, body) => {
 						if (!body) {
-							Logger.info(`Remove collection ${collection.id} because no body response for totalResults`);
-							_.remove(service.collections, function(item) {
+							Logger.warn(`Remove collection ${collection.id} because no body response for totalResults`);
+							/*_.remove(service.collections, function(item) {
 								return item.id === collection.id;
-							});
+							});*/
+							collection.totalResults = '???';
 							return;
 						}
 						Xml2JsonParser.parse(body, (result) => {
@@ -147,7 +164,7 @@ class CollectionService {
 
 		let searchUrlRequest = this.buildSearchRequestWithParam(collection.url_search, searchParams);
 		// TODO remove it as soon as possible and find an other way
-		if (collection.id.indexOf('SSARA') !== -1) {
+		if (collection.id.indexOf('FEDEO') !== -1) {
 			searchUrlRequest += 'recordSchema=om';
 		}
 
