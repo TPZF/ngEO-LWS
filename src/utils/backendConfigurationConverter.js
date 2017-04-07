@@ -85,10 +85,10 @@ let _convertEntryToFeature = function(entry) {
 	let eo = entry.EarthObservation;
 	if (eo && eo.featureOfInterest && eo.featureOfInterest.Footprint) {
 		feature.geometry = _convertGmlFpToInternalFp(eo.featureOfInterest);
+		feature = _addProductInformationForFeature(feature);
 	} else {
 		feature = null;
 	}
-	feature = _addProductInformationForFeature(feature);
 	return feature;
 }
 
