@@ -42,7 +42,7 @@
 				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"
 			}, {
 				"sTitle" : "Product",
-				"mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href"
+				"mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href"
 			}, {
 				"sTitle" : "Product Type",
 				"mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
@@ -60,7 +60,7 @@
 				"mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.timeliness"
 			}
 		],
-		"directDownloadColumn" : -1
+		"directDownloadColumn" : 13
 	},
 
 	"mailto" : "eohelp@esa.int",
