@@ -60,7 +60,6 @@ class CollectionService {
 						});
 					} else {
 						Logger.error(`Unable to find collectionsSchema for catalog ${catalog.name}`);
-						Logger.debug(Array.isArray(collectionSchema.entry));
 					}
 				});
 			});
@@ -89,8 +88,10 @@ class CollectionService {
 	populateCollection(collection) {
 		let service = this;
 		let startTime = Date.now();
+		Logger.debug('>> populateCollection(' + collection.id + ')');
 		// Get osdd
 		request(collection.url, (error, response, body) => {
+			Logger.debug('>> request on ' + collection.url);
 			Xml2JsonParser.parse(body, (result) => {
 				let endTime = Date.now();
 				Logger.info('Time to request and parse collection : ' + (endTime - startTime) + ' ms');
@@ -113,6 +114,7 @@ class CollectionService {
 					process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 					// and make first search
 					request(urlCount, (error, response, body) => {
+						Logger.debug('>> request on ' + urlCount);
 						if (!body) {
 							Logger.warn(`Remove collection ${collection.id} because no body response for totalResults`);
 							/*_.remove(service.collections, function(item) {
