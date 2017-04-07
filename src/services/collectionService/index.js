@@ -7,6 +7,11 @@ let Logger = require('utils/logger');
 let Configuration = require('config');
 let CatalogService = require('../catalogService');
 
+let fakeCollectionName = 'SENTINEL-1 Products';
+let fakeCollectionId = 'SENTINEL-1-PRODUCTS';
+let fakeCollectionUrlOsdd = 'http://fedeo.esa.int/opensearch/description.xml?parentIdentifier=EOP:ESA:SCIHUB&amp;platform=SENTINEL-1&amp;sensorType=RADAR&amp;startDate=2014-04-03T00:00:00Z&amp;endDate=';
+let fakeCollectionUrlSearch = 'https://fedeo.esa.int/opensearch/request?httpAccept=application%2Fatom%2Bxml&parentIdentifier=EOP:ESA:SCIHUB&startPage={startPage?}&startRecord={startIndex?}&maximumRecords={count?}&uid={geo:uid?}&startDate={time:start?}&endDate={time:end?}&bbox={geo:box?}&geometry={geo:geometry?}&creationDate={eo:creationDate?}&platform=SENTINEL-1&polarisationChannels={eo:polarisationChannels?}&orbitDirection={eo:orbitDirection?}&orbitNumber={eo:orbitNumber?}&productType={eo:productType?}&sensorMode={eo:sensorMode?}&processingLevel={eo:processingLevel?}&swathIdentifier={eo:swathIdentifier?}&username=' + Configuration.fedeo.username + '&password=' + Configuration.fedeo.password + '&recordSchema={sru:recordSchema?}&name={geo:name?}&lat={geo:lat?}&lon={geo:lon?}&radius={geo:radius?}';
+
 /**
  * Collection service designed to manage the available collections on different backends
  * Currently initialized with configuration file, but in future will be probably absorbed by Catalog object
@@ -30,8 +35,7 @@ class CollectionService {
 
 			CatalogService.catalogs.forEach((catalog) => {
 				if (catalog.fake) {
-					let fakeUrl = 'http://fedeo.esa.int/opensearch/description.xml?parentIdentifier=EOP:ESA:SCIHUB&amp;platform=SENTINEL-1&amp;sensorType=RADAR&amp;startDate=2014-04-03T00:00:00Z&amp;endDate= ';
-					let maFakeCollection = new Collection('FEDEO-SCI-HUB', fakeUrl, 'FEDEO-SCI-HUB');
+					let maFakeCollection = new Collection(fakeCollectionId, fakeCollectionUrlOsdd, fakeCollectionName);
 					thisService.collections.push(maFakeCollection);
 					// add other datas
 					thisService.populateCollection(maFakeCollection);
@@ -99,8 +103,8 @@ class CollectionService {
 				collection.osdd = result;
 				let searchRequestDescription = {};
 
-				if (collection.id.indexOf('FEDEO') === 0) {
-					searchRequestDescription = {'@' : { template : 'https://fedeo.esa.int/opensearch/request?httpAccept=application%2Fatom%2Bxml&parentIdentifier=EOP:ESA:SCIHUB&startPage={startPage?}&startRecord={startIndex?}&maximumRecords={count?}&uid={geo:uid?}&startDate={time:start?}&endDate={time:end?}&bbox={geo:box?}&geometry={geo:geometry?}&creationDate={eo:creationDate?}&platform=SENTINEL-1&polarisationChannels={eo:polarisationChannels?}&orbitDirection={eo:orbitDirection?}&orbitNumber={eo:orbitNumber?}&productType={eo:productType?}&sensorMode={eo:sensorMode?}&processingLevel={eo:processingLevel?}&swathIdentifier={eo:swathIdentifier?}&username=' + Configuration.fedeo.username + '&password=' + Configuration.fedeo.password + '&recordSchema={sru:recordSchema?}&name={geo:name?}&lat={geo:lat?}&lon={geo:lon?}&radius={geo:radius?}' }};
+				if (collection.id.indexOf(fakeCollectionId) === 0) {
+					searchRequestDescription = {'@' : { template : fakeCollectionUrlSearch }};
 				} else {
 					searchRequestDescription = service.findSearchRequestDescription(collection.id);
 				}
@@ -166,7 +170,7 @@ class CollectionService {
 
 		let searchUrlRequest = this.buildSearchRequestWithParam(collection.url_search, searchParams);
 		// TODO remove it as soon as possible and find an other way
-		if (collection.id.indexOf('FEDEO') !== -1) {
+		if (collection.id.indexOf(fakeCollectionId) !== -1) {
 			searchUrlRequest += 'recordSchema=om';
 		}
 
