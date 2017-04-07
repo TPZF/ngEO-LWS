@@ -27,8 +27,12 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
 	} else {
 		poslist = gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMembers.Polygon.exterior.LinearRing.posList;
 	}
-
-	let arrList = poslist.split(" ", -1);
+	let stringPosList = poslist;
+	if (poslist['#']) {
+		stringPosList = poslist['#'];
+	}
+	
+	let arrList = stringPosList.split(" ", -1);
 
 	for (let i = 0; i < arrList.length; i = i + 2) {
 		let coord = [];
@@ -40,6 +44,34 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
 	return geometry;
 }
 
+let _addProductInformationForFeature = function(feature) {
+	if (feature.properties.EarthObservation.result.EarthObservationResult.product) {
+		return feature;
+	} else {
+		// TODO define this from catalog configuration
+		let productUrl = _getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
+		console.log(productUrl);
+		if (productUrl !== '') {
+			let product = {
+				ProductInformation : {
+					fileName: {
+						ServiceReference : {
+							'@': {
+								href: ''
+							}
+						}
+					},
+					size: {
+						'#': ''
+					}
+				}
+			};
+			product.ProductInformation.fileName.ServiceReference['@'].href = productUrl;
+			feature.properties.EarthObservation.result.EarthObservationResult.product = product;
+		}
+		return feature;
+	}
+}
 /**
  * Convert a single entry to GeoJSON feature
  * if feature has no EarthObservation attribute, then remove it
@@ -56,6 +88,7 @@ let _convertEntryToFeature = function(entry) {
 	} else {
 		feature = null;
 	}
+	feature = _addProductInformationForFeature(feature);
 	return feature;
 }
 
@@ -100,7 +133,60 @@ let _getNamespaces = function(parsedXml) {
 	return JSON.stringify(parsedXml).match(namespaceRegexp).map(item => {
 		return item.split(':')[1] + ":";
 	});
-}
+};
+
+/**
+ * Helper recursive function to get a parameter from the configuration data
+ */
+let _getValue = function(object, property, defaultValue) {
+	if (object) {
+		var value = null;
+		var kv = property.split("="); // Split by "=" to handle arrays
+		if (kv.length == 2) {
+			// Array
+			if (object[kv[0]] == kv[1]) {
+				return object;
+			}
+		} else {
+			// Object
+			value = object[property];
+		}
+
+		if (typeof value != 'undefined') {
+			return value;
+		}
+	}
+
+	return defaultValue;
+};
+
+/**
+ *	Helper imperative function to get a parameter from the configuration data
+ *	(much faster than recursive one...)
+ */
+let _getFromPath = function(object, path, defaultValue) {
+	var names = path.split('.');
+	var obj = object;
+	for (var i = 0; obj && i < names.length - 1; i++) {
+		var nameKV = names[i].split('[]');
+		if (nameKV.length === 2) {
+			var obj2 = null;
+			for (var j=0; j<obj[nameKV[0]].length; j++) {
+				var obj2 = obj[nameKV[0]][j];
+				for (var k=i+1; obj2 && k < names.length -1; k++) {
+					obj2 = _getValue(obj2, names[k]);
+				}
+				if (obj2) {i=k; break;}
+			}
+			obj = obj2;
+		} else {
+			obj = _getValue(obj, names[i]);
+		}
+	}
+
+	return _getValue(obj, names[names.length - 1], defaultValue);
+};
+
 
 module.exports = {
 
