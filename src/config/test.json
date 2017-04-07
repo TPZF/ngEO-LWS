@@ -16,5 +16,9 @@
         "xmlnsParameter": "/opensearch/extensions/parameters/",
         "xmlnsTime": "/opensearch/extensions/time/",
         "identifier": "dc:identifier"
+    },
+    "fedeo": {
+        "username": "XXXXX",
+        "password": "*******"
     }
 }
