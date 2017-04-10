@@ -2,7 +2,7 @@ let _ = require('lodash');
 let request = require('request');
 let Catalog = require('./catalog');
 let Xml2JsonParser = require('utils/xml2jsonParser');
-let logger = require('utils/logger');
+let Logger = require('utils/logger');
 let Configuration = require('config');
 
 /**
@@ -26,19 +26,23 @@ class CatalogService {
 
 	/**
 	 * Get catalog with the given id
+	 * @function getCatalog
+	 * @param {String} id
 	 */
 	getCatalog(id) {
 		return _.find(this.catalogs, {id: id});
 	}
 
 	/**
-	 * Populate catalog with osdd & totalResults
+	 * Get catalog totalResults = number of collections
+	 * @function getTotal
+	 * @param {function} cbAfterFunction
 	 */
 	getTotal(cbAfterFunction) {
 		let nbMaxCatalog = this.catalogs.length;
 		let nbCatalog = 0;
 		this.catalogs.forEach((catalog) => {
-			// Remove it after demo
+			// TODO Remove it after demo
 			if (catalog.fake) {
 				catalog.totalResults = 1;
 				nbCatalog++;
@@ -58,8 +62,9 @@ class CatalogService {
 	}
 
 	/**
-	 * 
-	 * @param {*} cbAfterfunction 
+	 * populate catalog with collections
+	 * @function populate
+	 * @param {function} cbAfterfunction 
 	 */
 	populate(cbAfterfunction) {
 		let nbCatalogsComplete = 0;
@@ -74,7 +79,7 @@ class CatalogService {
 		this.catalogs.forEach((catalog) => {
 			if (!catalog.fake) {
 				catalog.collectionsSchema = [];
-				that.getLoop(catalog, 1, cbCatalogComplete);
+				that.getByLoopCollectionsForCatalog(catalog, 1, cbCatalogComplete);
 			} else {
 				cbCatalogComplete();
 			}
@@ -82,20 +87,26 @@ class CatalogService {
 	}
 
 	/**
-	 * 
-	 * @param {*} catalog 
-	 * @param {*} begin 
-	 * @param {*} callback 
+	 * Loop for getting collections for one catalog
+	 * step = 50
+	 * @function getByLoopCollectionsForCatalog
+	 * @param {object} catalog 
+	 * @param {number} begin 
+	 * @param {function} callback 
 	 */
-	getLoop(catalog, begin, callback) {
+	getByLoopCollectionsForCatalog(catalog, begin, callback) {
 		let that = this;
 		request(catalog.url + '&startRecord=' + begin, (error, response, body) => {
+			Logger.debug('>> request on ' + catalog.url + '&startRecord='+begin);
+			if (!body) {
+				return;
+			}
 			Xml2JsonParser.parse(body, (result) => {
 				catalog.collectionsSchema.push(result);
 				let max = (catalog.totalResults < 200) ? catalog.totalResults : 200;
 				//let max = catalog.totalResults;
 				if (begin+50 < max) {
-					that.getLoop(catalog, begin+50, callback);
+					that.getByLoopCollectionsForCatalog(catalog, begin+50, callback);
 				} else {
 					callback();
 				}
