@@ -1,20 +1,28 @@
-/*
- * GET datasetPopulationMatrix
- * IF-ngEO-datasetPopulationMatrix
- */
-
+// CORE
 let express = require('express');
-let router = express.Router();
-let logger = require('utils/logger');
+
+// UTILS
+let Logger = require('utils/logger');
+
+// SERVICE
 let collectionService = require('services/collectionService');
 
-// middleware that is specific to this router
+// ROUTER
+let router = express.Router();
 router.use(function timeLog(req, res, next) {
-	logger.info('Time: ', Date.now());
+	Logger.info('Time: ', Date.now());
 	next();
 });
-// define the home page route
+
+/**
+ * define the get route
+ * 
+ * @function router.get
+ * @param {string} url - /ngeo/datasetPopulationMatrix
+ */
 router.get('/', function (req, res) {
+
+	Logger.debug('GET /ngeo/datasetPopulationMatrix');
 	// let options = {
 	// 	root: __dirname
 	// };
@@ -45,12 +53,21 @@ router.get('/', function (req, res) {
 	// Dynamic result
 	res.json(response);
 
+
+
 	// Mocked result
 	// res.sendFile('./datasets.json', options);
 });
-// define the about route
+
+/**
+ * define the about route
+ *  
+ * @function router.get
+ * @param {string} url - /ngeo/datasetPopulationMatrix/about
+ */
 router.get('/about', function (req, res) {
-	res.send('retrieve the dataset population matrix containing dataset list and their id for the web client');
+	Logger.debug('GET /ngeo/datasetPopulationMatrix/about');
+	res.status(200).send('<h1>Route datasetPopulationMatrix</h1><h2>GET /ngeo/datasetPopulationMatrix</h2>');
 });
 
 module.exports = router
