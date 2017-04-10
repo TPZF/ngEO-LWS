@@ -1,5 +1,6 @@
 let _ = require('lodash');
 let request = require('request');
+let Promise = require('promise');
 
 let Collection = require('./collection');
 let Xml2JsonParser = require('utils/xml2jsonParser');
@@ -23,60 +24,71 @@ class CollectionService {
 	 */
 	constructor() {
 		
-		let thisService = this;
 		this.collections = [];
+		this.isLoading = true;
+		this.initialize().then(() => {
+			this.isLoading = false;
+		});
+	}
+
+	initialize() {
+		let thisService = this;
 		let startTime = Date.now();
 
-		let cbAfterCatalogsPopulate = function() {
+		return new Promise(function(resolve,reject) {
 
-			let endTime = Date.now();
-			Logger.info('Time to get populate for all catalogs : ' + (endTime - startTime) + ' ms');
-			startTime = endTime;
+			let cbAfterCatalogsPopulate = function() {
 
-			CatalogService.catalogs.forEach((catalog) => {
-				if (catalog.fake) {
-					let maFakeCollection = new Collection(fakeCollectionId, fakeCollectionUrlOsdd, fakeCollectionName);
-					thisService.collections.push(maFakeCollection);
-					// add other datas
-					thisService.populateCollection(maFakeCollection);
-				}
-				if (!catalog.collectionsSchema) { return;}
-				catalog.collectionsSchema.forEach((collectionSchema) => {
-					if (collectionSchema && collectionSchema.entry) {
-						if (!Array.isArray(collectionSchema.entry)) {
-							collectionSchema.entry = [collectionSchema.entry];
-						}
-						collectionSchema.entry.forEach((oneEntry) => {
-							// find url for getting opensearch description
-							let urlOSDD = _.find(oneEntry.link, function(lien) {
-								return (lien['@'].rel === 'search' && lien['@'].type === 'application/opensearchdescription+xml');
-							});
-							let url = urlOSDD ? urlOSDD['@'].href : oneEntry.id;
-							// find id
-							let idCollection = oneEntry[Configuration.opensearch.identifier];
-							if (!_.find(thisService.collections, function(item) {return item.id === idCollection})) {
-								// set collection object
-								let maCollection = new Collection(idCollection, url, oneEntry.title);
-								thisService.collections.push(maCollection);
-								// add other datas
-								thisService.populateCollection(maCollection);
-							}
-						});
-					} else {
-						Logger.error(`Unable to find collectionsSchema for catalog ${catalog.name}`);
+				let endTime = Date.now();
+				Logger.info('Time to get populate for all catalogs : ' + (endTime - startTime) + ' ms');
+				startTime = endTime;
+
+				CatalogService.catalogs.forEach((catalog) => {
+					if (catalog.fake) {
+						let maFakeCollection = new Collection(fakeCollectionId, fakeCollectionUrlOsdd, fakeCollectionName);
+						thisService.collections.push(maFakeCollection);
+						// add other datas
+						thisService.populateCollection(maFakeCollection);
 					}
+					if (!catalog.collectionsSchema) { return;}
+					catalog.collectionsSchema.forEach((collectionSchema) => {
+						if (collectionSchema && collectionSchema.entry) {
+							if (!Array.isArray(collectionSchema.entry)) {
+								collectionSchema.entry = [collectionSchema.entry];
+							}
+							collectionSchema.entry.forEach((oneEntry) => {
+								// find url for getting opensearch description
+								let urlOSDD = _.find(oneEntry.link, function(lien) {
+									return (lien['@'].rel === 'search' && lien['@'].type === 'application/opensearchdescription+xml');
+								});
+								let url = urlOSDD ? urlOSDD['@'].href : oneEntry.id;
+								// find id
+								let idCollection = oneEntry[Configuration.opensearch.identifier];
+								if (!_.find(thisService.collections, function(item) {return item.id === idCollection})) {
+									// set collection object
+									let maCollection = new Collection(idCollection, url, oneEntry.title);
+									thisService.collections.push(maCollection);
+									// add other datas
+									resolve(thisService.populateCollection(maCollection));
+								}
+							});
+						} else {
+							Logger.error(`Unable to find collectionsSchema for catalog ${catalog.name}`);
+							reject('Unable to find collectionsSchema');
+						}
+					});
 				});
-			});
-		}
+			}
 
-		let cbAfterCatalogsGetTotal = function(catalogs) {
-			let endTime = new Date().getTime();
-			Logger.info('Time to get total results for all catalogs : ' + (endTime - startTime) + ' ms');
-			startTime = endTime;
-			CatalogService.populate(cbAfterCatalogsPopulate);
+			let cbAfterCatalogsGetTotal = function(catalogs) {
+				let endTime = new Date().getTime();
+				Logger.info('Time to get total results for all catalogs : ' + (endTime - startTime) + ' ms');
+				startTime = endTime;
+				CatalogService.populate(cbAfterCatalogsPopulate);
 
-		};
-		CatalogService.getTotal(cbAfterCatalogsGetTotal);
+			};
+			CatalogService.getTotal(cbAfterCatalogsGetTotal);
+		});
 	}
 
 	/**

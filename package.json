@@ -15,6 +15,7 @@
     "lodash": "^4.17.4",
     "method-override": "^2.3.7",
     "mongodb": "^2.2.24",
+    "promise": "^7.1.1",
     "request": "^2.79.0",
     "routes": "^2.1.0",
     "xml2js-expat": "^0.2.2"
@@ -33,7 +34,7 @@
     "pretest": "mongod --config ./.mongodb/conf/mongod.conf --fork",
     "test": "NODE_ENV=test node ./node_modules/mocha/bin/mocha \"src/**/*.test.js\" --reporter spec",
     "posttest": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
-    
+
     "precoverage": "mongod --config ./.mongodb/conf/mongod.conf --fork",
     "coverage": "NODE_ENV=test istanbul cover --report html ./node_modules/mocha/bin/_mocha \"src/**/*.test.js\" -- -R spec",
     "postcoverage": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
