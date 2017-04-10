@@ -1,18 +1,24 @@
+// CORE
+let request = require('supertest');
+let should = require('should');
+
+// APP
+let app = require('../../app');
+
 /**
  * Unit test file for service web DataAccessRequestStatuses
  * It allow to test the REST service and the mongodb database
  */
-let should = require('should');
-let assert = require('assert');
-let request = require("supertest");
-
-let app = require('../../app');
-
 describe('Route dataAccessRequestStatuses', function() {
 
-	before(function(done) {
-		// if you want to pass parameters before testing
-		done();
+	it("Wait app is completly loading...", function (done) {
+		let isLoading = true;
+		this.timeout(4000);
+		setTimeout(function () {
+			isLoading = false;
+			should(isLoading).be.false();
+			done();
+		}, 3000);
 	});
 
 	it('GET /ngeo/dataAccessRequestStatuses', function (done) {
