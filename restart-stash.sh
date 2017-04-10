@@ -6,5 +6,7 @@ git stash -q
 git pull --rebase -q
 # stash pop items
 git stash pop -q
+# install modules
+npm install
 # start service ngeo
 sudo systemctl start ngeo
