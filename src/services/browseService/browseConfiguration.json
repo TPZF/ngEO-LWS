@@ -40,5 +40,18 @@
             "plateformId": "Envisat"
         },
         "url": "http://brow01.ngeo.eox.at/c/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=ENVISAT_ASAR_IMP_1P"
-    }    
+    },
+    {
+        "pattern": {
+            "plateformId": "IKONOS",
+            "serialId": "2"
+        },
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=IKONOS-2"
+    },
+    {
+        "pattern": {
+            "plateformId": "Pleiades"
+        },
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Pleiades"
+    }
 ]
