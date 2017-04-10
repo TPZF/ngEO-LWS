@@ -16,7 +16,13 @@ module.exports = {
 	},
 
 	/**
-	 * Helper recursive function to get a parameter from the configuration data
+	 * Helper function to get a property from an object
+	 * 
+	 * @function getValue
+	 * @param {object} object - JSON object
+	 * @param {string} property - property to find in object
+	 * @param {object} defaultValue - default value if property is not found
+	 * @returns {object}
 	 */
 	getValue: function(object, property, defaultValue) {
 		if (object) {
@@ -41,8 +47,13 @@ module.exports = {
 	},
 
 	/**
-	 *	Helper imperative function to get a parameter from the configuration data
-	 *	(much faster than recursive one...)
+	 * Helper iterative function to get a property from a json object
+	 *
+	 * @function getFromPath
+	 * @param {object} object - JSON object
+	 * @param {string} path - path to reach the value
+	 * @param {object} defaultValue - value if path not found
+	 * @returns {object}
 	 */
 	getFromPath: function(object, path, defaultValue) {
 		var names = path.split('.');
