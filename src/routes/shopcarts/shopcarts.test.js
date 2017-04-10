@@ -1,14 +1,15 @@
+// CORE
+let should = require('should');
+let request = require('supertest');
+
+// APP
+let app = require('../../app');
+
 /**
  * Unit test file for service web Shopcarts
  * It allow to test the REST service and the mongodb database
  */
-let should = require('should');
-let assert = require('assert');
-let request = require("supertest");
-
-let app = require('../../app');
-
-describe('ShopCarts', function() {
+describe('Route ShopCarts', function() {
 
 	before(function(done) {
 		// if you want to pass parameters before testing
@@ -276,7 +277,7 @@ describe('ShopCarts', function() {
 
 });
 
-describe('ShopCartFeatures', function() {
+describe('Route shopCart features', function() {
 
 	var idShopCart = 0;
 	var idFeatures = [];

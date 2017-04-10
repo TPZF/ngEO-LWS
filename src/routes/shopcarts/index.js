@@ -1,7 +1,6 @@
 // CORE
 let express = require('express');
 let _ = require('lodash');
-let MongoClient = require('mongodb').MongoClient;
 let ObjectId = require('mongodb').ObjectID;
 
 // UTILS
@@ -111,12 +110,10 @@ router.use(function authenticate(req, res, next) {
  *
  * @function router.get
  * @param url - /ngeo/shopcarts/
- * @param req - empty
- * @param res - response
  */
 router.get('/', (req, res) => {
 
-	Logger.debug('ShopCart list is calling');
+	Logger.debug('GET /ngeo/shopcarts');
 
 	// define call back function after listing shopcarts
 	// send response
@@ -146,12 +143,10 @@ router.get('/', (req, res) => {
  *
  * @function router.post
  * @param url - /ngeo/shopcarts/
- * @param req - request {shopcart:{name,userId,isDefault}}
- * @param res - response
  */
 router.post('/', (req,res) => {
 
-	Logger.debug('ShopCart create is calling');
+	Logger.debug('POST /ngeo/shopcarts');
 
 	// check if request is valid
 	if (!_checkRequest(req)) {
@@ -197,12 +192,10 @@ router.post('/', (req,res) => {
  *
  * @function router.put
  * @param url - /ngeo/shopcarts/id
- * @param req - request {shopcart:{_id,id,name,userId,isDefault}}
- * @param res - response
  */
 router.put('/:shopcart_id', (req,res) => {
 
-	Logger.debug('ShopCart update is calling');
+	Logger.debug('PUT /ngeo/shopcarts/:shopcartId');
 
 	// check if request is valid
 	if (!_checkRequest(req)) {
@@ -257,7 +250,7 @@ router.put('/:shopcart_id', (req,res) => {
  */
 router.delete('/:shopcart_id', (req,res) => {
 
-	Logger.debug('ShopCart delete is calling');
+	Logger.debug('DELETE /ngeo/shopcarts/:shopcartId');
 
 	// check if request is valid
 	if (!_checkRequest(req)) {
@@ -313,7 +306,7 @@ router.delete('/:shopcart_id', (req,res) => {
  */
 router.get('/:shopcart_id/items', (req,res) => {
 
-	Logger.debug('ShopCart search features is calling');
+	Logger.debug('GET /ngeo/shopcarts/:shopcartId/items');
 
 	if (!_checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
@@ -367,7 +360,7 @@ router.get('/:shopcart_id/items', (req,res) => {
  */
 router.post('/:shopcart_id/items', (req,res) => {
 
-	Logger.debug('ShopCart add feature is calling');
+	Logger.debug('POST /ngeo/shopcarts/:shopcartId/items');
 
 	if (!_checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
@@ -425,7 +418,7 @@ router.post('/:shopcart_id/items', (req,res) => {
  */
 router.post('/:shopcart_id/items/delete', (req,res) => {
 
-	Logger.debug('ShopCart delete features is calling');
+	Logger.debug('POST /ngeo/shopcarts/:shopcartId/items/delete');
 
 	if (!_checkRequestFeatures(req)) {
 		res.status(400).json("Request is not valid");
@@ -477,14 +470,10 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
  *
  * @function router.get
  * @param url - /ngeo/shopcarts/about
- * @param req - empty
- * @param res - response
  */
 router.get('/about', (req, res) => {
-
-	Logger.debug('About ShopCart is calling');
-
-	res.status(200).json("Description of shopcarts requests");
+	Logger.debug('GET /ngeo/shopcarts/about');
+	res.status(200).send('Description of shopcarts requests');
 });
 
 module.exports = router;
