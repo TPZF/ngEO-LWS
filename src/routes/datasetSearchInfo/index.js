@@ -173,20 +173,6 @@ router.get('/:datasetId', function (req, res) {
 	} else {
 		res.send(buildResponse(datasetId));
 	}
-
-	/*collectionService.info(datasetId, {
-		onSuccess: (result) => {
-			// Used for debug
-			if (req.query.sxcat) {
-				res.send(result);
-			} else {
-				res.send(buildResponse(datasetId, result))
-			}
-		},
-		onError: (errorMessage) => {
-			res.send(errorMessage);
-		}
-	});*/
 });
 
 // Just for test, maybe description should be extracted using this link..
@@ -200,12 +186,6 @@ router.get('/atom', function (req, res) {
 			res.send(errorMessage);
 		}
 	});
-});
-
-// Just for test, maybe description should be extracted using this link..
-router.get('/about', function (req, res) {
-	Logger.debug('About datasetSearchInfo requests is calling');
-	res.status(200).json("Description of datasetSearchInfo requests");
 });
 
 module.exports = router;
