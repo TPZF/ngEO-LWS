@@ -15,10 +15,6 @@ describe('Route dataAccessRequestStatuses', function() {
 		done();
 	});
 
-	/*
-	 * Steps on this test
-	 * 1 - GET /ngeo/dataAccessRequestStatuses
-	 */
 	it('GET /ngeo/dataAccessRequestStatuses', function (done) {
 
 		request(app)
@@ -35,10 +31,6 @@ describe('Route dataAccessRequestStatuses', function() {
 
 	});
 
-	/*
-	 * Steps on this test
-	 * 1 - GET /ngeo/dataAccessRequestStatuses/about
-	 */
 	it('GET /ngeo/dataAccessRequestStatuses/about', function (done) {
 
 		request(app)
