@@ -1,7 +1,5 @@
 // CORE
 let express = require('express');
-let MongoClient = require('mongodb').MongoClient;
-let ObjectId = require('mongodb').ObjectID;
 let _ = require('lodash');
 
 // UTILS
@@ -42,11 +40,10 @@ function _checkRequest(request) {
 	return true;
 }
 
+// ROUTER
 let router = express.Router({
 	mergeParams: true
 });
-
-// make sure we go to the next routes and don't stop here
 router.use(function timeLog(req, res, next) {
 	next();
 });
@@ -56,8 +53,6 @@ router.use(function timeLog(req, res, next) {
  *
  * @function router.post
  * @param url - /ngeo/simpleDataAccessRequests/
- * @param req - request {simpledataaccessrequest:{requestStage,downlaodLocation,productURLs,name}}
- * @param res - response
  */
 router.put('/', (req,res) => {
 
@@ -131,14 +126,10 @@ router.put('/', (req,res) => {
  * About : description of requests for simpleDataAccessRequests
  * @function router.get
  * @param {String} url - /ngeo/simpletDataAccessRequests/about
- * @param {object} req - empty
- * @param {object} res - response
  */
 router.get('/about', (req, res) => {
-
-	Logger.debug('About simpleDataAccessRequests requests is calling');
-
-	res.status(200).json("Description of simpleDataAccessRequests requests");
+	Logger.debug('GET /ngeo/simpletDataAccessRequests/about');
+	res.status(200).send('<h1>Description of simpleDataAccessRequests requests</h1>');
 });
 
 module.exports = router;
