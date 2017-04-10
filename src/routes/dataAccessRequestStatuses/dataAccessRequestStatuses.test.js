@@ -8,7 +8,7 @@ let request = require("supertest");
 
 let app = require('../../app');
 
-describe('DataAccessRequestStatuses', function() {
+describe('Route dataAccessRequestStatuses', function() {
 
 	before(function(done) {
 		// if you want to pass parameters before testing
@@ -19,22 +19,18 @@ describe('DataAccessRequestStatuses', function() {
 	 * Steps on this test
 	 * 1 - GET /ngeo/dataAccessRequestStatuses
 	 */
-	describe('GET /ngeo/dataAccessRequestStatuses', function () {
+	it('GET /ngeo/dataAccessRequestStatuses', function (done) {
 
-		it('List all dataAccessRequestStatuses', function(done) {
-
-			request(app)
-			.get('/ngeo/dataAccessRequestStatuses')
-			.send()
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('dataAccessRequestStatuses');
-				should(res.body.dataAccessRequestStatuses).be.a.Array();
-				done();
-			});
-
+		request(app)
+		.get('/ngeo/dataAccessRequestStatuses')
+		.send()
+		.expect(200)
+		.expect('Content-Type', /json/)
+		.end(function(err,res) {
+			should(res.body).be.a.Object();
+			should(res.body).have.property('dataAccessRequestStatuses');
+			should(res.body.dataAccessRequestStatuses).be.a.Array();
+			done();
 		});
 
 	});
@@ -43,20 +39,15 @@ describe('DataAccessRequestStatuses', function() {
 	 * Steps on this test
 	 * 1 - GET /ngeo/dataAccessRequestStatuses/about
 	 */
-	describe('GET /ngeo/dataAccessRequestStatuses/about', function () {
+	it('GET /ngeo/dataAccessRequestStatuses/about', function (done) {
 
-		it('Get info about dataAccessRequestStatuses', function(done) {
-
-			request(app)
-			.get('/ngeo/dataAccessRequestStatuses/about')
-			.send()
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.String();
-				done();
-			});
-
+		request(app)
+		.get('/ngeo/dataAccessRequestStatuses/about')
+		.send()
+		.expect(200)
+		.end(function(err,res) {
+			should(res.text).be.a.String();
+			done();
 		});
 
 	});

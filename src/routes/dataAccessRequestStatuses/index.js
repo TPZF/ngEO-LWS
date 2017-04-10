@@ -1,7 +1,5 @@
 // CORE
 let express = require('express');
-let MongoClient = require('mongodb').MongoClient;
-let ObjectId = require('mongodb').ObjectID;
 let _ = require('lodash');
 
 // UTILS
@@ -16,11 +14,10 @@ let DatabaseService = require('services/databaseService');
 let DATA_ACCESS_REQUEST_STATUS_NAME = 'DataAccessRequestStatus';
 let DOWNLOAD_MANAGER_NAME = 'DownloadManager';
 
+// ROUTER
 let router = express.Router({
 	mergeParams: true
 });
-
-// make sure we go to the next routes and don't stop here
 router.use(function timeLog(req, res, next) {
 	next();
 });
@@ -30,12 +27,10 @@ router.use(function timeLog(req, res, next) {
  *
  * @function router.get
  * @param url - /ngeo/dataAccessRequestStatuses/
- * @param req - empty
- * @param res - response
  */
 router.get('/', (req, res) => {
 
-	Logger.debug('DataAccessRequestStatuses list is calling');
+	Logger.debug('GET /ngeo/dataAccessRequestStatuses/');
 
 	// define call back function after listing downloadmnagers
 	// send response
@@ -91,14 +86,13 @@ router.get('/', (req, res) => {
  * About : description of requests for dataAccessRequestStatuses
  * @function router.get
  * @param {String} url - /ngeo/dataAccessRequestStatuses/about
- * @param {object} req - empty
- * @param {object} res - response
  */
 router.get('/about', (req, res) => {
 
-	Logger.debug('About dataAccessRequestStatuses requests is calling');
+	Logger.debug('GET /ngeo/dataAccessRequestStatuses/about');
 
-	res.status(200).json("Description of dataAccessRequestStatuses requests");
+	res.status(200).send('Description of dataAccessRequestStatuses requests');
+	
 });
 
 module.exports = router;
