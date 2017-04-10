@@ -47,7 +47,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "ssh://gitolite@tuleap.telespazio.fr/ngeo-lws/Ngeo-LWS.git"
+    "url": "https://github.com/TPZF/ngEO-LWS.git"
   },
   "author": "Telespazio FR",
   "license": "MIT"
