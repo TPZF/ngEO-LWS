@@ -1,19 +1,15 @@
+// CORE
+let request = require('supertest');
+let should = require('should');
+
+// APP
+let app = require('../../app');
+
 /**
  * Unit test file for service web DownloadManagers
  * It allow to test the REST service and the mongodb database
  */
-let should = require('should');
-let assert = require('assert');
-let request = require("supertest");
-
-let app = require('../../app');
-
-describe('DownloadManagers', function() {
-
-	before(function(done) {
-		// if you want to pass parameters before testing
-		done();
-	});
+describe('Route downloadManagers', function() {
 
 	/*
 	 * Steps on this test

@@ -1,6 +1,5 @@
 // CORE
 let express = require('express');
-let MongoClient = require('mongodb').MongoClient;
 let ObjectId = require('mongodb').ObjectID;
 let _ = require('lodash');
 
@@ -51,11 +50,10 @@ function _checkRequest(request) {
 	return true;
 }
 
+// ROUTER
 let router = express.Router({
 	mergeParams: true
 });
-
-// make sure we go to the next routes and don't stop here
 router.use(function timeLog(req, res, next) {
 	AuthenticationService.isAuthenticated(req, res);
 	next();
@@ -71,7 +69,7 @@ router.use(function timeLog(req, res, next) {
  */
 router.get('/', (req, res) => {
 
-	Logger.debug('DownloadManagers list is calling');
+	Logger.debug('GET /ngeo/downloadManagers');
 
 	// define call back function after listing downloadmanagers
 	// send response
@@ -108,7 +106,7 @@ router.get('/', (req, res) => {
  */
 router.get('/:downloadManagerid', (req, res) => {
 
-	Logger.debug('DownloadManagers get one is calling');
+	Logger.debug('GET /ngeo/downloadManagers/:id');
 
 	let idToGet = req.params['downloadManagerid'];
 
@@ -174,7 +172,7 @@ router.get('/:downloadManagerid', (req, res) => {
  */
 router.post('/', (req,res) => {
 
-	Logger.debug('DownloadManager add is calling');
+	Logger.debug('POST /ngeo/downloadManagers');
 
 	// check if request is valid
 	if (!_checkRequest(req)) {
@@ -223,7 +221,7 @@ router.post('/', (req,res) => {
  */
 router.delete('/:downloadmanager_id', (req,res) => {
 
-	Logger.debug('downloadmanager delete is calling');
+	Logger.debug('DELETE /ngeo/downloadManagers/:id');
 
 	// check if request is valid
 	if (!_checkRequest(req)) {
@@ -279,10 +277,8 @@ router.delete('/:downloadmanager_id', (req,res) => {
  * @param {object} res - response
  */
 router.get('/about', (req, res) => {
-
-	Logger.debug('About downloadManagers requests is calling');
-
-	res.status(200).json("Description of downloadManagers requests");
+	Logger.debug('GET /ngeo/downloadManagers/about');
+	res.status(200).send("Description of downloadManagers requests");
 });
 
 module.exports = router;
