@@ -15,7 +15,7 @@ let Utils = require('./utils');
  * @return
  *		the geometry json object in webc known format	
  */
-let _convertGmlFpToInternalFp = function (gmlFpEntry) {
+let _convertGmlFpToInternalFp = function (gmlFpEntry, collectionId) {
 	let geometry = {};
 	geometry.type = "Polygon";
 	geometry.coordinates = [];
@@ -37,8 +37,13 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry) {
 
 	for (let i = 0; i < arrList.length; i = i + 2) {
 		let coord = [];
-		coord[0] = parseFloat(arrList[i + 1]);
-		coord[1] = parseFloat(arrList[i]);
+		if (collectionId.indexOf('SENTINEL-1-PRODUCTS') === 0) {
+			coord[0] = parseFloat(arrList[i]);
+			coord[1] = parseFloat(arrList[i + 1]);
+		} else {
+			coord[0] = parseFloat(arrList[i + 1]);
+			coord[1] = parseFloat(arrList[i]);
+		}
 		geometry.coordinates[0].push(coord);
 	}
 
@@ -51,7 +56,6 @@ let _addProductInformationForFeature = function(feature) {
 	} else {
 		// TODO define this from catalog configuration
 		let productUrl = Utils.getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
-		console.log(productUrl);
 		if (productUrl !== '') {
 			let product = {
 				ProductInformation : {
@@ -77,7 +81,7 @@ let _addProductInformationForFeature = function(feature) {
  * Convert a single entry to GeoJSON feature
  * if feature has no EarthObservation attribute, then remove it
  */
-let _convertEntryToFeature = function(entry) {
+let _convertEntryToFeature = function(entry, collectionId) {
 	let feature = {};
 	feature.id = entry.id;
 	feature.type = "Feature";
@@ -85,7 +89,7 @@ let _convertEntryToFeature = function(entry) {
 
 	let eo = entry.EarthObservation;
 	if (eo && eo.featureOfInterest && eo.featureOfInterest.Footprint) {
-		feature.geometry = _convertGmlFpToInternalFp(eo.featureOfInterest);
+		feature.geometry = _convertGmlFpToInternalFp(eo.featureOfInterest, collectionId);
 		feature = _addProductInformationForFeature(feature);
 	} else {
 		feature = null;
@@ -101,7 +105,7 @@ let _convertEntryToFeature = function(entry) {
  * @return
  *		The GeoJSON FeatureCollection object in webc known format
  */
-let _convertEntriesIntoFeatureCollection = function (parsedJson) {
+let _convertEntriesIntoFeatureCollection = function (parsedJson, collectionId) {
 	let featureCollection = {
 		features: [],
 		properties: _.omit(parsedJson, ['@','entry','generator'])
@@ -112,11 +116,11 @@ let _convertEntriesIntoFeatureCollection = function (parsedJson) {
 
 		// If there is only one feature, the entries is not an array but the literal object
 		if ( !Array.isArray(entries) ) {
-			let feat = _convertEntryToFeature(entries);
+			let feat = _convertEntryToFeature(entries, collectionId);
 			if (feat) {featureCollection.features.push(feat); }
 		} else {
 			entries.forEach((entry) => {
-				let feat = _convertEntryToFeature(entry);
+				let feat = _convertEntryToFeature(entry, collectionId);
 				if (feat) {featureCollection.features.push(feat); }
 			});
 		}
@@ -146,12 +150,12 @@ module.exports = {
 	 * @return featureCollection
 	 *      Feature collection compatible with WEBC format
 	 */
-	convertSearchResponse: function (parsedXml) {
+	convertSearchResponse: function (parsedXml, collectionId) {
 		let startTime = new Date();
 		// Replace all the xmlns so we have a json file compatible directly with webc protocol by just removing namespaces
 		let removeNamespacesFromTags = new RegExp(_getNamespaces(parsedXml).join('|'), "g")
 		let stringJsonWithoutNamespaces = JSON.stringify(parsedXml).replace(removeNamespacesFromTags, '');
-		let result = _convertEntriesIntoFeatureCollection(JSON.parse(stringJsonWithoutNamespaces));
+		let result = _convertEntriesIntoFeatureCollection(JSON.parse(stringJsonWithoutNamespaces), collectionId);
 		logger.info('Our conversion from json to the webc format geojson data is : ', Date.now() - startTime);
 		return result;
 	}

@@ -45,7 +45,7 @@ router.get('/', function (req, res) {
 	collectionService.search(collectionId, {
 		params: req.query,
 		onSuccess: (result) => {
-			let geoJsonWebcData = configurationConverter.convertSearchResponse(result);
+			let geoJsonWebcData = configurationConverter.convertSearchResponse(result, collectionId);
 			if (geoJsonWebcData) {
 				// Add browse information for converted collection
 				browseService.addBrowseInfo(collectionId, geoJsonWebcData);
