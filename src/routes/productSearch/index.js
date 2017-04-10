@@ -1,16 +1,14 @@
-let logger = require('utils/logger');
+// CORE
 let express = require('express');
-let collectionService = require('services/collectionService');
-let browseService = require('services/browseService');
-let url = require('url');
 let _ = require('lodash');
 
+// UTILS
+let Logger = require('utils/logger');
 let configurationConverter = require('utils/backendConfigurationConverter');
 
-//the options here is to preserve  when express routes the url to preserver paramters
-let router = express.Router({
-	mergeParams: true
-});
+// SERVICES
+let collectionService = require('services/collectionService');
+let browseService = require('services/browseService');
 
 /**
  * @function _addOriginDatasetId
@@ -25,21 +23,26 @@ function _addOriginDatasetId(myCollectionId, myGeoJson) {
 	return myGeoJson;
 }
 
-//let queryPathUrl = "/atom?count=50&offset=900&bbox=&grel=&start=1990-01-01T00:00:00.000Z&end=2003-12-31T23:59:59.000Z&trel=&platformSerialIdentifier=&instrumentShortName=&wrsLongitudeGrid=&wrsLatitudeGrid=&availabilityTime=";
-
-// 'https://sxcat.eox.at/opensearch/collections/Landsat57Merged/atom?count=50&offset=900&bbox=&grel=&start=1990-01-01T00:00:00.000Z&end=2003-12-31T23:59:59.000Z&trel=&platformSerialIdentifier=&instrumentShortName=&wrsLongitudeGrid=&wrsLatitudeGrid=&availabilityTime=',
-
-// middleware that is specific to this router
+// ROUTER
+let router = express.Router({
+	mergeParams: true
+});
 router.use(function timeLog(req, res, next) {
-	logger.info('Time: ', Date.now());
+	Logger.info('Time: ', Date.now());
 	next();
 });
 
-// define the home page route
+/**
+ * define the home page route
+ * 
+ * @function router.get
+ * @param {string} url - /
+ */
 router.get('/', function (req, res) {
 	
 	// Retrieve collection url from collection service
 	let collectionId = req.params['fCollectionId'];
+	Logger.debug('GET /ngeo/catalogue/' + collectionId + '/search');
 
 	// Search the available products on backend
 	collectionService.search(collectionId, {
@@ -63,9 +66,15 @@ router.get('/', function (req, res) {
 	});
 });
 
-// define the about route
+/**
+ * define the about route
+ * 
+ * @function router.get
+ * @param {string} url - /about
+ */
 router.get('/about', function (req, res) {
-	res.send('retrieve the search');
+	Logger.debug('GET /ngeo/catalogue/:idCollection/search/about');
+	res.status(200).send('<h1>Route for productSearch</h1><h2>GET /ngeo/catalogue/:collectionId/search</h2><h2><h2>GET /ngeo/catalogue/about</h2>');
 });
 
 module.exports = router
