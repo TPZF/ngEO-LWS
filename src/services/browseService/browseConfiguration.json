@@ -53,5 +53,11 @@
             "plateformId": "Pleiades"
         },
         "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=Pleiades"
+    },
+    {
+        "pattern": {
+            "plateformId": "RapidEye"
+        },
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=RapidEye"
     }
 ]
