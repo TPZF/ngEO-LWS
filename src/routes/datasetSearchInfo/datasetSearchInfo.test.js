@@ -10,6 +10,16 @@ let app = require('../../app');
  */
 describe('Route datasetSearchInfo', function () {
 
+	it("Wait app is completly loading...", function (done) {
+		let isLoading = true;
+		this.timeout(10000);
+		setTimeout(function () {
+			isLoading = false;
+			should(isLoading).be.false();
+			done();
+		}, 9000);
+	});
+
 	let testCollectionId = 'Landsat57Merged';
 
 	it('GET /ngeo/datasetSearchInfo/:collectionId', function (done) {

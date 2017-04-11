@@ -7,6 +7,16 @@ let app = require('../../app');
 
 describe('Route datasetPopulationMatrix', function () {
 
+	it("Wait app is completly loading...", function (done) {
+		let isLoading = true;
+		this.timeout(10000);
+		setTimeout(function () {
+			isLoading = false;
+			should(isLoading).be.false();
+			done();
+		}, 9000);
+	});
+
 	it('GET /ngeo/datasetPopulationMatrix', function (done) {
 
 		request(app)
