@@ -30,28 +30,28 @@ TBD
 
 |Commands | Production command | Development command | Test command      |
 |-------- | ------------------ | ------------------- | ------------      |
-|`Starting server`| *npm start*| *npm run start-dev* |                   | 
-|`Stoping server`  | *npm stop* | *npm run stop-dev*  |                   | 
-|`Test with Coverage`|         |                     |*npm run coverage* | 
+|*Starting server*| `npm start`| `npm run start-dev` |                   | 
+|*Stoping server*  | `npm stop` | `npm run stop-dev`  |                   | 
+|*Test with Coverage*|         |                     |`npm run coverage` | 
 
 **open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project**
 
 >Windows commands
 
-* **__You need to run the `cmd` command with adminstrator rigths because of mongoDB database__**
-* **__Before running mongod and mongo from Command Prompt, you need to add Path Environment Variables for MongoDB__**
-* **in the file located @ `src/mongodWindows.conf`, you need to put the absolute path of the mongo log file in `path` attribute located @ in the `systemLog` attribute, because windows does not like relative path**
-* **__On windows you need to run the `cmd` command with adminstrator rigths because of mongoDB database__**
-* **__Then type this command `mongod --config "<path where is installed your project>/.mongodb/conf/mongodWindows.conf" --install__`**
+* *__You need to run the `cmd` command with adminstrator rigths because of mongoDB database__*
+* *__Before running mongod and mongo from Command Prompt, you need to add Path Environment Variables for MongoDB__*
+* *in the file located @ `src/mongodWindows.conf`, you need to put the absolute path of the mongo log file in `path` attribute located @ in the `systemLog` attribute, because windows does not like relative path*
+* *__On windows you need to run the `cmd` command with adminstrator rigths because of mongoDB database__*
+* *__Then type this command `mongod --config "<path where is installed your project>/.mongodb/conf/mongodWindows.conf" --install`__*
 
 
 |Commands | Production command | Development command | Test command      |
 |-------- | ------------------ | ------------------- | ------------      |
-|`Starting server`| *npm run start-windows*| *npm run start-windows-dev* |                   | 
-|`Stoping server`  | *npm run stop-windows* | *npm run stop-windows-dev*  |                   | 
-|`Test with Coverage`|         |                     |*npm run coverage-windows* | 
+|*Starting server*| `npm run start-windows`| `npm run start-windows-dev` |                   | 
+|*Stoping server*  | `npm run stop-windows` | `npm run stop-windows-dev`  |                   | 
+|*Test with Coverage*|         |                     |`npm run coverage-windows` | 
 
-**open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project**
+**Open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project**
 
 >For other OS, please adapt the script
 
