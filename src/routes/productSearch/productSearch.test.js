@@ -7,12 +7,20 @@ let app = require('../../app');
 
 describe('Route productSearch', function () {
 
-	beforeEach(function(done) {
-		done();
+	it("Wait app is completly loading...", function (done) {
+		let isLoading = true;
+		this.timeout(10000);
+		setTimeout(function () {
+			isLoading = false;
+			should(isLoading).be.false();
+			done();
+		}, 9000);
 	});
 
 	it('GET /ngeo/catalogue/Landsat57Merged/search', function (done) {
 
+		this.timeout(10000);
+		
 		request(app)
 		.get('/ngeo/catalogue/Landsat57Merged/search')
 		.expect(200)
