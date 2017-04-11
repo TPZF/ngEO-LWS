@@ -48,11 +48,11 @@
     "stop-dev": "mongo admin --eval 'db.shutdownServer()' > /dev/null",
 
     "prestart-windows": "net start MongoDB",
-    "start-windows": "set NODE_ENV=production&&node src/app.js&",
+    "start-windows": "set NODE_ENV=production&&node src/app.js",
     "stop-windows": "net stop MongoDB",
 
     "prestart-windows-dev": "net start MongoDB",
-    "start-windows-dev": "set NODE_ENV=development&&node src/app.js&",
+    "start-windows-dev": "set NODE_ENV=development&&node src/app.js",
     "stop-windows-dev": "net stop MongoDB",
 
     "pretest-windows": "net start MongoDB",
