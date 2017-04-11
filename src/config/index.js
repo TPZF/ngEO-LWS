@@ -12,7 +12,6 @@ class Configuration {
 				break;
 			case 'production':
 				Object.assign(this, require('./production'), require('./account'));
-				console.log(this);
 				break;
 			default:
 				console.error(`Unrecognized NODE_ENV: ${process.env.NODE_ENV} using development configuration by default`);
