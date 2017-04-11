@@ -23,10 +23,37 @@ TBD
 - Then do `npm install` and that is it as the **package.json** file contains already all required libraries
 - MongoDB Community Edition version 3.4
 - On windows and Mac OS, set mongod path in environment variables (you can call it from everywhere)
-- `npm run start` to start on linux os the localhost server listening at port 3000
-- `npm run start-dev` to start on dev mode with mongodb as a daemon
-- `npm run start-windows` to start on Windows os the localhost server listening at port 3000
-- open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
+
+
+## Starting/Stoping/Testing Server
+>Linux commands
+
+|Commands | Production command | Development command | Test command      |
+|-------- | ------------------ | ------------------- | ------------      |
+|`Starting server`| *npm start*| *npm run start-dev* |                   | 
+|`Stoping server`  | *npm stop* | *npm run stop-dev*  |                   | 
+|`Test with Coverage`|         |                     |*npm run coverage* | 
+
+**open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project**
+
+>Windows commands
+
+* **__You need to run the `cmd` command with adminstrator rigths because of mongoDB database__**
+* **__Before running mongod and mongo from Command Prompt, you need to add Path Environment Variables for MongoDB__**
+* **in the file located @ `src/mongodWindows.conf`, you need to put the absolute path of the mongo log file in `path` attribute located @ in the `systemLog` attribute, because windows does not like relative path**
+* **__On windows you need to run the `cmd` command with adminstrator rigths because of mongoDB database__**
+* **__Then type this command `mongod --config "<path where is installed your project>/.mongodb/conf/mongodWindows.conf" --install__`**
+
+
+|Commands | Production command | Development command | Test command      |
+|-------- | ------------------ | ------------------- | ------------      |
+|`Starting server`| *npm run start-windows*| *npm run start-windows-dev* |                   | 
+|`Stoping server`  | *npm run stop-windows* | *npm run stop-windows-dev*  |                   | 
+|`Test with Coverage`|         |                     |*npm run coverage-windows* | 
+
+**open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project**
+
+>For other OS, please adapt the script
 
 ## Installation Troubleshootings
 If by installing node and npm you have troubleshootings by typing `npm -v`
@@ -36,9 +63,6 @@ If by installing node and npm you have troubleshootings by typing `npm -v`
 - Do the same step on your favourite OS
 - Reinstall node and normally all is well ;)
 
-## Dev Installation
-
-TODO
 
 ## API Reference
 
@@ -46,15 +70,11 @@ TODO
 
 ## Tests
 
-Type `npm test`
-
-**Don't start mongod before, command test does it for you**
+Follow chapter **Starting/Stoping/Testing server**
 
 ## Tests coverage
 
-Type `npm run coverage`
-
-**Don't start mongod before, command coverage does it for you**
+Follow chapter **Starting/Stoping/Testing server**
 
 ## Troubleshootings
 
@@ -64,6 +84,7 @@ TODO
 
 - SHUBIN Maxime (maxime.shubin@telespazio.com)
 - ALIHOUSSEN Irchad (alihoussen.irchad@telespazio.com)
+- MANOEL Olivier (manoel.olivier@gmail.com)
 
 ## License
 
