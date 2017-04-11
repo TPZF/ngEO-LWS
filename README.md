@@ -34,7 +34,7 @@ TBD
 |*Stoping server*  | `npm stop` | `npm run stop-dev`  |                   | 
 |*Test with Coverage*|         |                     |`npm run coverage` | 
 
-**open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project**
+open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
 
 >Windows commands
 
@@ -51,7 +51,7 @@ TBD
 |*Stoping server*  | `npm run stop-windows` | `npm run stop-windows-dev`  |                   | 
 |*Test with Coverage*|         |                     |`npm run coverage-windows` | 
 
-**Open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project**
+Open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
 
 >For other OS, please adapt the script
 
