@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Description of datasetPopulationMatrix requests</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <h1>Description of datasetPopulationMatrix requests</h1>
+        <h2>GET /ngeo/datasetPopulationMatrix</h2>
+        <p>From collections of collectionService, retrieve parameters and product an objet like :</p>
+        <pre>
+            <code>
+            {
+                datasetpopulationmatrix: {
+                    criteriaTitles: ["keyword", "mission", "name", "sensor", "productType", "sensorMode"],
+                    datasetPopulationValues: [
+                        "",
+                        "REMOTE",
+                        collection.name, // name of collection
+                        "REMOTE",
+                        "REMOTE",
+                        "REMOTE",
+                        collection.id, // id of collection
+                        collection.totalResults // count of products in collection
+                    ]
+                }
+            }
+            </code>
+        </pre>
+        <h2>GET /ngeo/datasetPopulationMatrix/about</h2>
+        <p>Display this page.</p>
+    </body>
+</html>

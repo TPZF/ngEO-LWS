@@ -23,9 +23,6 @@ router.use(function timeLog(req, res, next) {
 router.get('/', function (req, res) {
 
 	Logger.debug('GET /ngeo/datasetPopulationMatrix');
-	// let options = {
-	// 	root: __dirname
-	// };
 
 	let response = {
 		"datasetpopulationmatrix": {
@@ -34,7 +31,6 @@ router.get('/', function (req, res) {
 		}
 	}
 
-	//console.log(collectionService.collections);
 	collectionService.collections.forEach((collection) => {
 		
 		// Add some hardcoded values for now just to make things work..
@@ -50,13 +46,8 @@ router.get('/', function (req, res) {
 		]);
 	});
 
-	// Dynamic result
 	res.json(response);
 
-
-
-	// Mocked result
-	// res.sendFile('./datasets.json', options);
 });
 
 /**
@@ -67,7 +58,10 @@ router.get('/', function (req, res) {
  */
 router.get('/about', function (req, res) {
 	Logger.debug('GET /ngeo/datasetPopulationMatrix/about');
-	res.status(200).send('<h1>Route datasetPopulationMatrix</h1><h2>GET /ngeo/datasetPopulationMatrix</h2>');
+	let options = {
+		root: __dirname
+	};
+	res.status(200).sendFile('./description.html', options);
 });
 
 module.exports = router
