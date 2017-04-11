@@ -4,6 +4,7 @@ let request = require('supertest');
 
 // APP
 let app = require('../../app');
+let Utils = require('../../utils/utils');
 
 /**
  * Unit test file for service web client configuration Data
@@ -29,13 +30,10 @@ describe('Route webClientConfigurationData', function () {
 		.buffer()
 		.parse(binaryParser)
 		.end(function(err,res) {
-			if (err) { done(err); }
 			should(res.status).be.equal(200);
-			/* FIXME ! there are somme comments in JSON file, so it's not possible to parse it !
-			let respDatas = JSON.parse(res.res.data);
+			let respDatas = JSON.parse(Utils.removeComments(res.res.data));
 			should(respDatas).be.a.Object();
 			should(respDatas).have.property('tableView');
-			*/
 			done();
 		});
 
