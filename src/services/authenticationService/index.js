@@ -11,6 +11,7 @@ class AuthenticationService {
 	}
 
     isAuthenticated(myRequest, myResponse) {
+        // TODO : from myRequest object, check if user is authenticated or not
        let flag = true;
        if (!flag) {
            myResponse.status(401).send('Unauthorized !');
@@ -24,6 +25,7 @@ class AuthenticationService {
      * @param {*} myResponse 
      */
     getUserId(myRequest) {
+        // TODO : from myRequest object, extract userId
         return 'anonymous';
     }
 
