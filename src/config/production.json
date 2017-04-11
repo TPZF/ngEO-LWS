@@ -1,6 +1,5 @@
 {
     "browseConfigurationPath": "services/browseService/browseConfiguration.json",
-    "collectionPath": "services/collectionService/collections-full.json",
     "catalogPath": "services/catalogService/catalogs.json",
     "logger": {
         "level": "warn",
@@ -17,9 +16,5 @@
         "xmlnsParameter": "/opensearch/extensions/parameters/",
         "xmlnsTime": "/opensearch/extensions/time/",
         "identifier": "dc:identifier"
-    },
-    "fedeo": {
-        "username": "XXXXX",
-        "password": "*******"
     }
 }
