@@ -156,7 +156,7 @@ module.exports = {
 		let removeNamespacesFromTags = new RegExp(_getNamespaces(parsedXml).join('|'), "g")
 		let stringJsonWithoutNamespaces = JSON.stringify(parsedXml).replace(removeNamespacesFromTags, '');
 		let result = _convertEntriesIntoFeatureCollection(JSON.parse(stringJsonWithoutNamespaces), collectionId);
-		logger.info('Our conversion from json to the webc format geojson data is : ', Date.now() - startTime);
+		logger.info('Conversion from json to the webc format geojson data took ', Date.now() - startTime + ' ms');
 		return result;
 	}
 
