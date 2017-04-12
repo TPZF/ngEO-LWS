@@ -21,7 +21,14 @@ class Xml2JsonParser {
 	parse(xml, onSuccess, onError) {
 		let startTime = Date.now();
 		let parser = new xml2js.Parser(function (result, error) {
-			logger.info('Time elapsed by expat lib : ', Date.now() - startTime);
+			let endTime = Date.now();
+			if ((endTime - startTime) < 100) {
+				logger.debug('Time elapsed by expat lib (ms) : ', Date.now() - startTime);
+			} else if ((endTime - startTime) < 500) {
+				logger.warn('Time elapsed by expat lib (ms) : ', Date.now() - startTime);
+			} else {
+				logger.error('Time elapsed by expat lib (ms) : ', Date.now() - startTime);
+			}
 			if (!error) {
 				onSuccess(result);
 			} else {
