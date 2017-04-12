@@ -65,34 +65,34 @@
             "plateformId": "SPOT",
             "serialId": "1"
         },
-        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT"
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT1-5"
     },
     {
         "pattern": {
             "plateformId": "SPOT",
             "serialId": "2"
         },
-        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT"
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT1-5"
     },
     {
         "pattern": {
             "plateformId": "SPOT",
             "serialId": "3"
         },
-        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT"
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT1-5"
     },
     {
         "pattern": {
             "plateformId": "SPOT",
             "serialId": "4"
         },
-        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT"
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT1-5"
     },
     {
         "pattern": {
             "plateformId": "SPOT",
             "serialId": "5"
         },
-        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT"
+        "url": "http://ngeo-light.evo-pdgs.com/d/wmts/1.0.0/WMTSCapabilities.xml?SERVICE=WMTS&VERSION=1.0.0&LAYER=SPOT1-5"
     }
 ]
