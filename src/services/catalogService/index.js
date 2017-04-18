@@ -102,10 +102,6 @@ class CatalogService {
 								Logger.error('catalogService.setTotalResults - No results for ' + myCatalog.url);
 								myCatalog.active = false;
 							}
-							if (myCatalog.totalResults > 200) {
-								console.log('toom any collections...');
-								myCatalog.totalResults = 140;
-							}
 							Logger.debug('catalogService.setTotalResults - Push totalResults ' + myCatalog.totalResults + ' in catalog ' + myCatalog.name)
 						});
 					}
