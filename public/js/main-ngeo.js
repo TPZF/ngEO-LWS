@@ -7788,6 +7788,32 @@ var SearchResults = require('searchResults/model/searchResults');
 //require('ui/dateRangeSlider');
 var dateCriteria_template = require('search/template/dateCriteriaContent');
 
+var ONE_DAY = 1000*60*60*24;
+var ONE_WEEK = 1000*60*60*24*7;
+var ONE_MONTH = 1000*60*60*24*30;
+var ONE_YEAR = 1000*60*60*24*365;
+
+var _setDateBeginEnd = function(myDate, flagBegin) {
+	var year = myDate.getFullYear();
+	var month = myDate.getMonth();
+	var day = myDate.getDate();
+	let newDate = new Date();
+	newDate.setFullYear(year);
+	newDate.setMonth(month);
+	newDate.setDate(day);
+	if (flagBegin) {
+		newDate.setUTCHours(0);
+		newDate.setUTCMinutes(0);
+		newDate.setUTCSeconds(0);
+		newDate.setUTCMilliseconds(0);
+	} else {
+		newDate.setUTCHours(23);
+		newDate.setUTCMinutes(59);
+		newDate.setUTCSeconds(59);
+		newDate.setUTCMilliseconds(999);
+	}
+	return newDate;
+}
 /**
  * The backbone model is DatasetSearch
  */
@@ -7897,12 +7923,12 @@ var TimeExtentView = Backbone.View.extend({
 
 			if ( this.model.get("dateRange") ) {
 				this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
-					calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - startDate.getFullYear()
+					calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
 				})).datebox("refresh");
 				this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
-					calYearPickMin: stopDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - stopDate.getFullYear()
+					calYearPickMin: this.model.get("stop").getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
 				})).datebox("refresh");
 			}
 		} else if (useTimeSlider) {
@@ -7974,7 +8000,58 @@ var TimeExtentView = Backbone.View.extend({
 		this.$fromDateInput.datebox("setTheDate", this.model.get("start"));
 		this.$toDateInput.datebox("setTheDate", this.model.get("stop"));
 
-		if ( this.model.get("dateRange") ) {			
+		if ( this.model.get("dateRange") ) {
+			// check dates
+			let changeOnDate = false;
+			let startDate = this.model.get("start");
+			let stopDate = this.model.get("stop");
+			let minDate = _setDateBeginEnd(this.model.get("dateRange").start, true);
+			let maxDate = _setDateBeginEnd(this.model.get("dateRange").stop, false);
+			if (startDate > maxDate) {
+				// startDate > max Range ==> stop=max and start = max - 1 week
+				startDate = new Date(maxDate.getTime() - ONE_WEEK);
+				stopDate = maxDate;
+				changeOnDate = true;
+			} else if (startDate < minDate) {
+				// startDate < min Range ==> start = min and stop=min + 1 week
+				startDate = minDate;
+				stopDate = new Date(minDate.getTime() + ONE_WEEK);
+				changeOnDate = true;
+			} else if (stopDate < minDate) {
+				// stop < min => start=min and stop = min + 1 week
+				startDate = minDate;
+				stopDate = new Date(minDate.getTime() + ONE_WEEK);
+				changeOnDate = true;
+			} else if (stopDate > maxDate) {
+				// stop > max => start=max - 1 week and stop = max
+				startDate = new Date(maxDate.getTime() - ONE_WEEK);
+				stopDate = maxDate;
+				changeOnDate = true;
+			} else if (stopDate == maxDate && stopDate - startDate > ONE_YEAR) {
+				startDate = new Date(stopDate.getTime() - ONE_MONTH);
+				changeOnDate = true;
+			} else if (stopDate - startDate > ONE_YEAR + ONE_DAY) {
+				// stop - start > 1 year => stop = min (max, start + 1 month)
+				stopDate = new Date(startDate.getTime() + ONE_MONTH);
+				if (stopDate > maxDate) {
+					stopDate = maxDate;
+				}
+				changeOnDate = true;
+			} else if (startDate > stopDate) {
+				// start > stop => start = max (stop - 1 month, min)
+				startDate = new Date(stopDate.getTime() - ONE_MONTH);
+				if (startDate < minDate) {
+					startDate = minDate;
+				}
+				changeOnDate = true;
+			}
+			if (changeOnDate) {
+				this.model.set({
+					"start": startDate,
+					"stop": stopDate
+				});
+			}
+
 			this.$fromDateInput.datebox("option", {
 				calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
 				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
@@ -7983,6 +8060,7 @@ var TimeExtentView = Backbone.View.extend({
 				calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
 				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
 			}).datebox("refresh");
+
 		}
 		//Uncomment to use back times
 		//		$('#fromTimeInput').val( this.model.get("startTime") );
@@ -9498,12 +9576,11 @@ var Configuration = require('configuration');
 var GeoJsonConverter = require('map/geojsonconverter');
 var exportViewContent_template = require('searchResults/template/exportViewContent');
 
-
 /** TODO TO BE IMPLEMENTED */
 var ExportView = Backbone.View.extend({
 
-	/** the model is the DatasetSearch (the search model containing search parameters)
-	/* the dataset property of DatasetSearch is the Dataset backbone model containing the download options
+	/**
+	 * the model is the featureCollection
 	 */
 
 	mediaTypes: {
@@ -9547,7 +9624,7 @@ var ExportView = Backbone.View.extend({
 				$download.attr('download', 'export.' + format);
 				$download.attr('href', URL.createObjectURL(blob));
 			}
-		},
+		}
 
 	},
 
@@ -9985,59 +10062,10 @@ module.exports = DownloadOptionsWidget;
 });
 
 require.register("searchResults/widget/exportWidget", function(exports, require, module) {
-/**
- * export widget module
- * Used to display the supported export formats. 
- */
-var Configuration = require('configuration');
-var ExportView = require('searchResults/view/exportView');
-var DataSetSearch = require('search/model/datasetSearch');
-var ngeoWidget = require('ui/widget');
 
-var ExportWidget = function(featureCollection) {
-
-	var parentElement = $('<div id="exportPopup">');
-	var element = $('<div id="exportPopupContent"></div>');
-	element.css('min-width', '200px');
-	element.appendTo(parentElement);
-	parentElement.appendTo('.ui-page-active');
-	parentElement.ngeowidget({
-		title: "Export",
-		// Reinit the standing order when the widget is closed (FL: is it really needed?)
-		hide: function() {
-			parentElement.remove();
-		}
-	});
-
-	var exportView = new ExportView({
-		model: featureCollection,
-		el: element
-	});
-
-	/**
-	 *	Open the popup
-	 */
-	this.open = function() {
-
-		exportView.render();
-
-		//trigger jqm styling
-		parentElement.ngeowidget("show");
-	};
-
-	/**
-	 *	For the moment not used since the popup can be 
-	 *	closed by clicking out side its content.
-	 */
-	this.close = function() {
-		parentElement.ngeowidget("hide");
-	};
-};
-
-module.exports = ExportWidget;
 });
 
-require.register("searchResults/widget/multipleBrowseWidget", function(exports, require, module) {
+;require.register("searchResults/widget/multipleBrowseWidget", function(exports, require, module) {
 /**  
  * Multiple browse selection widget module  
  */
@@ -10641,14 +10669,22 @@ module.exports = new ShopcartCollection();
 });
 
 require.register("shopcart/view/shopcartExportView", function(exports, require, module) {
-
 var Configuration = require('configuration');
+var GeoJsonConverter = require('map/geojsonconverter');
 var ShopcartCollection = require('shopcart/model/shopcartCollection');
 var exportViewContent_template = require('shopcart/template/shopcartExportContent');
 
 var ShopcartExportView = Backbone.View.extend({
 
+	/**
+	 * the model is featureCollection of the shopcart
+	 */
 
+	mediaTypes: {
+		'kml': 'application/vnd.google-earth.kml+xml',
+		'gml': 'application/gml+xml',
+		'geojson': 'application/json'
+	},
 
 	events: {
 
@@ -10659,19 +10695,55 @@ var ShopcartExportView = Backbone.View.extend({
 			if ($select.val() == '') {
 				$download.addClass('ui-disabled');
 			} else {
-				var format = $select.val();
+				var format = $select.val().toLowerCase();
 				$download.removeClass('ui-disabled');
-				$download.attr('href', ShopcartCollection.getCurrent().url() + "?format=" + format);
-			}
-		},
 
+				// Export with original geometries, also remove other internal properties
+				var featureWithOrigGeometries = $.extend(true, [], this.model.selection);
+				$.each(featureWithOrigGeometries, function(index, feature) {
+					if (feature._origGeometry) {
+						feature.geometry = feature._origGeometry;
+						delete feature._origGeometry;
+					}
+
+					// Remove internal properties
+					if (feature._featureCollection)
+						delete feature._featureCollection;
+					if (feature._isHidden)
+						delete feature._isHidden;
+					if (feature.properties.styleHint)
+						delete feature.properties.styleHint;
+				});
+
+				var blob = new Blob([GeoJsonConverter.convert(featureWithOrigGeometries, format)], {
+					"type": this.mediaTypes[format]
+				});
+				$download.attr('download', 'export.' + format);
+				$download.attr('href', URL.createObjectURL(blob));
+			}
+		}
 	},
 
 	render: function() {
-		this.$el.append(exportViewContent_template());
-		this.$el.trigger('create');
-		this.$el.find('#download-exported-shopcart').addClass('ui-disabled');
 
+		// Check for blob support
+		var blob = null;
+		if (window.Blob) {
+			// For Safari 5.1, test if we can create Blob.
+			try {
+				blob = new Blob();
+			} catch (err) {
+				blob = null;
+			}
+		}
+
+		if (!blob) {
+			this.$el.append('<p class="ui-error-message"><b>Export is not supported in your browser</b></p>');
+		} else {
+			this.$el.append(exportViewContent_template());
+			this.$el.trigger('create');
+			this.$el.find('#download-exported-shopcart').addClass('ui-disabled');
+		}
 		return this;
 	}
 
@@ -10842,7 +10914,7 @@ var ShopcartTableView = TableView.extend({
 		this.exportButton.button('enable');
 
 		this.exportButton.click(function() {
-			var shopcartExportWidget = new ShopcartExportWidget();
+			var shopcartExportWidget = new ShopcartExportWidget(self.model);
 			shopcartExportWidget.open();
 		});
 
@@ -10930,13 +11002,11 @@ require.register("shopcart/widget/shopcartExportWidget", function(exports, requi
  * export widget module
  * Used to display the supported export formats. 
  */
-
 var Configuration = require('configuration');
 var ShopcartExportView = require('shopcart/view/shopcartExportView');
 var ngeoWidget = require('ui/widget');
 
-
-var ShopcartExportWidget = function() {
+var ShopcartExportWidget = function(featureCollection) {
 
 	var parentElement = $('<div id="exportShopcartPopup">');
 	var element = $('<div id="exportShopcartPopupContent"></div>');
@@ -10952,6 +11022,7 @@ var ShopcartExportWidget = function() {
 	});
 
 	var exportView = new ShopcartExportView({
+		model: featureCollection,
 		el: element
 	});
 
