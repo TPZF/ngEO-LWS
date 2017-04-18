@@ -499,6 +499,18 @@ class CollectionService {
 		return result;
 	}
 
+	buildKeywords(myCollection) {
+		let result = [];
+		// TODO : check usage of these keywords
+		/*let collectionConf = require(Configuration['collectionPath']);
+		collectionConf.forEach((collection) => {
+			if (collection.name === myCollection.name) {
+				result = collection.keywords || [];
+			}
+		})*/
+		return result;
+	}
+
 	/**
 	 * Build datasetInfo response respecting protocol used by current version of WEBC
 	 */
@@ -582,7 +594,7 @@ class CollectionService {
 			datasetSearchInfo: {
 				datasetId: datasetId,
 				description: myCollection.Description,
-				keywords: [], // TODO
+				keywords: this.buildKeywords(myCollection),
 				downloadOptions: [], // TODO
 				attributes: this.buildAttributes(myCollection, searchRequestDescription, paramTag, omittedParameters),
 				startDate: startDate,
@@ -591,6 +603,64 @@ class CollectionService {
 			}
 		};
 		return outputJson;
+	}
+
+	buildDataSetPopulationMatrix() {
+		let response = {
+			"datasetpopulationmatrix": {
+				"criteriaTitles": ["keyword", "mission", "name", "sensor", "productType", "sensorMode"],
+				"datasetPopulationValues": []
+			}
+		};
+
+		let collectionsConf = require(Configuration['collectionPath']);
+
+		this.collections.forEach((collection) => {
+			let myCollectionConf = _.find(collectionsConf, (collectionConf) => {
+				return (collection.name === collectionConf.name)
+			});
+			if (myCollectionConf) {
+				let keywords = myCollectionConf.keywords || [];
+				if (keywords.length > 0) {
+					keywords.forEach((key) => {
+						// Add some hardcoded values for now just to make things work..
+						response.datasetpopulationmatrix.datasetPopulationValues.push([
+							key.keyword,
+							"REMOTE",
+							collection.name,
+							"REMOTE",
+							"REMOTE",
+							"REMOTE",
+							collection.id,
+							collection.totalResults
+						]);
+					});
+				} else {
+					response.datasetpopulationmatrix.datasetPopulationValues.push([
+						"",
+						"REMOTE",
+						collection.name,
+						"REMOTE",
+						"REMOTE",
+						"REMOTE",
+						collection.id,
+						collection.totalResults
+					]);
+				}
+			} else {
+				response.datasetpopulationmatrix.datasetPopulationValues.push([
+					"",
+					"REMOTE",
+					collection.name,
+					"REMOTE",
+					"REMOTE",
+					"REMOTE",
+					collection.id,
+					collection.totalResults
+				]);
+			}
+		});
+		return response;		
 	}
 	
 }

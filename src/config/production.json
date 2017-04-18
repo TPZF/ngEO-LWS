@@ -1,6 +1,4 @@
 {
-    "browseConfigurationPath": "services/browseService/browseConfiguration.json",
-    "catalogPath": "services/catalogService/catalogs.json",
     "logger": {
         "level": "warn",
         "outputPath": "./ngeo.log"
@@ -11,10 +9,5 @@
     		"username": "",
     		"password": ""
     	}
-    },
-    "opensearch" : {
-        "xmlnsParameter": "/opensearch/extensions/parameters/",
-        "xmlnsTime": "/opensearch/extensions/time/",
-        "identifier": "dc:identifier"
     }
 }

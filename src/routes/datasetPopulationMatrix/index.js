@@ -24,29 +24,8 @@ router.get('/', function (req, res) {
 
 	Logger.debug('GET /ngeo/datasetPopulationMatrix');
 
-	let response = {
-		"datasetpopulationmatrix": {
-			"criteriaTitles": ["keyword", "mission", "name", "sensor", "productType", "sensorMode"],
-			"datasetPopulationValues": []
-		}
-	}
-
 	collectionService.refresh().then(() => {
-		collectionService.collections.forEach((collection) => {
-			
-			// Add some hardcoded values for now just to make things work..
-			response.datasetpopulationmatrix.datasetPopulationValues.push([
-				"",
-				"REMOTE",
-				collection.name,
-				"REMOTE",
-				"REMOTE",
-				"REMOTE",
-				collection.id,
-				collection.totalResults
-			]);
-		});
-
+		let response = collectionService.buildDataSetPopulationMatrix();
 		res.json(response);
 	});
 

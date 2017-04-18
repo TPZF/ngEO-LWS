@@ -1,5 +1,13 @@
 {
+    "browseConfigurationPath": "services/browseService/browseConfiguration.json",
+    "catalogPath": "services/catalogService/catalogs.json",
+    "collectionPath": "services/collectionService/collections.json",
     "collectionService": {
         "refreshDelay": 86400000
+    },
+    "opensearch" : {
+        "xmlnsParameter": "/opensearch/extensions/parameters/",
+        "xmlnsTime": "/opensearch/extensions/time/",
+        "identifier": "dc:identifier"
     }
 }
