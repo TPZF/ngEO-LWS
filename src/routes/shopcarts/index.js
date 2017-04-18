@@ -139,6 +139,17 @@ router.get('/', (req, res) => {
 });
 
 /**
+ * About : description of this API
+ *
+ * @function router.get
+ * @param url - /ngeo/shopcarts/about
+ */
+router.get('/about', (req, res) => {
+	Logger.debug('GET /ngeo/shopcarts/about');
+	res.status(200).send('Description of shopcarts requests');
+});
+
+/**
  * Get a shopcart
  *
  * @function router.get
@@ -530,17 +541,6 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
 		cbAfterCheckAuthorization
 	);
 
-});
-
-/**
- * About : description of this API
- *
- * @function router.get
- * @param url - /ngeo/shopcarts/about
- */
-router.get('/about', (req, res) => {
-	Logger.debug('GET /ngeo/shopcarts/about');
-	res.status(200).send('Description of shopcarts requests');
 });
 
 module.exports = router;
