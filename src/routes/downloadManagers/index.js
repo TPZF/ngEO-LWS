@@ -97,6 +97,19 @@ router.get('/', (req, res) => {
 });
 
 /**
+ * About : description of requests for downloadManagers
+ * 
+ * @function router.get
+ * @param {String} url - /ngeo/downloadManagers/about
+ * @param {object} req - empty
+ * @param {object} res - response
+ */
+router.get('/about', (req, res) => {
+	Logger.debug('GET /ngeo/downloadManagers/about');
+	res.status(200).send("Description of downloadManagers requests");
+});
+
+/**
  * Get one downloadManager
  *
  * @function router.get
@@ -106,8 +119,16 @@ router.get('/', (req, res) => {
  */
 router.get('/:downloadManagerid', (req, res) => {
 
-	Logger.debug('GET /ngeo/downloadManagers/:id');
+	Logger.debug('GET /ngeo/downloadManagers/:downloadManagerid');
 
+	if (!req.params['downloadManagerid']) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+	if (!DatabaseService.checkParamId(req.params.downloadManagerid)) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
 	let idToGet = req.params['downloadManagerid'];
 
 	// define callback function after updating
@@ -267,18 +288,6 @@ router.delete('/:downloadmanager_id', (req,res) => {
 	);
 
 
-});
-
-/**
- * About : description of requests for downloadManagers
- * @function router.get
- * @param {String} url - /ngeo/downloadManagers/about
- * @param {object} req - empty
- * @param {object} res - response
- */
-router.get('/about', (req, res) => {
-	Logger.debug('GET /ngeo/downloadManagers/about');
-	res.status(200).send("Description of downloadManagers requests");
 });
 
 module.exports = router;
