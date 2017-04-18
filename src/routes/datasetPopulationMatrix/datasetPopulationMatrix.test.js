@@ -30,7 +30,6 @@ describe('Route datasetPopulationMatrix', function () {
 				should(res.body.datasetpopulationmatrix.criteriaTitles).have.length(6);
 				should(res.body.datasetpopulationmatrix).have.property('datasetPopulationValues');
 				should(res.body.datasetpopulationmatrix.datasetPopulationValues).be.a.Array();
-				should(res.body.datasetpopulationmatrix.datasetPopulationValues).have.length(24);
 				done();
 			});
 
