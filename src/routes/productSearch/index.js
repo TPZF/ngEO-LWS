@@ -57,7 +57,9 @@ router.get('/', function (req, res) {
 					geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData);
 					geoJsonWebcData.type = 'FeatureCollection';
 					// send to response
-					res.type('Content-Type', 'application/vnd.geo+json').send(geoJsonWebcData);
+					// FIXME - test fails if content-type is defined
+					//res.type('Content-Type', 'application/vnd.geo+json').send(geoJsonWebcData);
+					res.send(geoJsonWebcData);
 				} else {
 					res.status(500).send("Some inconsistency with response received from the backend");
 				}

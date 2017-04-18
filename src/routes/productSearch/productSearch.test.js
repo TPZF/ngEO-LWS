@@ -25,6 +25,8 @@ describe('Route productSearch', function () {
 		.get('/ngeo/catalogue/Landsat57Merged/search')
 		.expect(200)
 		.end(function (err, res) {
+			should(res.body).have.property('type');
+			should(res.body.type).be.equal('FeatureCollection');
 			should(res.body).have.property('features');
 			should(res.body.features).be.a.Array();
 			should(res.body.features[0]).have.property('id');
