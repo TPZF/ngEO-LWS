@@ -32,6 +32,7 @@ let shopcarts = require('./routes/shopcarts');
 let downloadManagers = require('./routes/downloadManagers');
 let simpleDataAccessRequests = require('./routes/simpleDataAccessRequests');
 let dataAccessRequestStatuses = require('./routes/dataAccessRequestStatuses');
+let opensearch = require('./routes/opensearch');
 
 let app = express();
 
@@ -56,6 +57,7 @@ app.use('/ngeo/shopcarts', shopcarts);
 app.use('/ngeo/downloadManagers', downloadManagers);
 app.use('/ngeo/simpleDataAccessRequests', simpleDataAccessRequests);
 app.use('/ngeo/dataAccessRequestStatuses', dataAccessRequestStatuses);
+app.use('/ngeo/opensearch', opensearch);
 
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 let host = process.env.HOST || 'localhost';
