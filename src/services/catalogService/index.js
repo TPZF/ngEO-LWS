@@ -166,6 +166,67 @@ class CatalogService {
 		});
 	}
 
+	getXMLFeed(referrer) {
+		Logger.debug('catalogService.getDescription()');
+		let nbResults = 0;
+		let xmlEntries = '';
+		this.catalogs.forEach((catalog) => {
+			nbResults += parseInt(catalog.totalResults);
+			xmlEntries += this.setFeedEntries(referrer, catalog);
+		});
+		let xmlDescription = '';
+		xmlDescription += this.setFeedHeader(referrer, nbResults);
+		xmlDescription += xmlEntries;
+		xmlDescription += this.setFeedFooter();
+		return xmlDescription;
+	}
+
+	setFeedHeader(myReferrer, myNbResults) {
+		let xmlResult = '<?xml version="1.0" encoding="UTF-8"?>';
+		xmlResult += '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:dc="http://purl.org/dc/elements/1.1/">';
+		xmlResult += '<id>' + myReferrer + '/ngeo/opensearch</id>';
+		xmlResult += '<title type="text">ngEO collections</title>';
+		xmlResult += '<subtitle type="text">Available collections in ngEO</subtitle>';
+		xmlResult += '<updated>' + new Date().toUTCString() + '</updated>';
+		xmlResult += '<author><name>ngEO Super Catalog</name></author>';
+		xmlResult += '<generator version="2.40">ngEO Super catalog</generator>';
+		xmlResult += '<os:totalResults>' + myNbResults + '</os:totalResults>';
+		xmlResult += '<os:startIndex>0</os:startIndex>';
+		xmlResult += '<os:itemsPerPage>100</os:itemsPerPage>';
+		xmlResult += '<os:Query role="request"/>';
+		xmlResult += '<link rel="search" type="application/opensearchdescription+xml" href="' + myReferrer + '/ngeo/opensearch"/>';
+		return xmlResult;
+	}
+
+	setFeedFooter() {
+		let xmlResult = '</feed>';
+		return xmlResult;
+	}
+
+	setFeedEntries(myReferrer, myCatalog) {
+		let xmlResult = '';
+		myCatalog.collectionsSchema.forEach((collectionSchema) => {
+			if (collectionSchema.entry && Array.isArray(collectionSchema.entry)) {
+				collectionSchema.entry.forEach((entry) => {
+					xmlResult += '<entry>';
+					xmlResult += '<id>' + myReferrer + '/ngeo/' + entry['dc:identifier'] + '</id>';
+					xmlResult += '<title>' + entry.title + '</title>';
+					xmlResult += '<summary type="html"><![CDATA[';
+					xmlResult += 'Collection ' + entry.title + '<p>';
+					xmlResult += '<a href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '" target="_blank">OpenSearch description</a><br>';
+					xmlResult += '<a href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search" target="_blank">OpenSearch GeoJson</a>';
+					xmlResult += '</p>';
+					xmlResult += ']]></summary>';
+					xmlResult += '<updated>' + entry.updated + '</updated>';
+					xmlResult += '<dc:identifier>' + entry['dc:identifier'] + '</dc:identifier>';
+					xmlResult += '<link rel="alternate" type="application/vnd.geo+json" title="Product search" href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search' + '"/>';
+					xmlResult += '<link rel="search" type="application/opensearchdescription+xml" title="OpenSearch description" href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '"/>';
+					xmlResult += '</entry>';
+				})
+			}
+		})
+		return xmlResult;
+	}
 }
 
 module.exports = new CatalogService();
