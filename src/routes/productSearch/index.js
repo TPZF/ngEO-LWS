@@ -54,9 +54,10 @@ router.get('/', function (req, res) {
 					// Add browse information for converted collection
 					browseService.addBrowseInfo(collectionId, geoJsonWebcData);
 					// Add originDatasetId for each features (used to retrieve a product from catalog or shopcart)
-					geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData)
+					geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData);
+					geoJsonWebcData.type = 'FeatureCollection';
 					// send to response
-					res.send(geoJsonWebcData);
+					res.type('Content-Type', 'application/vnd.geo+json').send(geoJsonWebcData);
 				} else {
 					res.status(500).send("Some inconsistency with response received from the backend");
 				}
