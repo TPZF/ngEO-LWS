@@ -139,6 +139,73 @@ router.get('/', (req, res) => {
 });
 
 /**
+ * Get a shopcart
+ *
+ * @function router.get
+ * @param url - /ngeo/shopcarts/:shopcart_id?format=[atom/json/kml/html]
+ */
+router.get('/:shopcart_id', (req, res) => {
+
+	Logger.debug('GET /ngeo/shopcarts/:shopcart_id');
+
+	// check if request is valid
+	if (!req.params['shopcart_id']) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+	if (!DatabaseService.checkParamId(req.params.shopcart_id)) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+	let idToGet = req.params.shopcart_id;
+	let start = 0;
+	let count = 999;
+	let myResp = {};
+
+	let cbSearchFeaturesInShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			_.map(response.datas, function(item) {
+				item.properties.shopcartItemId = item._id;
+				item.id = item._id;
+				delete item._id;
+			});
+			myResp.type = "FeatureCollection";
+			myResp.features = response.datas;
+			res.json(myResp);
+		}
+	}
+
+	let cbAfterList = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+			return;
+		}
+		if (response.datas.length !== 1) {
+			res.status(400).json('Bad request !');
+			return;
+		}
+		_.map(response.datas, function(item) {
+			delete item._id;
+		});
+		myResp = response.datas[0];
+		let myQueryCriteria = {
+			"properties.shopcart_id": idToGet
+		};
+		DatabaseService.search(SHOPCARTFEATURENAME, myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+	}
+
+	let jsonQueryForfilter = {
+		_id: ObjectId(idToGet),
+		userId: AuthenticationService.getUserId(req)
+	};
+
+	// call list service
+	DatabaseService.list(SHOPCARTNAME, jsonQueryForfilter, cbAfterList);
+
+});
+/**
  * Create a shopcart
  *
  * @function router.post
@@ -250,7 +317,7 @@ router.put('/:shopcart_id', (req,res) => {
  */
 router.delete('/:shopcart_id', (req,res) => {
 
-	Logger.debug('DELETE /ngeo/shopcarts/:shopcartId');
+	Logger.debug('DELETE /ngeo/shopcarts/:shopcart_id');
 
 	// check if request is valid
 	if (!_checkRequest(req)) {
