@@ -31,22 +31,24 @@ router.get('/', function (req, res) {
 		}
 	}
 
-	collectionService.collections.forEach((collection) => {
-		
-		// Add some hardcoded values for now just to make things work..
-		response.datasetpopulationmatrix.datasetPopulationValues.push([
-			"",
-			"REMOTE",
-			collection.name,
-			"REMOTE",
-			"REMOTE",
-			"REMOTE",
-			collection.id,
-			collection.totalResults
-		]);
-	});
+	collectionService.refresh().then(() => {
+		collectionService.collections.forEach((collection) => {
+			
+			// Add some hardcoded values for now just to make things work..
+			response.datasetpopulationmatrix.datasetPopulationValues.push([
+				"",
+				"REMOTE",
+				collection.name,
+				"REMOTE",
+				"REMOTE",
+				"REMOTE",
+				collection.id,
+				collection.totalResults
+			]);
+		});
 
-	res.json(response);
+		res.json(response);
+	});
 
 });
 
