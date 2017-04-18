@@ -32,6 +32,20 @@ router.get('/', function (req, res) {
 });
 
 /**
+ * About : description of requests for opensearch
+ * Placed before other get route to get priority
+ *  
+ * @function router.get
+ * @param {String} url - /ngeo/openseach/about
+ * @param {object} req - request
+ * @param {object} res - response
+ */
+router.get('/about', (req, res) => {
+	Logger.debug('GET /ngeo/opensearch/about');
+	res.status(200).send("Description of opensearch requests");
+});
+
+/**
  * Get opensearch description for a collection
  *
  * @function router.get
