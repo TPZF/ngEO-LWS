@@ -998,7 +998,7 @@ require.register("searchResults/template/exportViewContent", function(exports, r
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<label for="export-format">Choose format:</label>\r\n<select name="export-format" id="export-format" data-mini="true">\r\n   <option value="">...</option>\r\n   <option value="kml">KML</option>\r\n   <option value="gml">GML</option>\r\n   <option value="geojson">GeoJson</option>\r\n</select>\r\n\r\n\r\n<div class="popup-widget-footer">\r\n\t<a id="download" target="_blank" data-role="button" data-mini="true"\r\n\t\tdata-inline="true" data-theme="a">Download</a>\r\n</div>';
+__p+='<label for="export-format">Choose format:</label>\r\n<select name="export-format" id="export-format" data-mini="true">\r\n    <option value="">...</option>\r\n    <option value="kml">KML</option>\r\n    <option value="geojson">GeoJson</option>\r\n</select>\r\n\r\n\r\n<div class="popup-widget-footer">\r\n\t<a id="download" target="_blank" data-role="button" data-mini="true"\r\n\t\tdata-inline="true" data-theme="a">Download</a>\r\n</div>';
 }
 return __p;
 };
@@ -1042,7 +1042,7 @@ require.register("shopcart/template/shopcartExportContent", function(exports, re
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='<label for="export-format">Choose format:</label>\r\n<select name="export-format" id="shopcart-export-format" data-mini="true">\r\n   <option value="">...</option>\r\n   <option value="kml">KML</option>\r\n   <option value="atom">Atom 1.0</option>\r\n   <option value="html">HTML</option>\r\n   <option value="json">JSON</option>\r\n<select>\r\n\r\n\r\n<div class="popup-widget-footer">\r\n\t<a id="download-exported-shopcart" target="_blank" data-role="button" data-mini="true"\r\n\t\tdata-inline="true" data-theme="a">Download</a>\r\n</div>';
+__p+='<label for="export-format">Choose format:</label>\r\n<select name="export-format" id="shopcart-export-format" data-mini="true">\r\n   <option value="">...</option>\r\n   <option value="kml">KML</option>\r\n   <option value="geojson">GeoJson</option>\r\n<select>\r\n\r\n\r\n<div class="popup-widget-footer">\r\n\t<a id="download-exported-shopcart" target="_blank" data-role="button" data-mini="true"\r\n\t\tdata-inline="true" data-theme="a">Download</a>\r\n</div>';
 }
 return __p;
 };
