@@ -44,26 +44,29 @@ router.get('/', function (req, res) {
 	let collectionId = req.params['fCollectionId'];
 	Logger.debug('GET /ngeo/catalogue/' + collectionId + '/search');
 
-	// Search the available products on backend
-	collectionService.search(collectionId, {
-		params: req.query,
-		onSuccess: (result) => {
-			let geoJsonWebcData = configurationConverter.convertSearchResponse(result, collectionId);
-			if (geoJsonWebcData) {
-				// Add browse information for converted collection
-				browseService.addBrowseInfo(collectionId, geoJsonWebcData);
-				// Add originDatasetId for each features (used to retrieve a product from catalog or shopcart)
-				geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData)
-				// send to response
-				res.send(geoJsonWebcData);
-			} else {
-				res.status(500).send("Some inconsistency with response received from the backend");
+	collectionService.refresh().then(() => {
+		// Search the available products on backend
+		collectionService.search(collectionId, {
+			params: req.query,
+			onSuccess: (result) => {
+				let geoJsonWebcData = configurationConverter.convertSearchResponse(result, collectionId);
+				if (geoJsonWebcData) {
+					// Add browse information for converted collection
+					browseService.addBrowseInfo(collectionId, geoJsonWebcData);
+					// Add originDatasetId for each features (used to retrieve a product from catalog or shopcart)
+					geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData)
+					// send to response
+					res.send(geoJsonWebcData);
+				} else {
+					res.status(500).send("Some inconsistency with response received from the backend");
+				}
+			},
+			onError: (errorMessage) => {
+				res.status(500).send(errorMessage);
 			}
-		},
-		onError: (errorMessage) => {
-			res.status(500).send(errorMessage);
-		}
+		});
 	});
+
 });
 
 /**
