@@ -1,12 +1,6 @@
 [
     {
         "name": "SXCAT",
-        "url": "https://sxcat.eox.at/opensearch/atom?collection",
-        "fake": false
-    },
-    {
-        "name": "FEDEO",
-        "url": "https://fedeo.esa.int/",
-        "fake": true
+        "url": "https://sxcat.eox.at/opensearch/atom?collection"
     }
 ]

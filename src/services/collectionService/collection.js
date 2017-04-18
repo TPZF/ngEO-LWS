@@ -24,7 +24,8 @@ class Collection {
 			stop: 'end', 
 			startIndex: 'startIndex',
 			count: 'count',
-			bbox: 'bbox'
+			bbox: 'bbox',
+			geom: 'geom'
 		};
 
 		// Make object extendable
