@@ -1,0 +1,5 @@
+{
+    "collectionService": {
+        "refreshDelay": 86400000
+    }
+}
