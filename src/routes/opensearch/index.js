@@ -26,8 +26,7 @@ router.use(function timeLog(req, res, next) {
  */
 router.get('/', function (req, res) {
     Logger.debug('GET /ngeo/opensearch');
-    // get referrer = PROTOCOLE + '://' + HOST + PROXYBASE
-    let referrer = req.protocol + '://' + req.get('host') + req.baseUrl.split('/ngeo')[0];
+    let referrer = Configuration['host'];
 	res.set('Content-Type', 'application/atom+xml').send(CatalogService.getXMLFeed(referrer));
 });
 

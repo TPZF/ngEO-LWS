@@ -1,4 +1,5 @@
 {
+    "host": "http://ngeo-light.evo-pdgs.com/ngeo-qs",
     "logger": {
         "level": "warn",
         "outputPath": "./ngeo.log"
