@@ -397,6 +397,9 @@ class CollectionService {
 		}
 
 		let searchUrlRequest = _buildSearchRequestWithParam(collection.url_search, searchParams);
+		if (collection.id === fakeCollectionId) {
+			searchUrlRequest += 'recordSchema=om';
+		}
 		let startTime = Date.now();
 		Logger.info(`Searching for backend with ${searchUrlRequest}`);
 		request(searchUrlRequest, function (error, response, body) {
