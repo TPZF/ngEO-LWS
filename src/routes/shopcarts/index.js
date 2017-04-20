@@ -98,8 +98,7 @@ let router = express.Router({
 
 router.use(function authenticate(req, res, next) {
 	// for all shopcarts request, authentication is required
-	AuthenticationService.isAuthenticated(req, res);
-	next(); // make sure we go to the next routes and don't stop here
+	AuthenticationService.isAuthenticated(req, res, next);
 });
 
 // ======================================================================

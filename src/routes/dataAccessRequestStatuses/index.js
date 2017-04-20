@@ -18,8 +18,9 @@ let DOWNLOAD_MANAGER_NAME = 'DownloadManager';
 let router = express.Router({
 	mergeParams: true
 });
-router.use(function timeLog(req, res, next) {
-	next();
+router.use(function authenticate(req, res, next) {
+	// for all dar request, authentication is required
+	AuthenticationService.isAuthenticated(req, res, next);
 });
 
 /**

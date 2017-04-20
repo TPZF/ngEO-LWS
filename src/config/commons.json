@@ -9,5 +9,6 @@
         "xmlnsParameter": "/opensearch/extensions/parameters/",
         "xmlnsTime": "/opensearch/extensions/time/",
         "identifier": "dc:identifier"
-    }
+    },
+    "ssoUserId": "SSO-USER-ID"
 }
