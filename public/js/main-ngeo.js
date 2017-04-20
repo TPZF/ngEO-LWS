@@ -13366,9 +13366,9 @@ var TableView = Backbone.View.extend({
 
 			// Based on css value, show/hide browses
 			if ($target.hasClass('ui-icon-checkbox-off')) {
-				this.model.showBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+				this.model.showBrowses( $row.hasClass('row_highlighted') ? this.model.highlights : [data.feature] );
 			} else {
-				this.model.hideBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+				this.model.hideBrowses( $row.hasClass('row_highlighted') ? this.model.highlights : [data.feature] );
 			}
 		},
 
@@ -13385,7 +13385,7 @@ var TableView = Backbone.View.extend({
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: check every highlighted feature when clicking on already selected row
-					model.select( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
+					model.select( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
 				} else {
 					// "Select all" case
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
@@ -13398,7 +13398,7 @@ var TableView = Backbone.View.extend({
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
-					model.unselect( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
+					model.unselect( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
 				} else {
 					// "Unselect all" case
 					this.model.unselectAll();
@@ -13570,7 +13570,7 @@ var TableView = Backbone.View.extend({
 		if (!this.$table) return;
 
 		// Remove previous highlighted rows
-		this.$table.find('.row_selected').removeClass('row_selected');
+		this.$table.find('.row_highlighted').removeClass('row_highlighted');
 
 		if (features.length > 0) {
 			var rows = this.$table.find("tbody tr");
@@ -13578,7 +13578,7 @@ var TableView = Backbone.View.extend({
 
 				var $row = this._getRowFromFeature(features[i]);
 				if ( $row ) {
-					$row.addClass('row_selected');
+					$row.addClass('row_highlighted');
 				}
 			}
 
@@ -13983,6 +13983,11 @@ var TableView = Backbone.View.extend({
 			}
 		}
 
+		// ----------------------------------------
+		// first column = action buttons
+		// ----------------------------------------
+		content += '<td>';
+
 		var checkedClass = 'ui-icon-checkbox-off'; // By default
 		// Take into account the previous state of input
 		if ($row.find(".table-view-checkbox").length > 0 && $row.find(".table-view-checkbox").hasClass("ui-icon-checkbox-on")) {
@@ -13991,14 +13996,16 @@ var TableView = Backbone.View.extend({
 
 		// Layer selection checkbox
 		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
-		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
+		content += '<span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span>';
 
+		content += ' <span title="Direct download for this product" class="ui-icon directDownload"></span>';
 		// Layer browse visibility checkbox
 		/*
 		//var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
 		var browseVisibilityClass = rowData.feature._featureCollection.isHighlighted(rowData.feature) ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
 		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
 		*/
+		content += '</td>';
 
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
@@ -14190,9 +14197,9 @@ var TableView = Backbone.View.extend({
 		}
 		
 		// Scroll to the most recent product if selected
-		var selectedRows = this.$el.find('.row_selected');
-		if ( selectedRows.length ) {
-			var mostRecentRow = _.max(selectedRows, function(row) {
+		var highlightedRows = this.$el.find('.row_highlighted');
+		if ( highlightedRows.length ) {
+			var mostRecentRow = _.max(highlightedRows, function(row) {
 				var feature = $(row).data('internal').feature;
 				return new Date(Configuration.getMappedProperty(feature, "stop"));
 			});
@@ -14288,10 +14295,9 @@ var TableView = Backbone.View.extend({
 		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
 			.append('<div class="table-filter ui-block-a">\
 						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
-							<label for="filterTableInput">Filter table:</label>\
-							<input id="filterTableInput" data-inline="true" data-mini="true" type="text"/>\
+							<input id="filterTableInput" data-inline="true" data-mini="true" type="text" placeholder="Filter products..." />\
 						</div>\
-						<button data-mini="true" data-inline="true" id="table-columns-button">Columns</button>\
+						<button data-mini="true" data-inline="true" id="table-columns-button" title="Select columns to display in table" >Columns</button>\
 					</div>\
 					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
