@@ -24,6 +24,14 @@ TBD
 - MongoDB Community Edition version 3.4
 - On windows and Mac OS, set mongod path in environment variables (you can call it from everywhere)
 
+## Configuration
+
+See on src/config directory and define :
+
+- database access, account, password,
+- host,
+- account / password for authentication on catalogs
+- etc.
 
 ## Starting/Stoping/Testing Server
 >Linux commands
