@@ -53,6 +53,13 @@ a {
   color: #2489ce;
   font-weight: bold;
 }
+/* line 68, client/css/home.less */
+#version {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  color: #303030;
+}
 /* Palette */
 /* Layout */
 /* Width to avoid warping the elements on next line while resizing the window */
