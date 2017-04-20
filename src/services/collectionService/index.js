@@ -8,12 +8,12 @@ let Logger = require('utils/logger');
 let Configuration = require('config');
 let CatalogService = require('../catalogService');
 
-/*let fakeCollectionName = 'SENTINEL-1 Products';
+let fakeCollectionName = 'SENTINEL-1 Products';
 let fakeCollectionId = 'SENTINEL-1-PRODUCTS';
 let fakeCollectionUrlOsdd = 'http://fedeo.esa.int/opensearch/description.xml?parentIdentifier=EOP:ESA:SCIHUB&amp;platform=SENTINEL-1&amp;sensorType=RADAR&amp;startDate=2014-04-03T00:00:00Z&amp;endDate=';
 let fakeCollectionUrlSearch = 'https://fedeo.esa.int/opensearch/request?httpAccept=application%2Fatom%2Bxml&parentIdentifier=EOP:ESA:SCIHUB&startPage={startPage?}&startRecord={startIndex?}&maximumRecords={count?}&uid={geo:uid?}&startDate={time:start?}&endDate={time:end?}&bbox={geo:box?}&geometry={geo:geometry?}&creationDate={eo:creationDate?}&platform=SENTINEL-1&polarisationChannels={eo:polarisationChannels?}&orbitDirection={eo:orbitDirection?}&orbitNumber={eo:orbitNumber?}&productType={eo:productType?}&sensorMode={eo:sensorMode?}&processingLevel={eo:processingLevel?}&swathIdentifier={eo:swathIdentifier?}&username=' + Configuration.fedeo.username + '&password=' + Configuration.fedeo.password + '&recordSchema={sru:recordSchema?}&name={geo:name?}&lat={geo:lat?}&lon={geo:lon?}&radius={geo:radius?}';
 
-*//**
+/**
  * sample of myUrl
  * http://fedeo.esa.int/opensearch/request?
  * httpAccept=application%2Fsru%2Bxml&amp;parentIdentifier=SMOS_Open
@@ -152,8 +152,10 @@ class CollectionService {
 			// for each catalog -> set collections schema
 			let aPromisesSetCollectionsSchema = [];
 			CatalogService.getCatalogs(true).forEach((catalog) => {
-				let p = CatalogService.setCollectionsSchema(catalog);
-				aPromisesSetCollectionsSchema.push(p);
+				if (!catalog.fake) {
+					let p = CatalogService.setCollectionsSchema(catalog);
+					aPromisesSetCollectionsSchema.push(p);
+				}
 			});
 			return Promise.all(aPromisesSetCollectionsSchema);
 		}).then(() => {
@@ -179,6 +181,13 @@ class CollectionService {
 	addCollectionsFromCatalog(myCatalog) {
 		Logger.debug('collectionService.addCollectionsFromCatalog(' + myCatalog.name + ') *****');
 		let _this = this;
+		/***********************/
+		if (myCatalog.fake) {
+			let maFakeCollection = new Collection(fakeCollectionId, fakeCollectionUrlOsdd, fakeCollectionName);
+			// add other datas
+			return Promise.resolve(_this.getOsddCollection(maFakeCollection));
+		}
+		/***********************/
 		if (!myCatalog.collectionsSchema) {
 			myCatalog.active = false;
 			return Promise.resolve();
@@ -292,7 +301,15 @@ class CollectionService {
 		let _this = this;
 		// find node search request description
 		let searchRequestDescription = {};
-		searchRequestDescription = _this.findSearchRequestDescription(myCollection.id);
+		/**********************/
+		if (myCollection.id.indexOf(fakeCollectionId) === 0) {
+			searchRequestDescription = {'@' : { template : fakeCollectionUrlSearch }};
+		} else {
+		/**********************/
+			searchRequestDescription = _this.findSearchRequestDescription(myCollection.id);
+		/**********************/
+		}
+		/**********************/
 		if (!searchRequestDescription) {
 			_.remove(_this.collections, function(item) {
 				return item.id === myCollection.id;
@@ -303,7 +320,7 @@ class CollectionService {
 			// put url in url_search attribute
 			myCollection.url_search = searchRequestDescription['@'].template;
 			// create request to retrieve the number of available products
-			let urlCount = _buildSearchRequestWithValue(myCollection.url_search, {count: 1});
+				let urlCount = _buildSearchRequestWithValue(myCollection.url_search, {count: 1});
 			// and make first search
 			return new Promise((resolve,reject) => {
 				request(urlCount, (error, response, body) => {
@@ -613,19 +630,19 @@ class CollectionService {
 			}
 		};
 
-		let collectionsConf = require(Configuration['collectionPath']);
+		let collectionsOptionsConf = require(Configuration['collectionsOptionsPath']);
 
 		this.collections.forEach((collection) => {
-			let myCollectionConf = _.find(collectionsConf, (collectionConf) => {
-				return (collection.name === collectionConf.name)
+			let myCollectionOptionsConf = _.find(collectionsOptionsConf, (collectionOptionsConf) => {
+				return (collection.name === collectionOptionsConf.name)
 			});
-			if (myCollectionConf) {
-				let keywords = myCollectionConf.keywords || [];
+			if (myCollectionOptionsConf) {
+				let keywords = myCollectionOptionsConf.keywords || [];
 				if (keywords.length > 0) {
 					keywords.forEach((key) => {
 						// Add some hardcoded values for now just to make things work..
 						response.datasetpopulationmatrix.datasetPopulationValues.push([
-							key.keyword,
+							key,
 							"REMOTE",
 							collection.name,
 							"REMOTE",

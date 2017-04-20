@@ -3717,10 +3717,10 @@ module.exports = {
 				// Initialize menu bar
 				MenuBar.initialize("header nav");
 
-				$.mobile.activePage.find('#helpToolbar').toolbar({
+				/*$.mobile.activePage.find('#helpToolbar').toolbar({
 					onlyIcon: false
 				});
-				ContextHelp($.mobile.activePage);
+				ContextHelp($.mobile.activePage);*/
 			})
 			.fail(function(jqXHR, textStatus, errorThrown) {
 				Logger.error('Cannot load configuration : ' + errorThrown);
@@ -4110,6 +4110,7 @@ var DataSetPopulation = Backbone.Model.extend({
 	 */
 	parse: function(response) {
 
+		var _this = this;
 		var matrix = response.datasetpopulationmatrix.datasetPopulationValues;
 		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
 		var criterias = [];
@@ -4151,21 +4152,27 @@ var DataSetPopulation = Backbone.Model.extend({
 			}
 			this.datasetInfoMap[datasetId].rows.push(matrix[i]);
 
-			var keyword = matrix[i][this.keywordIndex].split(":"); // GROUP:VALUE
+			var keyword = matrix[i][this.keywordIndex]; // {GROUP: [VALUE]}
 			// Continue if empty
-			if ( keyword.length != 2 )
+			if ( keyword == '' )
 				continue;
 
-			var criteria = _.findWhere(criterias, { "title": keyword[0] });
+			var categorie = Object.keys(keyword)[0];
+
+			var criteria = _.findWhere(criterias, { "title": categorie });
 			if ( !criteria ) {
-				criteria = new Criteria(keyword[0]);
+				criteria = new Criteria(categorie);
 				criterias.push(criteria);
 			}
-			criteria.addValue(keyword[1]);
-			if ( !this.datasetInfoMap[datasetId].keywords[keyword[0]] )
-				this.datasetInfoMap[datasetId].keywords[keyword[0]] = [];
+			keyword[categorie].forEach(function(value) {
+				criteria.addValue(value);
+			});
+			if ( !this.datasetInfoMap[datasetId].keywords[categorie] )
+				this.datasetInfoMap[datasetId].keywords[categorie] = [];
 			// Store group:value as a dictionary in datasetInfoMap
-			this.datasetInfoMap[datasetId].keywords[keyword[0]].push(keyword[1]);
+			keyword[categorie].forEach(function(value) {
+				_this.datasetInfoMap[datasetId].keywords[categorie].push(value);
+			});
 		}
 
 		return {
@@ -6348,8 +6355,10 @@ var DatasetSelectionView = Backbone.View.extend({
 		'click .ui-icon': function(event) {
 			var datasetId = $(event.currentTarget.parentElement).data("datasetid");
 			if ($(event.currentTarget).hasClass("ui-icon-checkbox-off")) {
+				$(event.currentTarget).removeClass("ui-icon-checkbox-off").addClass("ui-icon-checkbox-on");
 				this.model.select(datasetId);
 			} else {
+				$(event.currentTarget).removeClass("ui-icon-checkbox-on").addClass("ui-icon-checkbox-off");
 				this.model.unselect(datasetId);
 			}
 		},
@@ -9707,7 +9716,7 @@ var SearchResultsTableView = TableView.extend({
 	events: {
 
 		//Called when the user clicks on the product id of an item
-		'click .ui-direct-download': function(event) {
+		'click .directDownload': function(event) {
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
@@ -9766,7 +9775,7 @@ var SearchResultsTableView = TableView.extend({
 	 */
 	renderButtons: function($buttonContainer) {
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -9785,7 +9794,7 @@ var SearchResultsTableView = TableView.extend({
 
 		});
 		//add selected items to the current or to a new shopcart
-		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true">Add to Shopcart</button>').appendTo($buttonContainer);
+		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true" title="Add selected products to shopcart">Add to shopcart</button>').appendTo($buttonContainer);
 		this.addToShopcart.button();
 		this.addToShopcart.button('disable');
 		this.addToShopcart.click(function() {
@@ -9814,7 +9823,7 @@ var SearchResultsTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.exportButton = $('<button title="Export" data-role="button" data-inline="true" data-mini="true">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KLM, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('disable');
 
@@ -10842,7 +10851,7 @@ var ShopcartTableView = TableView.extend({
 	events: {
 
 		//Called when the user clicks on the product id of an item
-		'click .ui-direct-download': function(event) {
+		'click .directDownload': function(event) {
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
@@ -10902,7 +10911,7 @@ var ShopcartTableView = TableView.extend({
 	renderButtons: function($buttonContainer) {
 		var self = this;
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -10927,7 +10936,7 @@ var ShopcartTableView = TableView.extend({
 
 		//add button to the widget footer in order to download products
 		//do not display this button -> this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
-		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>');
+		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Define download options">Download Options</button>');
 		this.downloadOptionsButton.button();
 		this.downloadOptionsButton.button('disable').hide();
 
@@ -10948,7 +10957,7 @@ var ShopcartTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true">Delete</button>').appendTo($buttonContainer);
+		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Delete selected products from this shopcart">Delete</button>').appendTo($buttonContainer);
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
 
@@ -10957,7 +10966,7 @@ var ShopcartTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to export a shopcart
-		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KML, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('enable');
 

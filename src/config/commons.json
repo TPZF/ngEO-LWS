@@ -1,7 +1,7 @@
 {
     "browseConfigurationPath": "services/browseService/browseConfiguration.json",
     "catalogPath": "services/catalogService/catalogs.json",
-    "collectionPath": "services/collectionService/collections.json",
+    "collectionsOptionsPath": "services/collectionService/collections-options.json",
     "collectionService": {
         "refreshDelay": 86400000
     },

@@ -3,72 +3,72 @@
         "name": "ASA_APP_1P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_APP_1P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "ASA_APS_1P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_APS_1P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "ASA_AP__0P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_AP__0P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "ASA_IMP_1P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_IMP_1P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "ASA_IMS_1P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_IMS_1P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "ASA_IM__0P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_IM__0P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "ASA_WSS_1P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_WSS_1P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "ASA_WS__0P",
         "url": "https://sxcat.eox.at/opensearch/collections/ASA_WS__0P",
         "keywords": [
-            {"keyword": "Platform:Envisat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["Envisat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
@@ -79,19 +79,18 @@
         "name": "IKONOS-2",
         "url": "https://sxcat.eox.at/opensearch/collections/IKONOS-2",
         "keywords": [
-            {"keyword": "Platform:IKONOS"},
-            {"keyword": "Sensor:OSA"},
-            {"keyword": "InstrumentType:High Res."}
+            {"Platform": ["IKONOS"]},
+            {"Sensor": ["OSA"]},
+            {"InstrumentType": ["High Res."]}
         ]
     },
     {
         "name": "Landsat57Merged",
         "url": "https://sxcat.eox.at/opensearch/collections/Landsat57Merged",
         "keywords": [
-            {"keyword": "Platform:Landsat"},
-            {"keyword": "Sensor:TM"},
-            {"keyword": "InstrumentType:High Res."},
-            {"keyword": "InstrumentType:Optical"}
+            {"Platform": ["Landsat"]},
+            {"Sensor": ["TM"]},
+            {"InstrumentType": ["High Res.", "Optical"]}
         ]
     },
     {
@@ -102,8 +101,8 @@
         "name": "Oceansat2",
         "url": "https://sxcat.eox.at/opensearch/collections/Oceansat2",
         "keywords": [
-            {"keyword": "Platform:OceanSat"},
-            {"keyword": "Sensor:OPTICAL"}
+            {"Platform": ["OceanSat"]},
+            {"Sensor": ["OPTICAL"]}
         ]
     },
     {
@@ -114,24 +113,24 @@
         "name": "RapidEye",
         "url": "https://sxcat.eox.at/opensearch/collections/RapidEye",
         "keywords": [
-            {"keyword": "Platform:RapidEye"},
-            {"keyword": "Sensor:OPTICAL"}
+            {"Platform": ["RapidEye"]},
+            {"Sensor": ["OPTICAL"]}
         ]
     },
     {
         "name": "RapidEye_SouthAmerica",
         "url": "https://sxcat.eox.at/opensearch/collections/RapidEye_SouthAmerica",
         "keywords": [
-            {"keyword": "Platform:RapidEye"},
-            {"keyword": "Sensor:OPTICAL"}
+            {"Platform": ["RapidEye"]},
+            {"Sensor": ["OPTICAL"]}
         ]
     },
     {
         "name": "RapidEye_Take5",
         "url": "https://sxcat.eox.at/opensearch/collections/RapidEye_Take5",
         "keywords": [
-            {"keyword": "Platform:RapidEye"},
-            {"keyword": "Sensor:OPTICAL"}
+            {"Platform": ["RapidEye"]},
+            {"Sensor": ["OPTICAL"]}
         ]
     },
     {
@@ -146,8 +145,8 @@
         "name": "SPOT1-5",
         "url": "https://sxcat.eox.at/opensearch/collections/SPOT1-5",
         "keywords": [
-            {"keyword": "Platform:SPOT"},
-            {"keyword": "Sensor:OPTICAL"}
+            {"Platform": ["SPOT"]},
+            {"Sensor": ["OPTICAL"]}
         ]
     },
     {
@@ -158,16 +157,16 @@
         "name": "Seasat",
         "url": "https://sxcat.eox.at/opensearch/collections/Seasat",
         "keywords": [
-            {"keyword": "Platform:Seasat"},
-            {"keyword": "Sensor:SAR"}
+            {"Platform": ["Seasat"]},
+            {"Sensor": ["SAR"]}
         ]
     },
     {
         "name": "WorldView-2",
         "url": "https://sxcat.eox.at/opensearch/collections/WorldView-2",
         "keywords": [
-            {"keyword": "Platform:WorldView"},
-            {"keyword": "Sensor:OPTICAL"}
+            {"Platform": ["WorldView"]},
+            {"Sensor": ["OPTICAL"]}
         ]
     }
 ]
