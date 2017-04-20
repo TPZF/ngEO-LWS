@@ -1,5 +1,5 @@
 let Logger = require('utils/logger'),
-	Configuration = require('config');
+    Configuration = require('config');
 
 /**
  * Database service
@@ -7,15 +7,22 @@ let Logger = require('utils/logger'),
  */
 class AuthenticationService {
 
-	constructor() {
-	}
+    constructor() {
+    }
 
-    isAuthenticated(myRequest, myResponse) {
-        // TODO : from myRequest object, check if user is authenticated or not
-       let flag = true;
-       if (!flag) {
-           myResponse.status(401).send('Unauthorized !');
-       }
+    isAuthenticated(myRequest, myResponse, myCallbackFunction) {
+        Logger.debug('AuthenticationService.isAuthenticated');
+        // TODO remove it when SSO is activated
+        myRequest.headers[Configuration['ssoUserId']] = 'anonymous';
+        let flag = false;
+        if (typeof this.getUserId(myRequest) !== 'undefined') {
+            flag = true;
+        }
+        if (!flag) {
+            myResponse.status(401).send('Unauthorized !');
+        } else {
+            myCallbackFunction();
+        }
     }
 
     /**
@@ -25,8 +32,8 @@ class AuthenticationService {
      * @param {*} myResponse 
      */
     getUserId(myRequest) {
-        // TODO : from myRequest object, extract userId
-        return 'anonymous';
+        Logger.debug('AuthenticationService.getUserId = ' + myRequest.headers[Configuration['ssoUserId']]);
+        return myRequest.headers[Configuration['ssoUserId']];
     }
 
 }
