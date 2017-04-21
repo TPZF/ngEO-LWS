@@ -1,349 +1,371 @@
 {
 	"version": "0.1",
-	"tableView" : {
-		"maxVisibleColumns" : 11,
-		"columnsDef" : [{
-				"sTitle" : "Mission",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName"
-			}, {
-				"sTitle" : "Satellite",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier"
-			}, {
-				"sTitle" : "Sensor",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
-			}, {
-				"sTitle" : "Start",
-				"mData" : "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition"
-			}, {
-				"sTitle" : "Stop",
-				"mData" : "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition"
-			}, {
-				"sTitle" : "Status",
-				"mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"
-			}, {
-				"sTitle" : "Swath",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"
-			}, {
-				"sTitle" : "Track",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"
-			}, {
-				"sTitle" : "Polarisation Channels",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationChannels"
-			}, {
-				"sTitle" : "Orbit",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"
-			}, {
-				"sTitle" : "Polarisation Mode",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationMode"
-			}, {
-				"sTitle" : "Pass",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"
-			}, {
-				"sTitle" : "Frame",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"
-			}, {
-				"sTitle" : "Product",
-				"mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href"
-			}, {
-				"sTitle" : "Product Type",
-				"mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
-			}, {
-				"sTitle" : "Illumination Azimuth Angle",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#"
-			}, {
-				"sTitle" : "Illumination Zenith Angle",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#"
-			}, {
-				"sTitle" : "Illumination Elevation Angle",
-				"mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#"
-			}, {
-				"sTitle" : "Timeliness",
-				"mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.timeliness"
+	"tableView": {
+		"maxVisibleColumns": 11,
+		"columnsDef": [
+			{
+				"sTitle": "Mission",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName"
+			},
+			{
+				"sTitle": "Satellite",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier"
+			},
+			{
+				"sTitle": "Sensor",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
+			},
+			{
+				"sTitle": "Start",
+				"mData": "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition"
+			},
+			{
+				"sTitle": "Stop",
+				"mData": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition"
+			},
+			{
+				"sTitle": "Status",
+				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"
+			},
+			{
+				"sTitle": "Swath",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"
+			},
+			{
+				"sTitle": "Track",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"
+			},
+			{
+				"sTitle": "Polarisation Channels",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationChannels"
+			},
+			{
+				"sTitle": "Orbit",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"
+			},
+			{
+				"sTitle": "Polarisation Mode",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationMode"
+			},
+			{
+				"sTitle": "Pass",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"
+			},
+			{
+				"sTitle": "Frame",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"
+			},
+			{
+				"sTitle": "Product",
+				"mData": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href"
+			},
+			{
+				"sTitle": "Product Type",
+				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
+			},
+			{
+				"sTitle": "Illumination Azimuth Angle",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#"
+			},
+			{
+				"sTitle": "Illumination Zenith Angle",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#"
+			},
+			{
+				"sTitle": "Illumination Elevation Angle",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#"
+			},
+			{
+				"sTitle": "Timeliness",
+				"mData": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.timeliness"
 			}
 		],
-		"directDownloadColumn" : 13
+		"directDownloadColumn": 13
 	},
-
-	"mailto" : "eohelp@esa.int",
-	"proxyUrl" : "http://localhost:3000/proxy?url=",
-
-	"search" : {
-		"geometryPrecision" : 2,
-		"advancedCriteriaLabels" : {
-			"ailz" : "ANX Ill. Zen.",
-			"cloudCoverPercentage" : "Cloud cover percentage",
+	"mailto": "eohelp@esa.int",
+	"proxyUrl": "http://localhost:3000/proxy?url=",
+	"search": {
+		"geometryPrecision": 2,
+		"advancedCriteriaLabels": {
+			"ailz": "ANX Ill. Zen.",
+			"cloudCoverPercentage": "Cloud cover percentage",
 			"country": "Country",
 			"city": "City",
-			"csalt_cycleNumber" : "Cycle number",
-			"csalt_instrumentType" : "Instrument type",
-			"csalt_isSegment" : "Is segment",
-			"csalt_relativePassNumber" : "Relative pass number",
-			"csatm_centreViewAngles" : "Centre view angles",
-			"csatm_cloudCoverPercentage" : "Cloud cover percentage",
-			"csatm_multiViewAngles" : "Multiview angles",
-			"csatm_snowCoverPercentage" : "Snow cover percentage",
-			"cseop_acquisitionType" : "Acquisition type",
-			"cseop_anxIllZen" : "Illumination azimuth angle",
-			"cseop_anxStart" : "ANX Start",
-			"cseop_anxStop" : "ANX Stop",
-			"cseop_asut" : "ASUT",
-			"cseop_fileName" : "File name",
-			"cseop_identifier" : "Identifier",
-			"cseop_illuminationElevationAngle" : "Illumination elevation angle",
-			"cseop_imageQualityDegradation" : "Image quality degradation",
-			"cseop_imageQualityDegradationTag" : "Image quality degradation tag",
-			"cseop_imageQualityReportURL" : "Image quality report URL",
-			"cseop_imageQualityStatus" : "Image quality status",
-			"cseop_orbitDirection" : "Orbit direction",
-			"cseop_processingMode" : "Processing mode",
-			"cseop_productType" : "Product type",
-			"cseop_size" : "Size",
-			"cseop_wrsLatitudeGrid" : "Frame",
-			"cslmb_sensorType" : "Sensor type",
-			"csopt_cloudCoverPercentage" : "Cloud cover percentage",
-			"csopt_snowCoverPercentage" : "Snow cover percentage",
-			"cssar_antennaLookDirection" : "Antenna look direction",
-			"cssar_dopplerFrequency" : "Doppler frequency",
-			"cssar_incidenceAngleVariation" : "Incidence angle variation",
-			"cssar_maximumIncidenceAngle" : "Maximum incidence angle",
-			"cssar_minimumIncidenceAngle" : "Minimum incidence angle",
-			"cssar_polarisationMode" : "Polarisation mode",
+			"csalt_cycleNumber": "Cycle number",
+			"csalt_instrumentType": "Instrument type",
+			"csalt_isSegment": "Is segment",
+			"csalt_relativePassNumber": "Relative pass number",
+			"csatm_centreViewAngles": "Centre view angles",
+			"csatm_cloudCoverPercentage": "Cloud cover percentage",
+			"csatm_multiViewAngles": "Multiview angles",
+			"csatm_snowCoverPercentage": "Snow cover percentage",
+			"cseop_acquisitionType": "Acquisition type",
+			"cseop_anxIllZen": "Illumination azimuth angle",
+			"cseop_anxStart": "ANX Start",
+			"cseop_anxStop": "ANX Stop",
+			"cseop_asut": "ASUT",
+			"cseop_fileName": "File name",
+			"cseop_identifier": "Identifier",
+			"cseop_illuminationElevationAngle": "Illumination elevation angle",
+			"cseop_imageQualityDegradation": "Image quality degradation",
+			"cseop_imageQualityDegradationTag": "Image quality degradation tag",
+			"cseop_imageQualityReportURL": "Image quality report URL",
+			"cseop_imageQualityStatus": "Image quality status",
+			"cseop_orbitDirection": "Orbit direction",
+			"cseop_processingMode": "Processing mode",
+			"cseop_productType": "Product type",
+			"cseop_size": "Size",
+			"cseop_wrsLatitudeGrid": "Frame",
+			"cslmb_sensorType": "Sensor type",
+			"csopt_cloudCoverPercentage": "Cloud cover percentage",
+			"csopt_snowCoverPercentage": "Snow cover percentage",
+			"cssar_antennaLookDirection": "Antenna look direction",
+			"cssar_dopplerFrequency": "Doppler frequency",
+			"cssar_incidenceAngleVariation": "Incidence angle variation",
+			"cssar_maximumIncidenceAngle": "Maximum incidence angle",
+			"cssar_minimumIncidenceAngle": "Minimum incidence angle",
+			"cssar_polarisationMode": "Polarisation mode",
 			"frame": "Frame",
 			"instrumentShortName": "Sensor",
-			"isn" : "Instrument short name",
+			"isn": "Instrument short name",
 			"nativeProductFormat": "Native product format",
-			"on" : "Orbit number",
+			"on": "Orbit number",
 			"operationalMode": "Operational mode",
 			"orbitDirection": "Orbit direction",
 			"orbitNumber": "Orbit number",
 			"path": "Path",
-			"pgrpi" : "Product group Id",
+			"pgrpi": "Product group Id",
 			"platformSerialIdentifier": "Satellite",
 			"polarisationChannels": "Polarisation channels",
-			"productType" : "Product type",
-			"psi" : "Platform serial identifier",
-			"psn" : "Platform short name",
+			"processingLevel": "Processing level",
+			"productType": "Product type",
+			"psi": "Platform serial identifier",
+			"psn": "Platform short name",
 			"row": "Row",
-			"s2ca" : "Cloudy area",
-			"s2cc" : "Cloud cover percentage",
-			"s2ct" : "Cloud threshold",
-			"sarpc" : "Polarisation channels",
-			"si" : "Swath identifier",
+			"s2ca": "Cloudy area",
+			"s2cc": "Cloud cover percentage",
+			"s2ct": "Cloud threshold",
+			"sarpc": "Polarisation channels",
+			"sensorMode": "Sensor mode",
+			"si": "Swath identifier",
 			"site": "Site",
-			"som" : "Sensor operational mode",
-			"st" : "Sensor type",
-			"status" : "Status",
+			"som": "Sensor operational mode",
+			"st": "Sensor type",
+			"status": "Status",
 			"swathIdentifier": "Swath identifier",
-			"tl" : "Timeliness",
+			"tl": "Timeliness",
 			"track": "Track",
-			"wlog" : "Track",
-			"wrsLatitudeGrid" : "Frame",
-			"wrsLongitudeGrid" : "Track"
+			"wlog": "Track",
+			"wrsLatitudeGrid": "Frame",
+			"wrsLongitudeGrid": "Track"
 		}
 	},
-
-	"searchResults" : {
-		"countPerPage" : 50
+	"searchResults": {
+		"countPerPage": 50
 	},
-
-	"keyDates" : [["2015-04-25", "Super date"]],
-
-	"downloadManager" : {
-		"downloadManagerInstallationLink" : {
-			"Windows" : "/files/ngEODownloadManager-2.0.5-RC06-windows-installer.exe",
-			"Linux" : "/files/ngEODownloadManager-2.0.5-RC06-linux-x64-installer.run",
-			"MacOS" : "/files/ngEODownloadManager-2.0.5-RC06-osx-installer.dmg"
+	"keyDates": [
+		[
+			"2015-04-25",
+			"Super date"
+		]
+	],
+	"downloadManager": {
+		"downloadManagerInstallationLink": {
+			"Windows": "/files/ngEODownloadManager-2.0.5-RC06-windows-installer.exe",
+			"Linux": "/files/ngEODownloadManager-2.0.5-RC06-linux-x64-installer.run",
+			"MacOS": "/files/ngEODownloadManager-2.0.5-RC06-osx-installer.dmg"
 			//"DMTU Windows" : "/files/download-manager-0.7.6-win_x64.zip",
 			//"DMTU Linux" : "/files/download-manager-0.7.6-linux_x64.tar.gz",
 			//"DMTU MacOS" : "/files/download-manager-0.7.6-macosx_x64.tar.gz"
 		}
 	},
-
-	"simpleDataAccessRequest" : {
-		"warningMaximumSize" : 10000
+	"simpleDataAccessRequest": {
+		"warningMaximumSize": 10000
 	},
-
-	"dataAccessRequestStatuses" : {
-		"messagefadeOutTime" : 2500,
-		"collapseDAR" : true,
-		"collapseProducts" : true
+	"dataAccessRequestStatuses": {
+		"messagefadeOutTime": 2500,
+		"collapseDAR": true,
+		"collapseProducts": true
 	},
-
-	"gazetteer" : {
-		"maxResults" : 3,
-		"timeout" : 5000,
-		"outputPolygon" : false
+	"gazetteer": {
+		"maxResults": 3,
+		"timeout": 5000,
+		"outputPolygon": false
 	},
-
-	"map" : {
-
+	"map": {
 		//"projection": "EPSG:900913",
 		//"projection": "EPSG:3857",
-		"projection" : "EPSG:4326",
-
+		"projection": "EPSG:4326",
 		// OpenLayers configuration
-		"openlayers" : {
-			"restrictedExtent" : [-360, -100, 360, 100],
-			"transitionEffect" : "resize"
+		"openlayers": {
+			"restrictedExtent": [
+				-360,
+				-100,
+				360,
+				100
+			],
+			"transitionEffect": "resize"
 		},
-
 		// GlobWeb configuration
-		"globweb" : {
-			"tileErrorTreshold" : 2,
-			"displayStats" : false,
-			"continuousRendering" : false,
-			"zoomDuration" : 500,
-			"elevationLayer" : {
-				"type" : "WCS",
-				"crossOrigin" : "use-credentials",
-				"baseUrl" : "https://tiles.esa.maps.eox.at/elevation?interpolation=bilinear",
-				"coverage" : "ace2",
-				"version" : "2.0.1"
+		"globweb": {
+			"tileErrorTreshold": 2,
+			"displayStats": false,
+			"continuousRendering": false,
+			"zoomDuration": 500,
+			"elevationLayer": {
+				"type": "WCS",
+				"crossOrigin": "use-credentials",
+				"baseUrl": "https://tiles.esa.maps.eox.at/elevation?interpolation=bilinear",
+				"coverage": "ace2",
+				"version": "2.0.1"
 			}
 		},
-
-		"backgroundLayers" : [{
-				"id" : "BlueMarble_TPZ_WMS",
-				"name" : "Blue Marble (TPZ-WMS)",
-				"type" : "WMS",
-				"baseUrl" : "http://demonstrator.telespazio.com/wmspub",
-				"attribution" : "Telespazio France",
-				"params" : {
-					"layers" : "BlueMarble"
+		"backgroundLayers": [
+			{
+				"id": "BlueMarble_TPZ_WMS",
+				"name": "Blue Marble (TPZ-WMS)",
+				"type": "WMS",
+				"baseUrl": "http://demonstrator.telespazio.com/wmspub",
+				"attribution": "Telespazio France",
+				"params": {
+					"layers": "BlueMarble"
 				}
-			}, {
-				"id" : "eox_terrain",
-				"name" : "Terrain",
-				"type" : "WMTS",
+			},
+			{
+				"id": "eox_terrain",
+				"name": "Terrain",
+				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl" : "https://tiles.esa.maps.eox.at/wmts/",
-				"attribution" : "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
-				"params" : {
-					"layer" : "terrain",
-					"matrixSet" : "WGS84"
+				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
+				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "terrain",
+					"matrixSet": "WGS84"
 				},
-				"projection" : "EPSG:4326"
-			}, {
-				"id" : "eox_osm",
-				"name" : "OpenStreetMap",
-				"type" : "WMTS",
+				"projection": "EPSG:4326"
+			},
+			{
+				"id": "eox_osm",
+				"name": "OpenStreetMap",
+				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl" : "https://tiles.esa.maps.eox.at/wmts/",
-				"attribution" : "OpenStreetMap { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
-				"params" : {
-					"layer" : "osm",
-					"matrixSet" : "WGS84"
+				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
+				"attribution": "OpenStreetMap { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "osm",
+					"matrixSet": "WGS84"
 				},
-				"projection" : "EPSG:4326"
-			}, {
-				"id" : "eox_satellite",
-				"name" : "Satellite",
-				"type" : "WMTS",
+				"projection": "EPSG:4326"
+			},
+			{
+				"id": "eox_satellite",
+				"name": "Satellite",
+				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl" : "https://tiles.esa.maps.eox.at/wmts/",
-				"attribution" : "Blue Marble { Data © Blue Marble © NASA’s Earth Observatory, Rendering © <a href='http://eox.at/'>EOX</a> }",
-				"params" : {
-					"layer" : "bluemarble",
-					"matrixSet" : "WGS84"
+				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
+				"attribution": "Blue Marble { Data © Blue Marble © NASA’s Earth Observatory, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "bluemarble",
+					"matrixSet": "WGS84"
 				},
-				"projection" : "EPSG:4326"
-			}, {
-				"id" : "eox_satellite2",
-				"name" : "Satellite Night",
-				"type" : "WMTS",
+				"projection": "EPSG:4326"
+			},
+			{
+				"id": "eox_satellite2",
+				"name": "Satellite Night",
+				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl" : "https://tiles.esa.maps.eox.at/wmts/",
-				"attribution" : "Black Marble { Data © Black Marble © NASA’s Earth Observatory, Rendering © <a href='http://eox.at/'>EOX</a> }",
-				"params" : {
-					"layer" : "blackmarble",
-					"matrixSet" : "WGS84"
+				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
+				"attribution": "Black Marble { Data © Black Marble © NASA’s Earth Observatory, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "blackmarble",
+					"matrixSet": "WGS84"
 				},
-				"projection" : "EPSG:4326"
+				"projection": "EPSG:4326"
 			}
 		],
-
-		"styles" : {
-			"results-footprint" : {
-				"default" : {
-					"strokeColor" : "#FF7373",
-					"strokeWidth" : 1,
-					"fill" : false
+		"styles": {
+			"results-footprint": {
+				"default": {
+					"strokeColor": "#FF7373",
+					"strokeWidth": 1,
+					"fill": false
 				},
-				"select" : {
-					"strokeColor" : "#7373ff",
-					"strokeWidth" : 3,
-					"fill" : false
+				"select": {
+					"strokeColor": "#7373ff",
+					"strokeWidth": 3,
+					"fill": false
 				},
-				"highlight" : {
-					"strokeColor" : "#ff0000",
-					"strokeWidth" : 3,
-					"fill" : false
+				"highlight": {
+					"strokeColor": "#ff0000",
+					"strokeWidth": 3,
+					"fill": false
 				},
-				"highlight-select" : {
-					"strokeColor" : "#0000FF",
-					"strokeWidth" : 3,
-					"fill" : false
+				"highlight-select": {
+					"strokeColor": "#0000FF",
+					"strokeWidth": 3,
+					"fill": false
 				}
 			},
-			"shopcart-footprint" : {
-				"default" : {
-					"strokeColor" : "#73FF73",
-					"strokeWidth" : 1,
-					"fill" : false
+			"shopcart-footprint": {
+				"default": {
+					"strokeColor": "#73FF73",
+					"strokeWidth": 1,
+					"fill": false
 				},
-				"select" : {
-					"strokeColor" : "#7373ff",
-					"strokeWidth" : 1,
-					"fill" : false
+				"select": {
+					"strokeColor": "#7373ff",
+					"strokeWidth": 1,
+					"fill": false
 				},
-				"highlight" : {
-					"strokeColor" : "#00ff00",
-					"strokeWidth" : 3,
-					"fill" : false
+				"highlight": {
+					"strokeColor": "#00ff00",
+					"strokeWidth": 3,
+					"fill": false
 				},
-				"highlight-select" : {
-					"strokeColor" : "#0000FF",
-					"strokeWidth" : 3,
-					"fill" : false
+				"highlight-select": {
+					"strokeColor": "#0000FF",
+					"strokeWidth": 3,
+					"fill": false
 				}
 			},
-			"search-area" : {
-				"strokeColor" : "#00ff00",
-				"strokeWidth" : 1,
-				"fill" : false
+			"search-area": {
+				"strokeColor": "#00ff00",
+				"strokeWidth": 1,
+				"fill": false
 			}
 		},
-
-		"layers" : [{
-				"name" : "Overlay",
-				"type" : "WMTS",
+		"layers": [
+			{
+				"name": "Overlay",
+				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl" : "https://tiles.maps.eox.at/wmts/",
-				"attribution" : "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
-				"params" : {
-					"layer" : "overlay",
-					"matrixSet" : "WGS84"
+				"baseUrl": "https://tiles.maps.eox.at/wmts/",
+				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "overlay",
+					"matrixSet": "WGS84"
 				},
-				"visible" : false,
-				"projection" : "EPSG:4326"
-			}, {
-				"name" : "Overlay Bright",
-				"type" : "WMTS",
+				"visible": false,
+				"projection": "EPSG:4326"
+			},
+			{
+				"name": "Overlay Bright",
+				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl" : "https://tiles.maps.eox.at/wmts/",
-				"attribution" : "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
-				"params" : {
-					"layer" : "overlay_bright",
-					"matrixSet" : "WGS84"
+				"baseUrl": "https://tiles.maps.eox.at/wmts/",
+				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "overlay_bright",
+					"matrixSet": "WGS84"
 				},
-				"visible" : false,
-				"projection" : "EPSG:4326"
+				"visible": false,
+				"projection": "EPSG:4326"
 			}
 		],
-
-		"browseDisplay" : {
-			"opacity" : 1,
-			"crossOrigin" : "use-credentials"
+		"browseDisplay": {
+			"opacity": 1,
+			"crossOrigin": "use-credentials"
 		}
 	}
 }

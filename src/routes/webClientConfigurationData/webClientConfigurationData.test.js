@@ -12,40 +12,28 @@ let Utils = require('../../utils/utils');
  */
 describe('Route webClientConfigurationData', function () {
 
-	// const binaryParser = function (res, cb) {
-	// 	res.setEncoding('binary');
-	// 	res.data = '';
-	// 	res.on("data", function (chunk) {
-	// 		res.data += chunk;
-	// 	});
-	// 	res.on('end', function () {
-	// 		cb(null, new Buffer(res.data, 'binary'));
-	// 	});
-	// };
-
 	it('GET /ngeo/webClientConfigurationData', function (done) {
 
 		request(app)
-		.get('/ngeo/webClientConfigurationData')
-		//.buffer()
-		//.parse(binaryParser)
-		.expect(200)
-		.end(function(err,res) {
-			let resp = JSON.parse(res.body);
-			should(resp).be.a.Object();
-			should(resp).have.property('tableView');
-			done();
-		});
+			.get('/ngeo/webClientConfigurationData')
+			//.buffer()
+			//.parse(binaryParser)
+			.expect(200)
+			.end(function (err, res) {
+				should(res.body).be.a.Object();
+				should(res.body).have.property('tableView');
+				done();
+			});
 
 	});
 
 	it('GET /ngeo/webClientConfigurationData/about', function (done) {
 		request(app)
-		.get('/ngeo/webClientConfigurationData/about')
-		.expect(200)
-		.end(function(err,res) {
-			should(res.text).be.a.String();
-			done();
-		});
+			.get('/ngeo/webClientConfigurationData/about')
+			.expect(200)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				done();
+			});
 	});
 });

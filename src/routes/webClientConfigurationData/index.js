@@ -19,12 +19,12 @@ router.use(function timeLog(req, res, next) {
 router.get('/', function (req, res) {
 	Logger.debug('GET /ngeo/webClientConfigurationData');
 	let filePath = __dirname + '/configuration.json';
-	var file = fs.readFile(filePath, 'utf-8', function(err, data) {
+	var file = fs.readFile(filePath, 'utf-8', function (err, data) {
 		if (err) {
 			res.status(500).send('Unexpected error');
 			return;
 		}
-		res.status(200).json(Utils.removeComments(data));
+		res.status(200).json(JSON.parse(Utils.removeComments(data)));
 	});
 });
 
