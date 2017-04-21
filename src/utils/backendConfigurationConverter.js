@@ -1,5 +1,5 @@
 let _ = require('lodash');
-let logger = require('./logger');
+let Logger = require('./logger');
 let Utils = require('./utils');
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,16 +21,17 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry, collectionId) {
 	geometry.coordinates = [];
 	geometry.coordinates[0] = [];
 
-	let posList = '';
-	// TODO : find a generic way to retrieve posList
-	if (gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMember) {
-		poslist = gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMember.Polygon.exterior.LinearRing.posList;
-	} else {
-		poslist = gmlFpEntry.Footprint.multiExtentOf.MultiSurface.surfaceMembers.Polygon.exterior.LinearRing.posList;
+	let posList = Utils.getFromPath(gmlFpEntry, 'multiExtentOf.MultiSurface.surfaceMember.Polygon.exterior.LinearRing.posList', '');
+	if (posList === '') {
+		posList = Utils.getFromPath(gmlFpEntry, 'multiExtentOf.MultiSurface.surfaceMembers.Polygon.exterior.LinearRing.posList', '');
 	}
-	let stringPosList = poslist;
-	if (poslist['#']) {
-		stringPosList = poslist['#'];
+	if (posList === '') {
+		Logger.warn('No posList for ' + gmlFpEntry + ' in collection ' + collectionId);
+		return geometry;
+	}
+	let stringPosList = posList;
+	if (posList['#']) {
+		stringPosList = posList['#'];
 	}
 	
 	let arrList = stringPosList.split(" ", -1);
@@ -51,31 +52,33 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry, collectionId) {
 }
 
 let _addProductInformationForFeature = function(feature) {
-	if (feature.properties.EarthObservation.result.EarthObservationResult.product) {
-		return feature;
-	} else {
-		// TODO define this from catalog configuration
-		let productUrl = Utils.getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
-		if (productUrl !== '') {
-			let product = {
-				ProductInformation : {
-					fileName: {
-						ServiceReference : {
-							'@': {
-								href: ''
-							}
-						}
-					},
-					size: {
-						'#': ''
-					}
-				}
-			};
-			product.ProductInformation.fileName.ServiceReference['@'].href = productUrl;
-			feature.properties.EarthObservation.result.EarthObservationResult.product = product;
-		}
+	let product = Utils.getFromPath(feature, 'properties.EarthObservation.result.EarthObservationResult.product', null);
+	if (product === null) {
+		Logger.warn('No product information for feature ' + (feature.id ? feature.id : feature));
 		return feature;
 	}
+
+	// TODO define this from catalog configuration
+	let productUrl = Utils.getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
+	if (productUrl !== '') {
+		let product = {
+			ProductInformation : {
+				fileName: {
+					ServiceReference : {
+						'@': {
+							href: productUrl
+						}
+					}
+				},
+				size: {
+					'#': ''
+				}
+			}
+		};
+		feature.properties.EarthObservation.result.EarthObservationResult.product = product;
+	}
+	return feature;
+
 }
 /**
  * Convert a single entry to GeoJSON feature
@@ -83,17 +86,17 @@ let _addProductInformationForFeature = function(feature) {
  */
 let _convertEntryToFeature = function(entry, collectionId) {
 	let feature = {};
-	feature.id = entry.id;
+	feature.id = (entry.id ? entry.id : collectionId + '-' + Math.round(Math.random() * 10000).toString());
 	feature.type = "Feature";
 	feature.properties = entry;
 
-	let eo = entry.EarthObservation;
-	if (eo && eo.featureOfInterest && eo.featureOfInterest.Footprint) {
-		feature.geometry = _convertGmlFpToInternalFp(eo.featureOfInterest, collectionId);
-		feature = _addProductInformationForFeature(feature);
-	} else {
-		feature = null;
+	let footPrint = Utils.getFromPath(entry, 'EarthObservation.featureOfInterest.Footprint', null);
+	if (footPrint === null) {
+		Logger.warn('No footprint info for feature ' + feature.id);
+		return null;
 	}
+	feature.geometry = _convertGmlFpToInternalFp(footPrint, collectionId);
+	feature = _addProductInformationForFeature(feature);
 	return feature;
 }
 
@@ -156,7 +159,7 @@ module.exports = {
 		let removeNamespacesFromTags = new RegExp(_getNamespaces(parsedXml).join('|'), "g")
 		let stringJsonWithoutNamespaces = JSON.stringify(parsedXml).replace(removeNamespacesFromTags, '');
 		let result = _convertEntriesIntoFeatureCollection(JSON.parse(stringJsonWithoutNamespaces), collectionId);
-		logger.info('Conversion from json to the webc format geojson data took ', Date.now() - startTime + ' ms');
+		Logger.info('Conversion from json to the webc format geojson data took ', Date.now() - startTime + ' ms');
 		return result;
 	}
 
