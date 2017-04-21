@@ -1,6 +1,10 @@
 {
-    "fedeo": {
-        "username": "username",
-        "password": "password"
-    }
+    "credentials" : [
+        {
+            "FEDEO": {
+                "username": "username",
+                "password": "password"
+            }
+        }
+    ]
 }
