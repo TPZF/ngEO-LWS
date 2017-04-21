@@ -12,28 +12,28 @@ let Utils = require('../../utils/utils');
  */
 describe('Route webClientConfigurationData', function () {
 
-	const binaryParser = function (res, cb) {
-		res.setEncoding('binary');
-		res.data = '';
-		res.on("data", function (chunk) {
-			res.data += chunk;
-		});
-		res.on('end', function () {
-			cb(null, new Buffer(res.data, 'binary'));
-		});
-	};
+	// const binaryParser = function (res, cb) {
+	// 	res.setEncoding('binary');
+	// 	res.data = '';
+	// 	res.on("data", function (chunk) {
+	// 		res.data += chunk;
+	// 	});
+	// 	res.on('end', function () {
+	// 		cb(null, new Buffer(res.data, 'binary'));
+	// 	});
+	// };
 
 	it('GET /ngeo/webClientConfigurationData', function (done) {
 
 		request(app)
 		.get('/ngeo/webClientConfigurationData')
-		.buffer()
-		.parse(binaryParser)
+		//.buffer()
+		//.parse(binaryParser)
+		.expect(200)
 		.end(function(err,res) {
-			should(res.status).be.equal(200);
-			let respDatas = JSON.parse(Utils.removeComments(res.res.data));
-			should(respDatas).be.a.Object();
-			should(respDatas).have.property('tableView');
+			let resp = JSON.parse(res.body);
+			should(resp).be.a.Object();
+			should(resp).have.property('tableView');
 			done();
 		});
 
