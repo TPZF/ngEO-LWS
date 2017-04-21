@@ -3,7 +3,7 @@
         "name": "SXCAT",
         "url": "https://sxcat.eox.at/opensearch/atom?collection",
         "fake": false,
-        "format": "atom+xml",
+        "responseFormatOnSearch": "atom+xml",
         "avoidedAttributes" : [
             "availabilityTime",
             "bbox",
@@ -21,7 +21,7 @@
         "name": "FEDEO",
         "url": "https://fedeo",
         "fake": true,
-        "format": "atom+xml",
+        "responseFormatOnSearch": "atom+xml",
         "avoidedAttributes" : [
             "bbox",
             "endDate",
