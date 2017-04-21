@@ -183,7 +183,7 @@ class CollectionService {
 		let _this = this;
 		/***********************/
 		if (myCatalog.fake) {
-			let maFakeCollection = new Collection(fakeCollectionId, fakeCollectionUrlOsdd, fakeCollectionName);
+			let maFakeCollection = new Collection(fakeCollectionId, fakeCollectionUrlOsdd, fakeCollectionName, myCatalog.id);
 			// add other datas
 			return Promise.resolve(_this.getOsddCollection(maFakeCollection));
 		}
@@ -194,7 +194,7 @@ class CollectionService {
 		} else {
 			let aPromisesCollectionSchema = [];
 			myCatalog.collectionsSchema.forEach((collectionSchema) => {
-				let p = _this.populateFromCollectionSchema(collectionSchema);
+				let p = _this.populateFromCollectionSchema(collectionSchema, myCatalog.id);
 				aPromisesCollectionSchema.push(p);
 			});
 			return Promise.all(aPromisesCollectionSchema);
@@ -207,9 +207,10 @@ class CollectionService {
 	 * 
 	 * @function populateFromCollectionSchema
 	 * @param {object} myCollectionSchema
+	 * @param {string} myCatalogId
 	 * @returns {Promise}
 	 */
-	populateFromCollectionSchema(myCollectionSchema) {
+	populateFromCollectionSchema(myCollectionSchema, myCatalogId) {
 		let _this = this;
 		if (myCollectionSchema.entry) {
 			if (!Array.isArray(myCollectionSchema.entry)) {
@@ -226,7 +227,7 @@ class CollectionService {
 				let idCollection = oneEntry[Configuration.opensearch.identifier];
 				if (!_.find(_this.collections, function(item) {return item.id === idCollection})) {
 					// set collection object
-					let maCollection = new Collection(idCollection, url, oneEntry.title);
+					let maCollection = new Collection(idCollection, url, oneEntry.title, myCatalogId);
 					// add other datas
 					aPromisesGetOsddCollection.push(_this.getOsddCollection(maCollection));
 				}
@@ -535,22 +536,18 @@ class CollectionService {
 	 * Build datasetInfo response respecting protocol used by current version of WEBC
 	 */
 	buildResponse(datasetId) {
-
-		// Avoid geo-spatial & catalog parameters since these are not takin part in advanced attributes
-		let omittedParameters = ["count", "offset", "bbox", "grel", "start", "end", "trel", "availabilityTime"];
-		// from FEDEO
-		omittedParameters.push("maximumRecords");
-		omittedParameters.push("startPage");
-		omittedParameters.push("startRecord");
-		omittedParameters.push("startDate");
-		omittedParameters.push("endDate");
-
-
+		
 		let myCollection = this.getCollection(datasetId);
 		if (!myCollection) {
 			Logger.error(`Unable to find collection ${datasetId}`);
 			return null;
 		}
+
+		// get catalog
+		let catalog = CatalogService.getCatalog(myCollection.catalogId);
+		// Avoid geo-spatial & catalog parameters since these are not takin part in advanced attributes
+		let avoidedAttributes = catalog.avoidedAttributes;
+
 		let paramTag = this.findTagByXmlns(myCollection.osdd, Configuration.opensearch.xmlnsParameter);
 		let timeTag = this.findTagByXmlns(myCollection.osdd, Configuration.opensearch.xmlnsTime);
 
@@ -616,7 +613,7 @@ class CollectionService {
 				description: myCollection.Description,
 				keywords: this.buildKeywords(myCollection),
 				downloadOptions: [], // TODO
-				attributes: this.buildAttributes(myCollection, searchRequestDescription, paramTag, omittedParameters),
+				attributes: this.buildAttributes(myCollection, searchRequestDescription, paramTag, avoidedAttributes),
 				startDate: startDate,
 				endDate: endDate,
 				startIndex: parseInt(searchRequestDescription['@'].indexOffset)

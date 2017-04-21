@@ -8,15 +8,17 @@ let Xml2JsonParser = require("utils/xml2jsonParser");
 class Collection {
 	/**
 	 * Collection constructor
-	 * @param url
-	 * 		The OpenSearch url of collection
-	 * @param options
-	 * 		Possible options later: id, title, summary, updated, dc:identifier, link
+	 * @param id
+	 * @param url - The OpenSearch url of collection
+	 * @param name
+	 * @param catalogId
+	 * @param options - Possible options later: id, title, summary, updated, dc:identifier, link
 	 */
-	constructor(id, url, name, options) {
+	constructor(id, url, name, catalogId, options) {
 		this.id = id;
 		this.url = url;
 		this.name = name;
+		this.catalogId = catalogId;
 
 		// default parameters, provided by webc
 		this.parameters = {

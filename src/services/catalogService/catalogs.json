@@ -2,11 +2,37 @@
     {
         "name": "SXCAT",
         "url": "https://sxcat.eox.at/opensearch/atom?collection",
-        "fake": false
+        "fake": false,
+        "format": "atom+xml",
+        "avoidedAttributes" : [
+            "availabilityTime",
+            "bbox",
+            "count",
+            "end",
+            "geom",
+            "grel",
+            "offset",
+            "start",
+            "stop",
+            "trel"
+        ]
     },
     {
         "name": "FEDEO",
         "url": "https://fedeo",
-        "fake": true
+        "fake": true,
+        "format": "atom+xml",
+        "avoidedAttributes" : [
+            "bbox",
+            "endDate",
+            "geometry",
+            "grel",
+            "maximumRecords",
+            "recordSchema",
+            "startDate",
+            "startPage",
+            "startRecord",
+            "trel"
+        ]
     }
 ]
