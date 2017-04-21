@@ -1,8 +1,10 @@
 // CORE
 let express = require('express');
+let fs = require('fs');
 
 // UTILS
 let Logger = require('utils/logger');
+let Utils = require('utils/utils');
 
 // ROUTER
 let router = express.Router();
@@ -16,10 +18,14 @@ router.use(function timeLog(req, res, next) {
  */
 router.get('/', function (req, res) {
 	Logger.debug('GET /ngeo/webClientConfigurationData');
-	let options = {
-		root: __dirname
-	};
-	res.sendFile('./configuration.json', options);
+	let filePath = __dirname + '/configuration.json';
+	var file = fs.readFile(filePath, 'utf-8', function(err, data) {
+		if (err) {
+			res.status(500).send('Unexpected error');
+			return;
+		}
+		res.status(200).json(Utils.removeComments(data));
+	});
 });
 
 /**
