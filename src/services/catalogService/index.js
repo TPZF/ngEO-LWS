@@ -201,26 +201,28 @@ class CatalogService {
 
 	setFeedEntries(myReferrer, myCatalog) {
 		let xmlResult = '';
-		myCatalog.collectionsSchema.forEach((collectionSchema) => {
-			if (collectionSchema.entry && Array.isArray(collectionSchema.entry)) {
-				collectionSchema.entry.forEach((entry) => {
-					xmlResult += '<entry>';
-					xmlResult += '<id>' + myReferrer + '/ngeo/' + entry['dc:identifier'] + '</id>';
-					xmlResult += '<title>' + entry.title + '</title>';
-					xmlResult += '<summary type="html"><![CDATA[';
-					xmlResult += 'Collection ' + entry.title + '<p>';
-					xmlResult += '<a href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '" target="_blank">OpenSearch description</a><br>';
-					xmlResult += '<a href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search" target="_blank">OpenSearch GeoJson</a>';
-					xmlResult += '</p>';
-					xmlResult += ']]></summary>';
-					xmlResult += '<updated>' + entry.updated + '</updated>';
-					xmlResult += '<dc:identifier>' + entry['dc:identifier'] + '</dc:identifier>';
-					xmlResult += '<link rel="alternate" type="application/vnd.geo+json" title="Product search" href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search' + '"/>';
-					xmlResult += '<link rel="search" type="application/opensearchdescription+xml" title="OpenSearch description" href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '"/>';
-					xmlResult += '</entry>';
-				})
-			}
-		})
+		if (myCatalog.collectionsSchema) {
+			myCatalog.collectionsSchema.forEach((collectionSchema) => {
+				if (collectionSchema.entry && Array.isArray(collectionSchema.entry)) {
+					collectionSchema.entry.forEach((entry) => {
+						xmlResult += '<entry>';
+						xmlResult += '<id>' + myReferrer + '/ngeo/' + entry['dc:identifier'] + '</id>';
+						xmlResult += '<title>' + entry.title + '</title>';
+						xmlResult += '<summary type="html"><![CDATA[';
+						xmlResult += 'Collection ' + entry.title + '<p>';
+						xmlResult += '<a href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '" target="_blank">OpenSearch description</a><br>';
+						xmlResult += '<a href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search" target="_blank">OpenSearch GeoJson</a>';
+						xmlResult += '</p>';
+						xmlResult += ']]></summary>';
+						xmlResult += '<updated>' + entry.updated + '</updated>';
+						xmlResult += '<dc:identifier>' + entry['dc:identifier'] + '</dc:identifier>';
+						xmlResult += '<link rel="alternate" type="application/vnd.geo+json" title="Product search" href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search' + '"/>';
+						xmlResult += '<link rel="search" type="application/opensearchdescription+xml" title="OpenSearch description" href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '"/>';
+						xmlResult += '</entry>';
+					})
+				}
+			});
+		}
 		return xmlResult;
 	}
 }
