@@ -65,7 +65,7 @@ router.get('/', function (req, res) {
 				}
 			},
 			onError: (errorMessage) => {
-				res.status(500).send(errorMessage);
+				res.status(500).send("Error while searching on " + collectionId);
 			}
 		});
 	});
