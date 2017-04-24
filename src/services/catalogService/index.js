@@ -162,21 +162,32 @@ class CatalogService {
 		});
 	}
 
-	getXMLFeed(referrer) {
+	/**
+	 * @function getXMLFeed
+	 * @param {string} myReferrer 
+	 * @returns {string}
+	 */
+	getXMLFeed(myReferrer) {
 		Logger.debug('catalogService.getDescription()');
 		let nbResults = 0;
 		let xmlEntries = '';
 		this.catalogs.forEach((catalog) => {
 			nbResults += parseInt(catalog.totalResults);
-			xmlEntries += this.setFeedEntries(referrer, catalog);
+			xmlEntries += this.setFeedEntries(myReferrer, catalog);
 		});
 		let xmlDescription = '';
-		xmlDescription += this.setFeedHeader(referrer, nbResults);
+		xmlDescription += this.setFeedHeader(myReferrer, nbResults);
 		xmlDescription += xmlEntries;
 		xmlDescription += this.setFeedFooter();
 		return xmlDescription;
 	}
 
+	/**
+	 * @function setFeedHeader
+	 * @param {string} myReferrer 
+	 * @param {number} myNbResults 
+	 * @returns {string}
+	 */
 	setFeedHeader(myReferrer, myNbResults) {
 		let xmlResult = '<?xml version="1.0" encoding="UTF-8"?>';
 		xmlResult += '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:dc="http://purl.org/dc/elements/1.1/">';
@@ -194,11 +205,21 @@ class CatalogService {
 		return xmlResult;
 	}
 
+	/**
+	 * @function setFeedFooter
+	 * @returns {string}
+	 */
 	setFeedFooter() {
 		let xmlResult = '</feed>';
 		return xmlResult;
 	}
 
+	/**
+	 * @function setFeedEntries
+	 * @param {string} myReferrer 
+	 * @param {object} myNbCatalog
+	 * @returns {string}
+	 */
 	setFeedEntries(myReferrer, myCatalog) {
 		let xmlResult = '';
 		if (myCatalog.collectionsSchema) {
