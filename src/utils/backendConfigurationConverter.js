@@ -51,6 +51,130 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry, collectionId) {
 	return geometry;
 }
 
+/**
+ * @function _addPolygonGeometry
+ * @param {string} myGeo 
+ * @return {object}
+ */
+let _addPolygonGeometry = function(myGeo) {
+	let geometry = {};
+	geometry.type = "Polygon";
+	geometry.coordinates = [];
+	geometry.coordinates[0] = [];
+
+	let arrList = myGeo.split(" ", -1);
+
+	for (let i = 0; i < arrList.length; i = i + 2) {
+		let coord = [];
+		coord[0] = parseFloat(arrList[i + 1]);
+		coord[1] = parseFloat(arrList[i]);
+		geometry.coordinates[0].push(coord);
+	}
+	return geometry;
+	
+}
+
+/**
+ * @function _addBoxGeometry
+ * @param {string} myGeo 
+ * @return {object}
+ */
+let _addBoxGeometry = function(myGeo) {
+	let geometry = {};
+	geometry.type = "Polygon";
+	geometry.coordinates = [];
+	geometry.coordinates[0] = [];
+
+	let arrList = myGeo.split(" ", -1);
+
+	for (let i = 0; i < arrList.length; i = i + 2) {
+		let coord = [];
+		coord[0] = parseFloat(arrList[i + 1]);
+		coord[1] = parseFloat(arrList[i]);
+		geometry.coordinates[0].push(coord);
+	}
+	return geometry;
+	
+}
+
+/**
+ * @function _addLineGeometry
+ * @param {string} myGeo 
+ * @return {object}
+ */
+let _addLineGeometry = function(myGeo) {
+	let geometry = {};
+	geometry.type = "LineString";
+	geometry.coordinates = [];
+	geometry.coordinates[0] = [];
+
+	let arrList = myGeo.split(" ", -1);
+
+	for (let i = 0; i < arrList.length; i = i + 2) {
+		let coord = [];
+		coord[0] = parseFloat(arrList[i + 1]);
+		coord[1] = parseFloat(arrList[i]);
+		geometry.coordinates[0].push(coord);
+	}
+	return geometry;
+	
+}
+
+/**
+ * @function _addPointGeometry
+ * @param {string} myGeo 
+ * @return {object}
+ */
+let _addPointGeometry = function(myGeo) {
+	let geometry = {};
+	geometry.type = "Point";
+	geometry.coordinates = [];
+	geometry.coordinates[0] = [];
+
+	let arrList = myGeo.split(" ", -1);
+
+	for (let i = 0; i < arrList.length; i = i + 2) {
+		let coord = [];
+		coord[0] = parseFloat(arrList[i + 1]);
+		coord[1] = parseFloat(arrList[i]);
+		geometry.coordinates = coord;
+	}
+	return geometry;
+	
+}
+
+/**
+ * @function _convertGeoRssFpToInternalFp
+ * @param {object} myEntry
+ * @returns {object}
+ */
+let _convertGeoRssFpToInternalFp = function (myEntry) {
+
+	let geo;
+	
+	geo = Utils.getFromPath(myEntry, 'polygon', '');
+	if (geo !== '') {
+		return _addPolygonGeometry(geo);
+	}
+	geo = Utils.getFromPath(myEntry, 'line', '');
+	if (geo !== '') {
+		return _addLineGeometry(geo);
+	}
+	geo = Utils.getFromPath(myEntry, 'point', '');
+	if (geo !== '') {
+		return _addPointGeometry(geo);
+	}
+	geo = Utils.getFromPath(myEntry, 'box', '');
+	if (geo !== '') {
+		return _addBoxGeometry(geo);
+	}
+	return _addPolygonGeometry(geo);
+}
+
+/**
+ * @function _addProductInformationForFeature
+ * @param {object} feature 
+ */
 let _addProductInformationForFeature = function(feature) {
 	let product = Utils.getFromPath(feature, 'properties.EarthObservation.result.EarthObservationResult.product', null);
 	if (product === null) {
@@ -89,13 +213,7 @@ let _convertEntryToFeature = function(entry, collectionId) {
 	feature.id = (entry.id ? entry.id : collectionId + '-' + Math.round(Math.random() * 10000).toString());
 	feature.type = "Feature";
 	feature.properties = entry;
-
-	let footPrint = Utils.getFromPath(entry, 'EarthObservation.featureOfInterest.Footprint', null);
-	if (footPrint === null) {
-		Logger.warn('No footprint info for feature ' + feature.id);
-		return null;
-	}
-	feature.geometry = _convertGmlFpToInternalFp(footPrint, collectionId);
+	feature.geometry = _convertGeoRssFpToInternalFp(entry);
 	feature = _addProductInformationForFeature(feature);
 	return feature;
 }
@@ -148,8 +266,8 @@ module.exports = {
 	/**
 	 * Convert parsed xml coming from search request to current ngeo WEBC format
 	 * 
-	 * @param {Object} parsedXml
-	 *      XML search response in SX-CAT format as json
+	 * @param {Object} parsedXml - XML search response in SX-CAT format as json
+	 * @param {string} collectionId - id of collection (dataset)
 	 * @return featureCollection
 	 *      Feature collection compatible with WEBC format
 	 */
