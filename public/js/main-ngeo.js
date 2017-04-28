@@ -2621,10 +2621,10 @@ require.register("dataAccess/model/simpleDataAccessRequest", function(exports, r
      var productStatuses = dataAccessRequestStatus.productStatuses;
      var aPromises = [];
      for (var i = 0; i < productStatuses.length; i++) {
-       var _expectedSize = _.find(this.productSizes, function(item) {
+       var _productSize = _.find(this.productSizes, function(item) {
          return item.productURL === productStatuses[i].productURL;
-       }).productSize;
-       if (_expectedSize) {
+       });
+       if (_productSize && _productSize.productSize) {
           productStatuses[i].expectedSize = _expectedSize;
           this.totalSize += parseInt(_expectedSize);
        }
@@ -6509,7 +6509,7 @@ var DatasetSelectionView = Backbone.View.extend({
 			for (var j = 0; j < criteriaValues.length; j++) {
 
 				// Add the option to the select element
-				var $opt = $('<option value="' + criteriaValues[j] + '">' + criterias[i].title + ' : ' + criteriaValues[j] + '</option>')
+				var $opt = $('<option value="' + criteriaValues[j] + '">' + criteriaValues[j] + '</option>')
 					.appendTo($selectCriteria);
 
 				// Add selected attr to option if is actually selected
@@ -8292,12 +8292,14 @@ module.exports = {
 		for ( var i=0; i<fc.features.length; i++ ) {
 			var feature = fc.features[i];
 			var browses = Configuration.getMappedProperty(feature, "browses");
-			if (browses) {
+			if (browses[0] !== undefined) {
 				var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 				if ( selectedBrowse ) {
 					var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));	
 					if ( selectedBrowses.indexOf(_browseLayerMap[layerName]) == -1 ) {
-						selectedBrowses.push(_browseLayerMap[layerName]);
+						if (_browseLayerMap[layerName]) {
+							selectedBrowses.push(_browseLayerMap[layerName]);
+						}
 					}
 				}
 			}
@@ -8598,6 +8600,7 @@ var Logger = require('logger');
 var BrowsesManager = require('searchResults/browsesManager');
 var Map = require('map/map');
 var SelectHandler = require('map/selectHandler');
+var ProductService = require('ui/productService');
 
 /**
  *	Update the array of selected/highlighted features
@@ -8657,36 +8660,26 @@ var _onShowBrowses = function(features, fc) {
 	}
 };
 
+var _onFocus = function(feature, fc) {
+	fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+};
+
+var _onUnFocus = function(feature, fc) {
+	fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
+};
+
 // Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features, fc) {
-	for (var i = 0; i < features.length; i++) {
-		var feature = features[i];
-		if (fc.isHighlighted(feature)) {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
-			//display browse if feature is highlighted
-			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
-		} else {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "select");
-		}
-	}
 	Map.trigger("selectFeatures", features);
-	_updateFeaturesWithBrowse(features);
 };
 
 
 // Call when a feature is unselected to synchronize the map
 var _onUnselectFeatures = function(features, fc) {
-	for (var i = 0; i < features.length; i++) {
-		var feature = features[i];
-		if (fc.isHighlighted(feature)) {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
-		} else {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "default");
-			BrowsesManager.removeBrowse(feature);
-		}
-	}
 	Map.trigger("unselectFeatures");
 };
+
+var _keyCode = 0;
 
 // Selected or highlighted features with browse
 var _featuresWithBrowse = [];
@@ -8699,42 +8692,45 @@ var _lazyRenderOrdering = _.debounce(function() {
 }, waitTimeout);
 
 // Call when a feature is highlighted to synchronize the map
-var _onHighlightFeatures = function(features, prevFeatures, fc) {
-
-	if (prevFeatures.length > 0) {
-
-		// Set to default the footprint of previously selected features
-		for (var i = 0; i < prevFeatures.length; i++) {
-
-			if (fc.isSelected(prevFeatures[i])) {
-				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "select");
-			} else {
-				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "default");
-				BrowsesManager.removeBrowse(prevFeatures[i]);
-			}
-		}
-	}
+var _onHighlightFeatures = function(features, fc) {
 
 	var highlightedFeats = [];
-	if (features.length > 0) {
+	if (features && features.length > 0) {
 		// Highlight currently selected features
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
-			if (fc.isSelected(feature)) {
-				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
-				BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
-
-			} else {
-				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
-			}
+			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
+			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 			//HACK add feature collection since it does not contain the feature collection
 			feature._featureCollection = fc;
 			highlightedFeats.push(feature);
 		}
+		ProductService.addBrowsedProducts(features);
 	}
 	_updateFeaturesWithBrowse(features);
-	Map.trigger("highlightFeatures", highlightedFeats);
+	Map.trigger("highlightFeatures", features);
 };
+
+// Call when a feature is highlighted to synchronize the map
+var _onUnHighlightFeatures = function(features, fc) {
+
+	// for previous features to unhighlight
+	if (features && features.length > 0) {
+
+		// Set to default the footprint of previously selected features
+		for (var i = 0; i < features.length; i++) {
+			var feature = features[i];
+			fc._footprintLayer.modifyFeaturesStyle([feature], "default");
+			
+			BrowsesManager.removeBrowse(feature);
+		}
+		ProductService.removeBrowsedProducts(features);
+	}
+	//_updateFeaturesWithBrowse(featuresToHighLight);
+	// update mapPopup
+	Map.trigger("unhighlightFeatures", features);
+};
+
 
 module.exports = {
 
@@ -8748,19 +8744,29 @@ module.exports = {
 	initialize: function() {
 		// Connect with map feature picking
 		Map.on('pickedFeatures', function(features, featureCollections) {
-			var highlights = {}
+			var highlights = {};
+			ProductService.addHighlightedProducts(features);
 			for (var i = 0; i < featureCollections.length; i++) {
 				highlights[featureCollections[i].id] = [];
 			}
-
+			// add picked features to highlights
 			for (var i = 0; i < features.length; i++) {
 				var fc = features[i]._featureCollection;
 				highlights[fc.id].push(features[i]);
 			}
-
+			// add checked features to highlights
 			for (var i = 0; i < featureCollections.length; i++) {
-				featureCollections[i].highlight(highlights[featureCollections[i].id]);
+				if (_keyCode !== 17) { // Ctrl key not pressed > unhighlight unchecked products
+					featureCollections[i].checkAllHighlight();
+				}
+				featureCollections[i].setHighlight(highlights[featureCollections[i].id]);
 			}
+		});
+		Map.on('keyDown', function(code) {
+			_keyCode = code;
+		});
+		Map.on('keyUp', function(code) {
+			_keyCode = 0;
 		});
 	},
 
@@ -8799,8 +8805,12 @@ module.exports = {
 		fc.on('selectFeatures', _onSelectFeatures);
 		fc.on('unselectFeatures', _onUnselectFeatures);
 		fc.on('highlightFeatures', _onHighlightFeatures);
+		fc.on('unhighlightFeatures', _onUnHighlightFeatures);
 		fc.on('show:browses', _onShowBrowses);
 		fc.on('hide:browses', _onHideBrowses);
+
+		fc.on('focus', _onFocus);
+		fc.on('unfocus', _onUnFocus);
 
 		SelectHandler.addFeatureCollection(fc);
 	},
@@ -8830,12 +8840,9 @@ module.exports = {
 			Map.removeLayer(fc._footprintLayer);
 		}
 
-		// Remove browse on highlight and selection
+		// Remove browse on highlight and selections
 		for (var i = 0; i < fc.highlights.length; i++) {
 			BrowsesManager.removeBrowse(fc.highlights[i]);
-		}
-		for (var i = 0; i < fc.selection.length; i++) {
-			BrowsesManager.removeBrowse(fc.selection[i]);
 		}
 
 		SelectHandler.removeFeatureCollection(fc);
@@ -8853,6 +8860,7 @@ var Configuration = require('configuration');
 var DataSetPopulation = require('search/model/dataSetPopulation');
 var DataSetSearch = require('search/model/datasetSearch');
 var DownloadOptions = require('search/model/downloadOptions');
+var ProductService = require('ui/productService');
 
 /**
  * Extract the download options from the product url
@@ -8891,7 +8899,7 @@ var FeatureCollection = function() {
 	this.features = [];
 
 	// The current selection
-	this.selection = [];
+	this.selections = [];
 
 	// The hightlighted features
 	this.highlights = [];
@@ -8992,26 +9000,49 @@ var FeatureCollection = function() {
 
 	};
 
-	// Remove features from the collection
+	// 
+	/**
+	 * Remove features from collection
+	 * 
+	 * @function removeFeatures
+	 * @param {array} features
+	 * 
+	 * @see client/js/shopcart/model#deleteHighlights()
+	 */
 	this.removeFeatures = function(features) {
-		this.setSelection(_.difference(this.selection, features));
-		this.highlight(_.difference(this.highlights, features));
+		this.unselect(features);
+		this.unsetHighlight(features);
 		this.features = _.difference(this.features, features);
 		self.trigger('remove:features', features, self);
 	};
 
-	// Show features
+	// 
+	/**
+	 * Show features of collection
+	 * 
+	 * @function showFeatures
+	 * @param {array} features
+	 * 
+	 * @see client/js/ui/tableView#filterData()
+	 */
 	this.showFeatures = function(features) {
 		self.trigger('show:features', features, self);
 		if ( features.length > 0 ) {
 			// HACK: highlight all highlights, selected all selection for the moment
-			this.trigger("highlightFeatures", this.highlights, this.highlights, this);
-			this.trigger("selectFeatures", this.selection, this);
+			this.trigger("highlightFeatures", this.highlights, this);
+			this.trigger("selectFeatures", this.selections, this);
 		}
 
 	};
 	
-	// Hide features
+	/**
+	 * Hide features of collection
+	 * 
+	 * @function hideFeatures
+	 * @param {array} features
+	 * 
+	 * @see client/js/ui/tableView#filterData()
+	 */ 
 	this.hideFeatures = function(features) { 
 		self.trigger('hide:features', features, self);
 	};
@@ -9046,8 +9077,8 @@ var FeatureCollection = function() {
 	// Reset the results
 	this.reset = function() {
 		// Reset all highlighted/selected features
-		this.resetHighlighted();
-		this.resetSelected();
+		this.unsetHighlight(this.highlights);
+		this.unselect(this.selections);
 
 		// Reset children
 		for ( var x in this.children ) {
@@ -9072,8 +9103,8 @@ var FeatureCollection = function() {
 			this.currentPage = page;
 			this.features.length = 0;
 			// Reset all highlighted/selected features
-			this.resetHighlighted();
-			this.resetSelected();
+			this.unsetHighlight(this.highlights);
+			this.unselect(this.selections);
 
 			// Reset children
 			for ( var x in this.children ) {
@@ -9108,57 +9139,135 @@ var FeatureCollection = function() {
 		}
 	};
 
-	// Set the selection, replace the previous one
-	this.setSelection = function(features) {
-		var unselected = _.difference(this.selection, features);
-		var selected = _.difference(features, this.selection);
-		this.selection = features;
-		if (unselected.length != 0) {
-			this.trigger("unselectFeatures", unselected, this);
-		}
-		if (selected.length != 0) {
-			this.trigger("selectFeatures", selected, this);
-		}
+	/**
+	 * Check if a feature is browsed
+	 * @see ProductService
+	 * 
+	 * @function isBrowsed
+	 * @param {object} feature
+	 * @returns {boolean}
+	 */ 
+	this.isBrowsed = function(feature) {
+		return ProductService.getBrowsedProducts().indexOf(feature) >= 0;
 	};
 
-	// Check if a feature is selected
+	/**
+	 * Check if a feature is selected
+	 * 
+	 * @function isSelected
+	 * @param {object} feature
+	 * @returns {boolean}
+	 */ 
 	this.isSelected = function(feature) {
-		return this.selection.indexOf(feature) >= 0;
+		return this.selections.indexOf(feature) >= 0;
 	};
 
-	// Check if a feature is highlighted
+	/**
+	 * Check if a feature is highlighted
+	 * 
+	 * @function isHighlighted
+	 * @param {object} feature
+	 * @returns {boolean}
+	 */
 	this.isHighlighted = function(feature) {
-		return this.highlights.indexOf(feature) >= 0;
+		return this.highlights.indexOf(feature) >= 0
 	};
 
-	// Reset all highlighted features
-	this.resetHighlighted = function() {
-		this.trigger("highlightFeatures", [], this.highlights, this);
-		this.highlights = [];
+	/**
+	 * For all features
+	 * If feature is not selected (checked)
+	 * Then unhighlight it
+	 * 
+	 * @function checkAllHighlight
+	 * @returns {void}
+	 */
+	this.checkAllHighlight = function() {
+		var _this = this;
+		var unhighlights = [];
+		this.highlights.forEach(function(feat) {
+			if (!_this.isSelected(feat)) {
+				unhighlights.push(feat);
+			}
+		})
+		this.unsetHighlight(unhighlights);
 	};
 
-	// Reset all selected features
-	this.resetSelected = function() {
-		this.trigger("unselectFeatures", this.selection, this);
-		this.selection = [];
+	/**
+	 * Set status highlight for these features
+	 * And trigger this event
+	 * 
+	 * @function setHighlight
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.setHighlight = function(features) {
+
+		ProductService.addHighlightedProducts(features);
+
+		var _this = this; // reference to featureCollection object
+
+		if (features.length === 0) {
+			this.checkAllHighlight();
+		}
+
+		this.highlights = _.union(this.highlights, features);
+
+		this.trigger("highlightFeatures", features, this);
+		// ***OML*** this.showBrowses( _.intersection(features, this.features));
+		// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
+		for ( var x in this.children ) {
+			// ***OML*** this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
+		}
 	};
 
-	// Highlight a feature, only one can be highlight at a time
-	this.highlight = function(features) {
+	/**
+	 * Remove highlight status for these features
+	 * And trigger this event
+	 * 
+	 * @function unsetHighlight
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.unsetHighlight = function(features) {
 
-		if (features.length != 0 || this.highlights.length != 0) {
-			var prevHighlights = this.highlights;
-			// Copy highlighted items
-			this.highlights = features.slice(0);
-			// Trigger highlight event with features which belongs to "this" feature collection
-			this.trigger("highlightFeatures", _.intersection(features, this.features), prevHighlights, this);
-			this.showBrowses( _.intersection(features, this.features));
-			// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
-			for ( var x in this.children ) {
-				this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
+		ProductService.removeHighlightedProducts(features);
+		this.highlights = _.difference(this.highlights, features);
+		this.trigger("unhighlightFeatures", features, this);
+
+	};
+
+	/**
+	 * Select features
+	 * 
+	 * @function select
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.select = function(features) {
+		for ( var i=0; i<features.length; i++ ) {
+			var feature = features[i];
+			if ( this.selections.indexOf(feature) == -1 ) {
+				this.selections.push(feature);
 			}
 		}
+		ProductService.addCheckedProducts(features);
+		this.trigger("selectFeatures", features, this);
 	};
+
+	/**
+	 * Unselect features
+	 * 
+	 * @function unselect
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.unselect = function(features) {
+		let newSelections = _.difference(this.selections, features);
+		this.selections = newSelections;
+		ProductService.removeCheckedProducts(features);
+		this.trigger("unselectFeatures", features, this);
+	};
+
 
 	// Create a child feature collection for the given feature
 	this.createChild = function(featureId) {
@@ -9187,57 +9296,6 @@ var FeatureCollection = function() {
 		delete this.children[cleanedId];
 	};
 
-	// Select features
-	this.select = function(features) {
-		for ( var i=0; i<features.length; i++ ) {
-			var feature = features[i];
-			if ( this.selection.indexOf(feature) == -1 ) {
-				this.selection.push(feature);
-			}
-		}
-		this.trigger("selectFeatures", features, this);
-	};
-
-	// Unselect features
-	this.unselect = function(features) {
-		for ( var i=0; i<features.length; i++ ) {
-			var feature = features[i];
-			if ( this.selection.indexOf(feature) >= 0 ) {
-				this.selection.splice(this.selection.indexOf(feature), 1);
-			}
-		}
-		this.trigger("unselectFeatures", features, this);
-	};
-
-	/**
-	 * Select all the items of the table which are not selected
-	 *
-	 * @param filteredFeatures
-	 *		Features to select: used if features were filtered by table view
-	 */
-	this.selectAll = function(filteredFeatures) {
-
-		// Use filtered features if defined otherwise select all present features
-		var selected = _.difference(filteredFeatures ? filteredFeatures : this.features, this.selection);
-		for (var i = 0; i < selected.length; i++) {
-			this.selection.push(selected[i]);
-		}
-
-		if (selected.length != 0) {
-			this.trigger("selectFeatures", selected, this);
-		}
-	};
-
-	/**
-	 * Unselect all the already selected table items
-	 */
-	this.unselectAll = function() {
-		// Copy current selection into new array to be fired within the event
-		var features = this.selection.slice(0);
-		this.selection = [];
-		this.trigger("unselectFeatures", features, this);
-	};
-
 	/**
 	 * Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
@@ -9246,8 +9304,26 @@ var FeatureCollection = function() {
 
 		var productUrls = [];
 
-		for (var i = 0; i < this.selection.length; i++) {
-			var f = this.selection[i];
+		for (var i = 0; i < this.selections.length; i++) {
+			var f = this.selections[i];
+			var url = Configuration.getMappedProperty(f, "productUrl", null);
+			if (url) {
+				productUrls.push(url);
+			}
+		}
+		return productUrls;
+	};
+
+	/**
+	 * Get the list of products URLs from a list of features
+	 * if the file name is empty the product is rejected
+	 */
+	this.getHighlightedProductUrls = function() {
+
+		var productUrls = [];
+
+		for (var i = 0; i < this.highlights.length; i++) {
+			var f = this.highlights[i];
 			var url = Configuration.getMappedProperty(f, "productUrl", null);
 			if (url) {
 				productUrls.push(url);
@@ -9294,13 +9370,13 @@ var FeatureCollection = function() {
 	this.updateDownloadOptions = function(downloadOptions) {
 
 		var self = this;
-		_.each(this.selection, function(feature) {
+		_.each(this.selections, function(feature) {
 
 			self.updateProductUrl(feature, "productUrl", downloadOptions);
 			// NGEO-1972: Update productUri (metadata report) as well...
 			self.updateProductUrl(feature, "productUri", downloadOptions);
 		});
-		this.trigger("update:downloadOptions", this.selection);
+		this.trigger("update:downloadOptions", this.selections);
 	};
 
 	/** 
@@ -9308,15 +9384,15 @@ var FeatureCollection = function() {
 	 */
 	this.getSelectedDownloadOptions = function() {
 
-		if (this.selection.length == 0)
+		if (this.selections.length == 0)
 			return {};
 
 		// Retreive download options for first product in selection
-		var selectedDownloadOptions = _getProductDownloadOptions(this.selection[0]);
+		var selectedDownloadOptions = _getProductDownloadOptions(this.selections[0]);
 
 		// Now check if the other have the same download options
-		for (var i = 1; i < this.selection.length; i++) {
-			var dos = _getProductDownloadOptions(this.selection[i]);
+		for (var i = 1; i < this.selections.length; i++) {
+			var dos = _getProductDownloadOptions(this.selections[i]);
 
 			for (var x in dos) {
 				if ( _.isArray(dos[x]) ) {
@@ -9353,12 +9429,28 @@ var FeatureCollection = function() {
 	};
 
 	/**
-	 * Get the datasets from the selection
+	 * Get the datasets from the selections
 	 */
-	this.getSelectionDatasetIds = function() {
+	// this.getSelectionDatasetIds = function() {
+	// 	var datasetIds = [];
+	// 	for (var i = 0; i < this.selections.length; i++) {
+	// 		var datasetId = this.getDatasetId(this.selections[i]);
+	// 		if (datasetId) {
+	// 			if (datasetIds.indexOf(datasetId) < 0) {
+	// 				datasetIds.push(datasetId);
+	// 			}
+	// 		}
+	// 	}
+	// 	return datasetIds;
+	// };
+
+	/**
+	 * Get the datasets from the highlights
+	 */
+	this.getDatasetIdsFromHighlights = function() {
 		var datasetIds = [];
-		for (var i = 0; i < this.selection.length; i++) {
-			var datasetId = this.getDatasetId(this.selection[i]);
+		for (var i = 0; i < this.highlights.length; i++) {
+			var datasetId = this.getDatasetId(this.highlights[i]);
 			if (datasetId) {
 				if (datasetIds.indexOf(datasetId) < 0) {
 					datasetIds.push(datasetId);
@@ -9378,7 +9470,7 @@ var FeatureCollection = function() {
 		}
 
 		var downloadOptions = [];
-		var datasetIds = this.getSelectionDatasetIds();
+		var datasetIds = this.getDatasetIdsFromHighlights();
 		if (datasetIds.length == 1) {
 			DataSetPopulation.fetchDataset(datasetIds[0], function(dataset) {
 				callback(dataset.get('downloadOptions'));
@@ -9423,6 +9515,15 @@ var FeatureCollection = function() {
 		}
 		return false;
 	};
+
+
+	this.focus = function(feature) {
+		this.trigger("focus", feature, this);
+	}
+
+	this.unfocus = function(feature) {
+		this.trigger("unfocus", feature, this);
+	}
 
 	// Add events
 	_.extend(this, Backbone.Events);
@@ -9612,7 +9713,7 @@ var ExportView = Backbone.View.extend({
 				$download.removeClass('ui-disabled');
 
 				// Export with original geometries, also remove other internal properties
-				var featureWithOrigGeometries = $.extend(true, [], this.model.selection);
+				var featureWithOrigGeometries = $.extend(true, [], this.model.highlights);
 				$.each(featureWithOrigGeometries, function(index, feature) {
 					if (feature._origGeometry) {
 						feature.geometry = feature._origGeometry;
@@ -9667,16 +9768,21 @@ module.exports = ExportView;
 });
 
 require.register("searchResults/view/searchResultsTableView", function(exports, require, module) {
-var Logger = require('logger');
-var GlobalEvents = require('globalEvents');
-var TableView = require('ui/tableView');
 var Configuration = require('configuration');
-var SearchResults = require('searchResults/model/searchResults');
-var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
+var GlobalEvents = require('globalEvents');
+var Logger = require('logger');
+
+var TableView = require('ui/tableView');
+
+// WIDGETS
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
 var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget');
 var ExportWidget = require('searchResults/widget/exportWidget');
+
+// MODELS
+var SearchResults = require('searchResults/model/searchResults');
+var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
 
 /**
  * The model is the backbone model SearchResults 
@@ -9718,6 +9824,7 @@ var SearchResultsTableView = TableView.extend({
 
 		//Called when the user clicks on the product id of an item
 		'click .directDownload': function(event) {
+			event.stopPropagation();
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
@@ -9729,16 +9836,11 @@ var SearchResultsTableView = TableView.extend({
 		}
 	},
 
+	updateHighlights: function() {
+		TableView.prototype.updateHighlights.apply(this, arguments);
 
-	/**
-	 * Call when selection has changed
-	 */
-	updateSelection: function(features) {
-
-		TableView.prototype.updateSelection.apply(this, arguments);
-
-		// Disable export if no product selected
-		if (this.model.selection.length > 0) {
+		// Disable export if no product highlighted
+		if (this.model.highlights.length > 0) {
 			this.exportButton.button('enable');
 		} else {
 			this.exportButton.button('disable');
@@ -9746,14 +9848,14 @@ var SearchResultsTableView = TableView.extend({
 
 		//Disable the retrieve Product and download options button if no product item is selected 
 		//and/or if the products checked do not have a product url
-		if (this.model.getSelectedProductUrls().length == 0) {
+		if (this.model.getHighlightedProductUrls().length == 0) {
 			this.retrieveProduct.button('disable');
 			this.downloadOptionsButton.button('disable');
 			this.addToShopcart.button('disable');
 		} else {
 
 			// NGEO-1770: No retrieve button if selection contains at least one planned product
-			var hasPlanned = _.find(this.model.selection, function(feature) {
+			var hasPlanned = _.find(this.model.highlights, function(feature) {
 				return Configuration.getMappedProperty(feature, "status", null) == "PLANNED";
 			});
 			this.retrieveProduct.button(hasPlanned ? 'disable' : 'enable');
@@ -9761,14 +9863,8 @@ var SearchResultsTableView = TableView.extend({
 			var hasDownloadOptions = (this.model.dataset && this.model.dataset.get('downloadOptions') && this.model.dataset.get('downloadOptions').length != 0);
 			this.downloadOptionsButton.button(hasDownloadOptions ? 'enable' : 'disable');
 			this.addToShopcart.button('enable');
-
-			/*var nonPlannedSelectProducts = this.model.getSelectedNonPlannedFeatures();
-			if ( nonPlannedSelectProducts.length == 0 ) {
-				this.addToShopcart.button('disable');
-			} else {
-				this.addToShopcart.button('enable');
-			}*/
 		}
+
 	},
 
 	/**
@@ -9776,7 +9872,7 @@ var SearchResultsTableView = TableView.extend({
 	 */
 	renderButtons: function($buttonContainer) {
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve highlighted products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -9786,7 +9882,7 @@ var SearchResultsTableView = TableView.extend({
 
 			if (self.model.downloadAccess) {
 				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProducts(self.model.selection);
+				SimpleDataAccessRequest.setProducts(self.model.highlights);
 
 				DataAccessWidget.open(SimpleDataAccessRequest);
 			} else {
@@ -9794,12 +9890,12 @@ var SearchResultsTableView = TableView.extend({
 			}
 
 		});
-		//add selected items to the current or to a new shopcart
-		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true" title="Add selected products to shopcart">Add to shopcart</button>').appendTo($buttonContainer);
+		//add highlighted items to the current or to a new shopcart
+		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true" title="Add highlighted products to shopcart">Add to shopcart</button>').appendTo($buttonContainer);
 		this.addToShopcart.button();
 		this.addToShopcart.button('disable');
 		this.addToShopcart.click(function() {
-			GlobalEvents.trigger('addToShopcart', self.model.selection);
+			GlobalEvents.trigger('addToShopcart', self.model.highlights);
 		});
 
 		//add button to the widget footer in order to download products
@@ -9808,7 +9904,7 @@ var SearchResultsTableView = TableView.extend({
 		this.downloadOptionsButton.button();
 		this.downloadOptionsButton.button('disable');
 
-		//Displays the download options of the selected products in order to be changed in one shot
+		//Displays the download options of the highlighted products in order to be changed in one shot
 		//for the moment all product belong to the unique selected dataset 
 		this.downloadOptionsButton.click(function() {
 
@@ -9824,7 +9920,7 @@ var SearchResultsTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KLM, GeoJson)">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export highlighted products (KLM, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('disable');
 
@@ -10465,6 +10561,7 @@ var Shopcart = Backbone.Model.extend({
 
 						// Clone the feature to be different from the selected one
 						var feature = _.clone(features[indexOfProductUrls]);
+						feature.id = itemsAddedResponse[i].id;
 						feature.properties = _.clone(feature.properties);
 						feature.properties.shopcartItemId = itemsAddedResponse[i].id;
 
@@ -10513,18 +10610,18 @@ var Shopcart = Backbone.Model.extend({
 	},
 
 	/**
-	 * Submit a delete request to the server in order to delete the selected 
+	 * Submit a delete request to the server in order to delete the highlighted 
 	 * shopcart items.
 	 */
-	deleteSelection: function() {
+	deleteHighlights: function() {
 
-		if (this.featureCollection.selection.length == 0)
+		if (this.featureCollection.highlights.length == 0)
 			return;
 
 		// Build the request body
 		var itemsToRemove = [];
-		for (var i = 0; i < this.featureCollection.selection.length; i++) {
-			var f = this.featureCollection.selection[i];
+		for (var i = 0; i < this.featureCollection.highlights.length; i++) {
+			var f = this.featureCollection.highlights[i];
 			if (f.properties && f.properties.shopcartItemId) {
 				itemsToRemove.push({
 					shopcartId: this.id,
@@ -10534,7 +10631,7 @@ var Shopcart = Backbone.Model.extend({
 		}
 
 		// Check if items are correct
-		if (itemsToRemove.length != this.featureCollection.selection.length) {
+		if (itemsToRemove.length != this.featureCollection.highlights.length) {
 			Logger.error("The selected shopcart items do not contain valid ID and cannot be removed.");
 			return;
 		}
@@ -10582,15 +10679,15 @@ var Shopcart = Backbone.Model.extend({
 	},
 
 	/**
-	 * Submit a PUT request to the server in order to update the selected 
+	 * Submit a PUT request to the server in order to update the highlightes 
 	 * shopcart items with the given download options
 	 */
-	updateSelection: function(downloadOptions) {
+	updateHighlights: function(downloadOptions) {
 		var itemsToUpdate = [];
 
 		// Build the request body
-		for (var i = 0; i < this.featureCollection.selection.length; i++) {
-			var f = this.featureCollection.selection[i];
+		for (var i = 0; i < this.featureCollection.highlights.length; i++) {
+			var f = this.featureCollection.highlights[i];
 			if ( f.properties.shopcartItemId ) {
 				itemsToUpdate.push({
 					'shopcartId': this.id,
@@ -10757,7 +10854,7 @@ var ShopcartExportView = Backbone.View.extend({
 				$download.removeClass('ui-disabled');
 
 				// Export with original geometries, also remove other internal properties
-				var featureWithOrigGeometries = $.extend(true, [], this.model.selection);
+				var featureWithOrigGeometries = $.extend(true, [], this.model.highlights);
 				$.each(featureWithOrigGeometries, function(index, feature) {
 					if (feature._origGeometry) {
 						feature.geometry = feature._origGeometry;
@@ -10811,16 +10908,21 @@ module.exports = ShopcartExportView;
 });
 
 require.register("shopcart/view/shopcartTableView", function(exports, require, module) {
-var Logger = require('logger');
-var TableView = require('ui/tableView');
 var Configuration = require('configuration');
-var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
+var Logger = require('logger');
+
+var TableView = require('ui/tableView');
+
+// WIDGETS
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
+var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
 var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget');
 var ShopcartExportWidget = require('shopcart/widget/shopcartExportWidget');
-var DataSetPopulation = require('search/model/dataSetPopulation');
+
+// MODELS
 var DataSetAuthorizations = require('search/model/datasetAuthorizations');
-var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
+var DataSetPopulation = require('search/model/dataSetPopulation');
+var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
 
 /**
  * The model is the backbone model FeatureCollection 
@@ -10867,11 +10969,11 @@ var ShopcartTableView = TableView.extend({
 	/**
 	 * Update the footer button states
 	 */
-	updateSelection: function () {
-		TableView.prototype.updateSelection.apply(this, arguments);
+	updateHighlights: function () {
+		TableView.prototype.updateHighlights.apply(this, arguments);
 
-		// Disable export if no product selected
-		if (this.model.selection.length > 0) {
+		// Disable export if no product highlighted
+		if (this.model.highlights.length > 0) {
 			this.exportButton.button('enable');
 		} else {
 			this.exportButton.button('disable');
@@ -10879,8 +10981,8 @@ var ShopcartTableView = TableView.extend({
 
 		// The products have to be a part of dataset so we extract dataset ids
 		// to be sure that products are viable
-		var selectedDatasetIds = this.model.getSelectionDatasetIds();
-		if (selectedDatasetIds.length > 0) {
+		var highlightedDatasetIds = this.model.getDatasetIdsFromHighlights();
+		if (highlightedDatasetIds.length > 0) {
 			this.deleteButton.button('enable');
 			this.retrieveProduct.button('enable');
 		} else {
@@ -10919,7 +11021,7 @@ var ShopcartTableView = TableView.extend({
 	renderButtons: function ($buttonContainer) {
 		var self = this;
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve highlighted products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -10928,13 +11030,13 @@ var ShopcartTableView = TableView.extend({
 		this.retrieveProduct.click(function () {
 
 			var hasDownloadAccess = true;
-			_.each(self.model.selection, function (feature) {
+			_.each(self.model.highlights, function (feature) {
 				hasDownloadAccess &= DataSetAuthorizations.hasDownloadAccess(self.model.getDatasetId(feature));
 			});
 
 			if (hasDownloadAccess) {
 				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProducts(self.model.selection);
+				SimpleDataAccessRequest.setProducts(self.model.highlights);
 
 				DataAccessWidget.open(SimpleDataAccessRequest);
 			} else {
@@ -10949,12 +11051,12 @@ var ShopcartTableView = TableView.extend({
 		this.downloadOptionsButton.button('disable').hide();
 
 		this.downloadOptionsButton.click(function () {
-			var datasetId = self.model.getSelectionDatasetIds()[0]; // We are sure that there is only one dataset selected
+			var datasetId = self.model.getDatasetIdsFromHighlights()[0]; // We are sure that there is only one dataset selected
 			var downloadOptionsWidget = new DownloadOptionsWidget({
 				datasetId: datasetId,
 				featureCollection: self.model,
 				callback: function (updatedDownloadOptions) {
-					self.shopcart.updateSelection(updatedDownloadOptions.getAttributes()).then(function (response) {
+					self.shopcart.updateHighlights(updatedDownloadOptions.getAttributes()).then(function (response) {
 						console.log(response);
 						// TODO: handle a real response
 						self.model.updateDownloadOptions(updatedDownloadOptions);
@@ -10965,16 +11067,16 @@ var ShopcartTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Delete selected products from this shopcart">Delete</button>').appendTo($buttonContainer);
+		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Delete highlighted products from this shopcart">Delete</button>').appendTo($buttonContainer);
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
 
 		this.deleteButton.click(function () {
-			self.shopcart.deleteSelection();
+			self.shopcart.deleteHighlights();
 		});
 
 		//add button to the widget footer in order to export a shopcart
-		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KML, GeoJson)">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export highlighted products (KML, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('disable');
 
@@ -12046,9 +12148,9 @@ var GanttView = Backbone.View.extend({
 		$bar.appendTo(this.$el.find('.gantt-body-scroll'))
 			// ZoomTo & highlight the selected feature
 			.click(function() {
-				if (self.model.highlight) {
+				if (self.model.setHighlight) {
 					Map.zoomToFeature(feature);
-					self.model.highlight([feature]);
+					self.model.setHighlight([feature]);
 				}
 			});
 	},
@@ -12665,6 +12767,69 @@ var PanelManager = Backbone.View.extend({
 module.exports = PanelManager;
 });
 
+require.register("ui/productService", function(exports, require, module) {
+var Logger = require('logger');
+
+var _productsHighlighted = [];
+var _productsChecked = [];
+var _productsBrowsed = [];
+
+module.exports = {
+
+    // for highlighted products
+    addHighlightedProducts: function(features) {
+        _productsHighlighted = _.union(_productsHighlighted, features);
+    },
+
+    getHighlightedProducts: function() {
+        return _productsHighlighted;
+    },
+
+    removeHighlightedProducts: function(features) {
+        _productsHighlighted = _.difference(_productsHighlighted, features);
+    },
+
+    resetHighlightedProducts: function(features) {
+        _productsHighlighted = [];
+    },
+
+    // for browsed products
+    addBrowsedProducts: function(features) {
+        _productsBrowsed = _.union(_productsBrowsed, features);
+    },
+
+    getBrowsedProducts: function() {
+        return _productsBrowsed;
+    },
+
+    removeBrowsedProducts: function(features) {
+        _productsBrowsed = _.difference(_productsBrowsed, features);
+    },
+
+    resetBrowsedProducts: function(features) {
+        _productsBrowsed = [];
+    },
+
+    // for checked products
+    addCheckedProducts: function(features) {
+        _productsChecked = _.union(_productsChecked, features);
+    },
+
+    getCheckedProducts: function() {
+        return _productsChecked;
+    },
+
+    removeCheckedProducts: function(features) {
+        _productsChecked = _.difference(_productsChecked, features);
+    },
+
+    resetCheckedProducts: function(features) {
+        _productsChecked = [];
+    }
+};
+
+});
+
 require.register("ui/sharePopup", function(exports, require, module) {
 /**
  * Widget module
@@ -13139,6 +13304,7 @@ var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
 var FeatureCollection = require('searchResults/model/featureCollection');
 var SearchResultsMap = require('searchResults/map');
 var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
+var ProductService = require('ui/productService');
 
 /**
  *	Get nested objects containing the given key
@@ -13183,6 +13349,7 @@ var ctrlPressed = false;
 var shiftPressed = false;
 var _lastSelectedRow = null;
 var _clickInTable = false; // Terrible hack to avoid scrolling to most recent feature(FIXME please..)
+var _dblClick = false;
 
 /**
  *	Toggle arrays helper used to splice/push features depending on their presence in prevArray
@@ -13240,9 +13407,17 @@ var TableView = Backbone.View.extend({
 				// Ctrl+A : select all
 				e.preventDefault();
 
-				if ( self.model )
-					$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
+				if ( self.model ) {
+					if (self.model.highlights.length === self.model.features.length) {
+						self.model.checkAllHighlight();
+					} else {
+						self.model.setHighlight(self.model.features);
+					}
+				}
+				//	$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
+				
 			}
+			Map.trigger('keyDown', e.keyCode);
 		}
 		var onKeyUp = function(e) {
 			if ( e.keyCode == '17' ) {
@@ -13251,6 +13426,7 @@ var TableView = Backbone.View.extend({
 			if ( e.keyCode == '16' ) {
 				shiftPressed = false;
 			}
+			Map.trigger('keyUp', e.keyCode);
 		}
 		document.addEventListener('keydown', onKeyDown);
 		document.addEventListener('keyup', onKeyUp);
@@ -13260,8 +13436,7 @@ var TableView = Backbone.View.extend({
 		 *	TODO: Replace the mecanism by something more sexy..
 		 */
 		this.triggerHighlightFeature = _.debounce(function(){
-			this.highlightFeature(_allHighlights);
-			_allHighlights = [];
+			self.updateHighlights();
 		}, 10);
 	},
 
@@ -13279,6 +13454,7 @@ var TableView = Backbone.View.extend({
 			var data = $(event.currentTarget).data('internal');
 			if (data) {
 				Map.zoomToFeature(data.feature);
+				_dblClick = true;
 			}
 		},
 
@@ -13297,16 +13473,21 @@ var TableView = Backbone.View.extend({
 			if ( data ) {
 				var fc = this.model;
 				var currentHighlights;
+
 				if ( ctrlPressed ) {
-					if ( fc.highlights.indexOf(data.feature) != -1 ) {
-						currentHighlights = _.without(fc.highlights, data.feature);
+					// if feature is highlighted
+					if ( fc.isHighlighted(data.feature) ) {
+						// and if feature is not selected >> unsetHighlight
+						if (!fc.isSelected(data.feature)) {
+							fc.unsetHighlight([data.feature]);
+						}
 					} else {
-						currentHighlights = fc.highlights.concat(data.feature);
+						// highlight this feature
+						fc.setHighlight([data.feature]);
 					}
 				} else if ( shiftPressed && _lastSelectedRow ) {
 					document.getSelection().removeAllRanges();
 					var range = [_lastSelectedRow, $row].sort(function(a,b) { return a.index() - b.index() } );
-
 					var selectedRows = range[0].nextUntil(range[1]);
 					selectedRows.push(event.currentTarget);
 					var selectedFeatures = _.map(selectedRows, function(row) {
@@ -13314,15 +13495,22 @@ var TableView = Backbone.View.extend({
 					});
 					currentHighlights = fc.highlights.slice(0);
 					toggleArrays(selectedFeatures, currentHighlights);
+					fc.setHighlight(currentHighlights);
+				} else if (!fc.isHighlighted(data.feature)) {
+					// feature is not highlighted
+					// - check all features highlighted before
+					// - and highlight this one
+					fc.checkAllHighlight();
+					fc.setHighlight([data.feature]);
+				} else if (_dblClick) {
+					//fc.unsetHighlight([data.feature]);
+					_dblClick = false;
 				} else {
-					currentHighlights = [data.feature];
+					fc.checkAllHighlight();
+					fc.setHighlight([data.feature]);
 				}
 				_clickInTable = true;
 				_lastSelectedRow = $row;
-
-				if (fc.highlight && data.feature) {
-					fc.highlight(currentHighlights);
-				}
 			}
 		},
 
@@ -13332,7 +13520,10 @@ var TableView = Backbone.View.extend({
 			var $cell = $(event.currentTarget);
 			$cell.siblings("th").removeClass('sorting_asc').removeClass('sorting_desc');
 
-			if ($cell.find('.table-view-checkbox').length > 0)
+			// if ($cell.find('.table-view-checkbox').length > 0)
+			// 	return;
+			// on fist column, no sort
+			if ($cell.find('#table-columns-button').length > 0)
 				return;
 
 			var cellIndex = this.columnDefs.indexOf(_.find(this.columnDefs, function(c) { return c.sTitle == $cell.html(); } ));
@@ -13383,6 +13574,7 @@ var TableView = Backbone.View.extend({
 		// Called when the user clicks on the "selection" checkbox in table
 		'click .table-view-checkbox': function(event) {
 			// Retreive the position of the selected row
+			event.stopPropagation();
 			var $target = $(event.currentTarget);
 			var $row = $target.closest('tr');
 			var data = $row.data('internal');
@@ -13393,8 +13585,12 @@ var TableView = Backbone.View.extend({
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: check every highlighted feature when clicking on already selected row
-					model.select( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
-				} else {
+					//model.select( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
+					model.select([data.feature]);
+					model.setHighlight([data.feature]);
+				}
+				/*
+				 else {
 					// "Select all" case
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
 					this.model.selectAll(filteredFeatures);
@@ -13402,18 +13598,20 @@ var TableView = Backbone.View.extend({
 						.removeClass('ui-icon-checkbox-off')
 						.addClass('ui-icon-checkbox-on');
 				}
+				*/
 			} else {
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
-					model.unselect( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
-				} else {
+					//model.unselect( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
+					model.unselect([data.feature]);
+				}/* else {
 					// "Unselect all" case
 					this.model.unselectAll();
 					$target
 						.removeClass('ui-icon-checkbox-on')
 						.addClass('ui-icon-checkbox-off');
-				}
+				}*/
 			}
 		},
 
@@ -13442,6 +13640,13 @@ var TableView = Backbone.View.extend({
 				});
 		},
 		
+		'click #check-button': function(event) {
+			this.model.select(this.model.highlights);
+		},
+
+		'click #uncheck-button': function(event) {
+			this.model.unselect(this.model.highlights);
+		},
 		// Incremental pagination
 		'click .loadMore' : function(event) {
 			var rowData = $(event.currentTarget).closest('.paging').data("internal");
@@ -13476,11 +13681,15 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "unselectFeatures", this.updateSelection);
 			this.listenTo(this.model, "show:browses", this.showBrowses);
 			this.listenTo(this.model, "hide:browses", this.hideBrowses);
-			this.listenTo(this.model, "highlightFeatures", function(features){
+			this.listenTo(this.model, "highlightFeatures", this.triggerHighlightFeature);/*function(features){
 				_allHighlights = _allHighlights.concat(features);
-				self.triggerHighlightFeature();
-			});
+				self.triggerHighlightFeature(features);
+			});*/
+			this.listenTo(this.model, "unhighlightFeatures", this.unhighlightFeatures);
 			this.listenTo(this.model, "update:downloadOptions", this.updateRows);
+
+			this.listenTo(this.model, "focus", this.onFocus);
+			this.listenTo(this.model, "unfocus", this.onUnFocus);
 
 			if (this.model.features.length > 0) {
 				this.addData(this.model.features);
@@ -13572,13 +13781,18 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 * Highlight the features on the table when they have been highlighted on the map.
+	 * For each highlights
+	 * Update class for row
+	 * And scroll to most recent
+	 * 
+	 * @function updateHighlights
 	 */
-	highlightFeature: function(features, prevFeatures) {
+	updateHighlights: function() {
 		if (!this.$table) return;
 
-		// Remove previous highlighted rows
-		this.$table.find('.row_highlighted').removeClass('row_highlighted');
+		var _this = this;
+
+		var features = ProductService.getHighlightedProducts();
 
 		if (features.length > 0) {
 			var rows = this.$table.find("tbody tr");
@@ -13589,9 +13803,9 @@ var TableView = Backbone.View.extend({
 					$row.addClass('row_highlighted');
 				}
 			}
-
 			// NGEO-1941: Scroll to the most recent highlighted product in table
-			var mostRecentFeature = _.max(features, function(f) {
+			// for featureCollection activated
+			var mostRecentFeature = _.max(_.filter(features, function(feat) {return feat._featureCollection.id === _this.model.id}), function(f) {
 				return new Date(Configuration.getMappedProperty(f, "stop"));
 			});
 
@@ -13601,9 +13815,33 @@ var TableView = Backbone.View.extend({
 			} else {
 				_clickInTable = false;
 			}
-
 		}
 	},
+
+	/**
+	 * For each feature unhighlights (remove class for row)
+	 * And update buttons @see updateHighlights
+	 * 
+	 * @function unhighlightFeatures
+	 * @param {array} features
+	 */
+	unhighlightFeatures: function(features) {
+		if (!this.$table) return;
+		if (features.length > 0) {
+			var rows = this.$table.find("tbody tr");
+			for (var i = 0; i < features.length; i++) {
+
+				var $row = this._getRowFromFeature(features[i]);
+				if ( $row ) {
+					$row.removeClass('row_highlighted');
+					this.onUnFocus(features[i]);
+				}
+			}
+		}
+		// call updateHighlights to update buttons (retrieve/add/export)
+		this.updateHighlights();
+	},
+
 
 	/**
 	 *	Scroll table elt to the given $row
@@ -13678,12 +13916,12 @@ var TableView = Backbone.View.extend({
 		for (var i = 0; i < features.length; i++) {
 			var $row = this._getRowFromFeature(features[i]);
 
-			if ( $row && this.model.selection.indexOf(features[i]) >= 0 ) {
-				// Feature is seleceted
+			if ( $row && this.model.selections.indexOf(features[i]) >= 0 ) {
+				// Feature is selected
 				$row.find('.table-view-checkbox')
 					.addClass('ui-icon-checkbox-on')
 					.removeClass('ui-icon-checkbox-off');
-			} else {
+			} else if ($row) {
 				// Feature isn't selected
 				$row.find('.table-view-checkbox')
 					.removeClass('ui-icon-checkbox-on')
@@ -14006,7 +14244,12 @@ var TableView = Backbone.View.extend({
 		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
 		content += '<span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span>';
 
+		// direct download
 		content += ' <span title="Direct download for this product" class="ui-icon directDownload"></span>';
+
+		// focus
+		content += ' <span class="focus-checkbox ui-icon ui-icon-checkbox-off"></span>';
+
 		// Layer browse visibility checkbox
 		/*
 		//var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
@@ -14132,11 +14375,11 @@ var TableView = Backbone.View.extend({
 		}
 
 		this.updateFixedHeader();
-		this.updateSelection(this.model.selection);
+		this.updateSelection(this.model.selections);
 		// TODO: Make this view dependent on model only ...
 		// FIXME: check if hereafter commented line is really needed
 		// _allHighlights = _allHighlights.concat(this.model.highlights);
-		this.triggerHighlightFeature();
+		this.updateHighlights();
 	},
 
 	/**
@@ -14247,8 +14490,17 @@ var TableView = Backbone.View.extend({
 		if (this.hasExpandableRows) {
 			$row.append('<th></th>');
 		}
-		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
+		//$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
 		//$row.append('<th class="browseVisibility"></th>');
+
+		// $row.append('<th>\
+		// 	<button data-role="button" data-mini="true" data-inline="true" id="table-columns-button" title="Select columns to display in table" >Columns</button>\
+		// </th>');
+
+		$row.append('<th>\
+			<span class="ui-icon" id="table-columns-button" title="Select columns to display in table" ></span>\
+		</th>');
+		
 
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
@@ -14305,7 +14557,8 @@ var TableView = Backbone.View.extend({
 						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
 							<input id="filterTableInput" data-inline="true" data-mini="true" type="text" placeholder="Filter products..." />\
 						</div>\
-						<button data-mini="true" data-inline="true" id="table-columns-button" title="Select columns to display in table" >Columns</button>\
+						<button data-mini="true" data-inline="true" id="check-button" title="Check highlighted products" >Check</button>\
+						<button data-mini="true" data-inline="true" id="uncheck-button" title="Uncheck highlighted products" >Uncheck</button>\
 					</div>\
 					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
@@ -14323,6 +14576,33 @@ var TableView = Backbone.View.extend({
 	 */
 	refresh: function() {
 		this.updateFixedHeader();
+	},
+
+	onFocus: function(feature, fc) {
+		if (!this.$table) return;
+
+		var $row = this._getRowFromFeature(feature);
+
+		if ( $row ) {
+			// Feature is focus
+			$row.find('.focus-checkbox')
+				.addClass('ui-icon-checkbox-on')
+				.removeClass('ui-icon-checkbox-off');
+			this._scrollTo($row);
+		}
+	},
+
+	onUnFocus: function(feature, fc) {
+		if (!this.$table) return;
+
+		var $row = this._getRowFromFeature(feature);
+
+		if ( $row ) {
+			// Feature is unfocus
+			$row.find('.focus-checkbox')
+				.addClass('ui-icon-checkbox-off')
+				.removeClass('ui-icon-checkbox-on');
+		}
 	}
 });
 

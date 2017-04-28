@@ -563,7 +563,7 @@ __p+='\r\n\t\t\t\t\t\t<label id="'+
 ((__t=( label ))==null?'':__t)+
 ' : </label>\r\n\t\t\t\t\t\t<!-- Selectbox -->\r\n\t\t\t\t\t\t<select id="'+
 ((__t=( criterion.id ))==null?'':__t)+
-'" data-mini="true"">\r\n\t\t\t\t\t\t\t<option value="">None</option>\r\n\t\t\t\t\t\t\t';
+'" data-mini="true"">\r\n\t\t\t\t\t\t\t<option value="">Any</option>\r\n\t\t\t\t\t\t\t';
  _.each(criterion.possibleValues, function(possibleValue) { 
 __p+='\r\n\t\t\t\t\t\t\t\t<option value="'+
 ((__t=( possibleValue ))==null?'':__t)+
