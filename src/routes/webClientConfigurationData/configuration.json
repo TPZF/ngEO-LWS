@@ -87,6 +87,7 @@
 	"search": {
 		"geometryPrecision": 2,
 		"advancedCriteriaLabels": {
+			"acquisitionType": "Acquisition type",
 			"ailz": "ANX Ill. Zen.",
 			"cloudCoverPercentage": "Cloud cover percentage",
 			"country": "Country",
@@ -138,6 +139,8 @@
 			"platformSerialIdentifier": "Satellite",
 			"polarisationChannels": "Polarisation channels",
 			"processingLevel": "Processing level",
+			"productionStatus": "Production status",
+			"productQualityStatus": "Product quality status",
 			"productType": "Product type",
 			"psi": "Platform serial identifier",
 			"psn": "Platform short name",
