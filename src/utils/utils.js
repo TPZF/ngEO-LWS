@@ -76,6 +76,23 @@ module.exports = {
 		}
 
 		return this.getValue(obj, names[names.length - 1], defaultValue);
+	},
+
+	/**
+	 * @function findTagByXmlns
+	 * @param {string} myJsonOSDD 
+	 * @param {string} myPathXmlns
+	 * @returns {string}
+	 */
+	findTagByXmlns: function(myJsonOSDD, myPathXmlns) {
+		let _result = '';
+		for (var _node in myJsonOSDD['@']) {
+			if (myJsonOSDD['@'][_node].indexOf(myPathXmlns) >= 0) {
+				_result = _node.split(':')[1] + ':';
+				break;
+			}
+		}
+		return _result;
 	}
 
 };
