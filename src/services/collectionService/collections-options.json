@@ -1,7 +1,6 @@
 [
     {
         "id": "SXCAT-ASA_APP_1P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_APP_1P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -10,7 +9,6 @@
     },
     {
         "id": "SXCAT-ASA_APS_1P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_APS_1P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -19,7 +17,6 @@
     },
     {
         "id": "SXCAT-ASA_AP__0P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_AP__0P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -28,7 +25,6 @@
     },
     {
         "id": "SXCAT-ASA_IMP_1P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_IMP_1P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -37,7 +33,6 @@
     },
     {
         "id": "SXCAT-ASA_IMS_1P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_IMS_1P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -46,7 +41,6 @@
     },
     {
         "id": "SXCAT-ASA_IM__0P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_IM__0P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -55,7 +49,6 @@
     },
     {
         "id": "SXCAT-ASA_WSS_1P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_WSS_1P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -64,7 +57,6 @@
     },
     {
         "id": "SXCAT-ASA_WS__0P",
-        "url": "https://sxcat.eox.at/opensearch/collections/ASA_WS__0P",
         "keywords": [
             {"Platform": ["Envisat"]},
             {"Sensor": ["TM"]},
@@ -72,12 +64,10 @@
         ]
     },
     {
-        "id": "SXCAT-AUX_Dynamic_Open",
-        "url": "https://sxcat.eox.at/opensearch/collections/AUX_Dynamic_Open"
+        "id": "SXCAT-AUX_Dynamic_Open"
     },
     {
         "id": "SXCAT-IKONOS-2",
-        "url": "https://sxcat.eox.at/opensearch/collections/IKONOS-2",
         "keywords": [
             {"Platform": ["IKONOS"]},
             {"Sensor": ["OSA"]},
@@ -86,7 +76,6 @@
     },
     {
         "id": "SXCAT-Landsat57Merged",
-        "url": "https://sxcat.eox.at/opensearch/collections/Landsat57Merged",
         "keywords": [
             {"Platform": ["Landsat"]},
             {"Sensor": ["TM"]},
@@ -94,24 +83,20 @@
         ]
     },
     {
-        "id": "SXCAT-NRT_Open",
-        "url": "https://sxcat.eox.at/opensearch/collections/NRT_Open"
+        "id": "SXCAT-NRT_Open"
     },
     {
         "id": "SXCAT-Oceansat2",
-        "url": "https://sxcat.eox.at/opensearch/collections/Oceansat2",
         "keywords": [
             {"Platform": ["OceanSat"]},
             {"Sensor": ["OPTICAL"]}
         ]
     },
     {
-        "id": "SXCAT-Pleiades",
-        "url": "https://sxcat.eox.at/opensearch/collections/Pleiades"
+        "id": "SXCAT-Pleiades"
     },
     {
         "id": "SXCAT-RapidEye",
-        "url": "https://sxcat.eox.at/opensearch/collections/RapidEye",
         "keywords": [
             {"Platform": ["RapidEye"]},
             {"Sensor": ["OPTICAL"]}
@@ -119,7 +104,6 @@
     },
     {
         "id": "SXCAT-RapidEye_SouthAmerica",
-        "url": "https://sxcat.eox.at/opensearch/collections/RapidEye_SouthAmerica",
         "keywords": [
             {"Platform": ["RapidEye"]},
             {"Sensor": ["OPTICAL"]}
@@ -127,23 +111,19 @@
     },
     {
         "id": "SXCAT-RapidEye_Take5",
-        "url": "https://sxcat.eox.at/opensearch/collections/RapidEye_Take5",
         "keywords": [
             {"Platform": ["RapidEye"]},
             {"Sensor": ["OPTICAL"]}
         ]
     },
     {
-        "id": "SXCAT-SAR_IM__0P",
-        "url": "https://sxcat.eox.at/opensearch/collections/SAR_IM__0P"
+        "id": "SXCAT-SAR_IM__0P"
     },
     {
-        "name": "SXCAT-SMOS_Open",
-        "url": "https://sxcat.eox.at/opensearch/collections/SMOS_Open"
+        "id": "SXCAT-SMOS_Open"
     },
     {
         "id": "SXCAT-SPOT1-5",
-        "url": "https://sxcat.eox.at/opensearch/collections/SPOT1-5",
         "keywords": [
             {"Platform": ["SPOT"]},
             {"Sensor": ["OPTICAL"]}
@@ -151,11 +131,12 @@
     },
     {
         "id": "SXCAT-SPOT6-7",
-        "url": "https://sxcat.eox.at/opensearch/collections/SPOT6-7"
+        "keywords": [
+            {"Platform": ["SPOT"]}
+        ]
     },
     {
         "id": "SXCAT-Seasat",
-        "url": "https://sxcat.eox.at/opensearch/collections/Seasat",
         "keywords": [
             {"Platform": ["Seasat"]},
             {"Sensor": ["SAR"]}
@@ -163,10 +144,18 @@
     },
     {
         "id": "SXCAT-WorldView-2",
-        "url": "https://sxcat.eox.at/opensearch/collections/WorldView-2",
         "keywords": [
             {"Platform": ["WorldView"]},
             {"Sensor": ["OPTICAL"]}
         ]
+    },
+    {
+        "id": "FEDEO-ENVISAT.ASA",
+        "keywords": [
+            {"Platform": ["Envisat"]}
+        ]
+    },
+    {
+        "id": "FEDEO-ERS.SAR"
     }
 ]

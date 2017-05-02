@@ -675,7 +675,7 @@ class CollectionService {
 
 		this.collections.forEach((_collection) => {
 			let _collectionOptionsConf = _.find(_collectionsOptionsConf, (_item) => {
-				return (_collection.name === _item.name)
+				return (_collection.id === _item.id)
 			});
 			if (_collectionOptionsConf) {
 				let _keywords = _collectionOptionsConf.keywords || [];
