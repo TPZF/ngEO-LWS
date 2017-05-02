@@ -17,12 +17,12 @@ describe('Route productSearch', function () {
 		}, 9000);
 	});
 
-	it('GET /ngeo/catalogue/Landsat57Merged/search', function (done) {
+	it('GET /ngeo/catalogue/SXCAT-Landsat57Merged/search', function (done) {
 
 		this.timeout(10000);
 		
 		request(app)
-		.get('/ngeo/catalogue/Landsat57Merged/search')
+		.get('/ngeo/catalogue/SXCAT-Landsat57Merged/search')
 		.expect(200)
 		.end(function (err, res) {
 			should(res.body).have.property('type');
@@ -37,10 +37,10 @@ describe('Route productSearch', function () {
 		});
 	})
 
-	it('GET /ngeo/catalogue/Landsat57Merged/search/about', function (done) {
+	it('GET /ngeo/catalogue/SXCAT-Landsat57Merged/search/about', function (done) {
 
 		request(app)
-		.get('/ngeo/catalogue/Landsat57Merged/search/about')
+		.get('/ngeo/catalogue/SXCAT-Landsat57Merged/search/about')
 		.expect(200)
 		.end(function (err, res) {
 			should(res.text).be.a.String();

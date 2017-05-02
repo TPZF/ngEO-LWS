@@ -20,7 +20,7 @@ describe('Route datasetSearchInfo', function () {
 		}, 9000);
 	});
 
-	let testCollectionId = 'Landsat57Merged';
+	let testCollectionId = 'SXCAT-Landsat57Merged';
 
 	it('GET /ngeo/datasetSearchInfo/:collectionId', function (done) {
 		
