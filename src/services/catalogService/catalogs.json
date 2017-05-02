@@ -2,7 +2,6 @@
     {
         "name": "SXCAT",
         "url": "https://sxcat.eox.at/opensearch/atom?collection",
-        "fake": false,
         "responseFormatOnSearch": "atom+xml",
         "avoidedAttributes" : [
             "availabilityTime",
@@ -20,7 +19,6 @@
     {
         "name": "FEDEO",
         "url": "http://geo.spacebel.be/opensearch/request/?httpAccept=application/atom%2Bxml&amp;query=%22OADS%22",
-        "fake": false,
         "responseFormatOnSearch": "atom+xml",
         "avoidedAttributes" : [
             "bbox",
