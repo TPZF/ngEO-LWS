@@ -19,8 +19,8 @@
     },
     {
         "name": "FEDEO",
-        "url": "https://fedeo",
-        "fake": true,
+        "url": "http://geo.spacebel.be/opensearch/request/?httpAccept=application/atom%2Bxml&amp;query=%22OADS%22",
+        "fake": false,
         "responseFormatOnSearch": "atom+xml",
         "avoidedAttributes" : [
             "bbox",
@@ -33,6 +33,10 @@
             "startPage",
             "startRecord",
             "trel"
-        ]
+        ],
+        "mandatoryAttributes": 
+            {
+                "recordSchema": "om"
+            }
     }
 ]
