@@ -50,22 +50,26 @@ router.get('/', function (req, res) {
 			params: req.query,
 			onSuccess: (result) => {
 				let geoJsonWebcData = configurationConverter.convertSearchResponse(result, collectionId);
-				if (geoJsonWebcData) {
-					// Add browse information for converted collection
-					browseService.addBrowseInfo(collectionId, geoJsonWebcData);
-					// Add originDatasetId for each features (used to retrieve a product from catalog or shopcart)
-					geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData);
-					geoJsonWebcData.type = 'FeatureCollection';
-					// send to response
-					// FIXME - test fails if content-type is defined
-					//res.type('Content-Type', 'application/vnd.geo+json').send(geoJsonWebcData);
-					res.send(geoJsonWebcData);
-				} else {
+				if (!geoJsonWebcData) {
 					res.status(500).send("Some inconsistency with response received from the backend");
+					return;
 				}
+				// Add browse information for converted collection
+				browseService.addBrowseInfo(collectionId, geoJsonWebcData);
+				// Add originDatasetId for each features (used to retrieve a product from catalog or shopcart)
+				geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData);
+				geoJsonWebcData.type = 'FeatureCollection';
+				// send to response
+				// FIXME - test fails if content-type is defined
+				//res.type('Content-Type', 'application/vnd.geo+json').send(geoJsonWebcData);
+				res.send(geoJsonWebcData);
 			},
-			onError: (errorMessage) => {
-				res.status(500).send("Error while searching on " + collectionId);
+			onError: (errorCode) => {
+				if (errorCode === '404') {
+					res.status(404).send('Not found');
+				} else {
+					res.status(500).send('Error while searching on collection ' + collectionId);
+				}
 			}
 		});
 	});

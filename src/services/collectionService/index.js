@@ -388,7 +388,7 @@ class CollectionService {
 		let _collection = this.getCollection(myCollectionId);
 		if (typeof _collection === 'undefined') {
 			Logger.error('collectionService.search - collection ' + myCollectionId + ' not found !');
-			return null;
+			return myOptions.onError('404');
 		}
 
 		// map params with those of collection
@@ -408,7 +408,7 @@ class CollectionService {
 			if (!error && response.statusCode == 200) {
 				Xml2JsonParser.parse(body, myOptions.onSuccess, myOptions.onError);
 			} else {
-				myOptions.onError('Error while searching on ' + _searchUrlRequest);
+				myOptions.onError('500');
 			}
 		});
 	}
