@@ -8,11 +8,6 @@ let Logger = require('utils/logger');
 let Configuration = require('config');
 let CatalogService = require('../catalogService');
 
-let fakeCollectionName = 'SENTINEL-1 Products';
-let fakeCollectionId = 'SENTINEL-1-PRODUCTS';
-let fakeCollectionUrlOsdd = 'http://fedeo.esa.int/opensearch/description.xml?parentIdentifier=EOP:ESA:SCIHUB&amp;platform=SENTINEL-1&amp;sensorType=RADAR&amp;startDate=2014-04-03T00:00:00Z&amp;endDate=';
-let fakeCollectionUrlSearch = 'https://fedeo.esa.int/opensearch/request?httpAccept=application%2Fatom%2Bxml&parentIdentifier=EOP:ESA:SCIHUB&startPage={startPage?}&startRecord={startIndex?}&maximumRecords={count?}&uid={geo:uid?}&startDate={time:start?}&endDate={time:end?}&bbox={geo:box?}&geometry={geo:geometry?}&creationDate={eo:creationDate?}&platform=SENTINEL-1&polarisationChannels={eo:polarisationChannels?}&orbitDirection={eo:orbitDirection?}&orbitNumber={eo:orbitNumber?}&productType={eo:productType?}&sensorMode={eo:sensorMode?}&processingLevel={eo:processingLevel?}&swathIdentifier={eo:swathIdentifier?}&username=' + Configuration.credentials[0].FEDEO.username + '&password=' + Configuration.credentials[0].FEDEO.password + '&recordSchema={sru:recordSchema?}&name={geo:name?}&lat={geo:lat?}&lon={geo:lon?}&radius={geo:radius?}';
-
 /**
  * sample of myUrl
  * http://fedeo.esa.int/opensearch/request?
@@ -152,10 +147,8 @@ class CollectionService {
 			// for each catalog -> set collections schema
 			let aPromisesSetCollectionsSchema = [];
 			CatalogService.getCatalogs(true).forEach((catalog) => {
-				if (!catalog.fake) {
-					let p = CatalogService.setCollectionsSchema(catalog);
-					aPromisesSetCollectionsSchema.push(p);
-				}
+				let p = CatalogService.setCollectionsSchema(catalog);
+				aPromisesSetCollectionsSchema.push(p);
 			});
 			return Promise.all(aPromisesSetCollectionsSchema);
 		}).then(() => {
@@ -181,13 +174,6 @@ class CollectionService {
 	addCollectionsFromCatalog(myCatalog) {
 		Logger.debug('collectionService.addCollectionsFromCatalog(' + myCatalog.name + ') *****');
 		let _this = this;
-		/***********************/
-		if (myCatalog.fake) {
-			let maFakeCollection = new Collection(fakeCollectionId, fakeCollectionUrlOsdd, fakeCollectionName, myCatalog.id);
-			// add other datas
-			return Promise.resolve(_this.getOsddCollection(maFakeCollection));
-		}
-		/***********************/
 		if (!myCatalog.collectionsSchema) {
 			myCatalog.active = false;
 			return Promise.resolve();
@@ -302,15 +288,7 @@ class CollectionService {
 		let _this = this;
 		// find node search request description
 		let searchRequestDescription = {};
-		/**********************/
-		if (myCollection.id.indexOf(fakeCollectionId) === 0) {
-			searchRequestDescription = {'@' : { template : fakeCollectionUrlSearch }};
-		} else {
-		/**********************/
-			searchRequestDescription = _this.findSearchRequestDescription(myCollection.id);
-		/**********************/
-		}
-		/**********************/
+		searchRequestDescription = _this.findSearchRequestDescription(myCollection.id);
 		if (!searchRequestDescription) {
 			_.remove(_this.collections, function(item) {
 				return item.id === myCollection.id;
@@ -399,10 +377,6 @@ class CollectionService {
 
 		let searchUrlRequest = _buildSearchRequestWithParam(collection.url_search, searchParams);
 		searchUrlRequest += this.addMandatoryAttributes(collection);
-
-		if (collection.id === fakeCollectionId) {
-			searchUrlRequest += 'recordSchema=om';
-		}
 		let startTime = Date.now();
 		Logger.info(`Searching for backend with ${searchUrlRequest}`);
 		request(searchUrlRequest, function (error, response, body) {

@@ -21,7 +21,6 @@ class CatalogService {
 			catalogsConf.forEach((catalogConf) => {
 				let options = {
 					active : true,
-					fake: catalogConf.fake,
 					avoidedAttributes: catalogConf.avoidedAttributes,
 					mandatoryAttributes: catalogConf.mandatoryAttributes
 				};
@@ -81,38 +80,31 @@ class CatalogService {
 		let that = this;
 		return new Promise((resolve,reject) => {
 			Logger.debug('catalogService.setTotalResults(' + myCatalog.name + ')');
-			if (myCatalog.fake) {
-				Logger.debug('catalogService.setTotalResults - fedeo catalog');
-				myCatalog.totalResults = 1;
-				resolve();
-			} else {
-				Logger.debug('catalogService.setTotalResults - sxcat catalog');
-				// 
-				if (Configuration.request && Configuration.request.tlsRejectUnauthorized) {
-					console.log('tls reject unauthorized is false !')
-					//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-				}
-				request(myCatalog.url, (error, response, body) => {
-					Logger.debug('catalogService.setTotalResults - GET ' + myCatalog.url);
-					if (error) {
-						Logger.error('catalogService.setTotalResults - Unable to get totalResults for catalog ' + myCatalog.name);
-						myCatalog.active = false;
-					} else if (response.statusCode === 404) {
-						Logger.error('catalogService.setTotalResults - Unreachable url ' + myCatalog.url);
-						myCatalog.active = false;
-					} else {
-						Xml2JsonParser.parse(body, (result) => {
-							myCatalog.totalResults = result['os:totalResults'];
-							if (!myCatalog.totalResults || myCatalog.totalResults < 1) {
-								Logger.error('catalogService.setTotalResults - No results for ' + myCatalog.url);
-								myCatalog.active = false;
-							}
-							Logger.debug('catalogService.setTotalResults - Push totalResults ' + myCatalog.totalResults + ' in catalog ' + myCatalog.name)
-						});
-					}
-					resolve();
-				});
+			// 
+			if (Configuration.request && Configuration.request.tlsRejectUnauthorized) {
+				console.log('tls reject unauthorized is false !')
+				//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 			}
+			request(myCatalog.url, (error, response, body) => {
+				Logger.debug('catalogService.setTotalResults - GET ' + myCatalog.url);
+				if (error) {
+					Logger.error('catalogService.setTotalResults - Unable to get totalResults for catalog ' + myCatalog.name);
+					myCatalog.active = false;
+				} else if (response.statusCode === 404) {
+					Logger.error('catalogService.setTotalResults - Unreachable url ' + myCatalog.url);
+					myCatalog.active = false;
+				} else {
+					Xml2JsonParser.parse(body, (result) => {
+						myCatalog.totalResults = result['os:totalResults'];
+						if (!myCatalog.totalResults || myCatalog.totalResults < 1) {
+							Logger.error('catalogService.setTotalResults - No results for ' + myCatalog.url);
+							myCatalog.active = false;
+						}
+						Logger.debug('catalogService.setTotalResults - Push totalResults ' + myCatalog.totalResults + ' in catalog ' + myCatalog.name)
+					});
+				}
+				resolve();
+			});
 		});
 	}
 
