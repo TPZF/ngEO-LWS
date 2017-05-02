@@ -30,10 +30,10 @@ describe('Route opensearch', function () {
 		});
 	})
 
-	it('GET /ngeo/opensearch/Landsat57Merged', function (done) {
+	it('GET /ngeo/opensearch/SXCAT-Landsat57Merged', function (done) {
 
 		request(app)
-		.get('/ngeo/opensearch/Landsat57Merged')
+		.get('/ngeo/opensearch/SXCAT-Landsat57Merged')
 		.expect(200)
 		.end(function (err, res) {
 			should(res.text).be.a.String();
