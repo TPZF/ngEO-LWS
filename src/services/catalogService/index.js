@@ -19,7 +19,12 @@ class CatalogService {
 		if (Array.isArray(catalogsConf)) {
 			// Create catalog object from conf
 			catalogsConf.forEach((catalogConf) => {
-				let options = {active : true, fake: catalogConf.fake, avoidedAttributes: catalogConf.avoidedAttributes};
+				let options = {
+					active : true,
+					fake: catalogConf.fake,
+					avoidedAttributes: catalogConf.avoidedAttributes,
+					mandatoryAttributes: catalogConf.mandatoryAttributes
+				};
 				let catalog = new Catalog(catalogConf.url, catalogConf.name, options);
 				this.catalogs.push(catalog);
 			});
