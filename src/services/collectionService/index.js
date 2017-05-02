@@ -398,6 +398,8 @@ class CollectionService {
 		}
 
 		let searchUrlRequest = _buildSearchRequestWithParam(collection.url_search, searchParams);
+		searchUrlRequest += this.addMandatoryAttributes(collection);
+
 		if (collection.id === fakeCollectionId) {
 			searchUrlRequest += 'recordSchema=om';
 		}
@@ -411,6 +413,28 @@ class CollectionService {
 				options.onError('Error while searching on ' + searchUrlRequest);
 			}
 		});
+	}
+
+	/**
+	 * Add mandatory attributes - for example FEDEO must have recordSchema=om to retrieve EO datas
+	 * @see collectionService#search()
+	 * 
+	 * @function addMandatoryAttributes
+	 * @param {object} myCollection 
+	 * @returns {string}
+	 */
+	addMandatoryAttributes(myCollection) {
+		let result = '';
+		let _catalog = CatalogService.getCatalog(myCollection.catalogId);
+		if (typeof _catalog === 'undefined') {
+			return result;
+		}
+		if (_catalog.mandatoryAttributes) {
+			Object.getOwnPropertyNames(_catalog.mandatoryAttributes).forEach((key) => {
+				result += '&' + key + '=' + _catalog.mandatoryAttributes[key];
+			});
+		}
+		return result;
 	}
 
 	/**
