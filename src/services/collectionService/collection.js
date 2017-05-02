@@ -15,7 +15,8 @@ class Collection {
 	 * @param options - Possible options later: id, title, summary, updated, dc:identifier, link
 	 */
 	constructor(id, url, name, catalogId, options) {
-		this.id = id;
+		// concatenation of catalogId and collectionId because collectionId not always unique
+		this.id = catalogId + '-' + id;
 		this.url = url;
 		this.name = name;
 		this.catalogId = catalogId;
