@@ -1,5 +1,3 @@
-let request = require("request");
-
 /**
  * Catalog class
  * Representing the catalogs
@@ -7,10 +5,10 @@ let request = require("request");
 class Catalog {
 	/**
 	 * Catalog constructor
-	 * @param url
-	 * 		The OpenSearch url of catalog
-	 * @param options
-	 * 		Possible options later: id, title, summary, updated, dc:identifier, link
+	 * 
+	 * @param url - The OpenSearch url of catalog
+	 * @param name - The OpenSearch name of catalog
+	 * @param options - Possible options later: id, title, summary, updated, dc:identifier, link
 	 */
 	constructor(url, name, options) {
 		this.url = url;
