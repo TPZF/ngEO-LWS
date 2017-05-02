@@ -179,27 +179,25 @@ let _addProductInformationForFeature = function(feature) {
 	let product = Utils.getFromPath(feature, 'properties.EarthObservation.result.EarthObservationResult.product', null);
 	if (product === null) {
 		Logger.warn('No product information for feature ' + (feature.id ? feature.id : feature));
-		return feature;
-	}
-
-	// TODO define this from catalog configuration
-	let productUrl = Utils.getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
-	if (productUrl !== '') {
-		let product = {
-			ProductInformation : {
-				fileName: {
-					ServiceReference : {
-						'@': {
-							href: productUrl
+		// try to set product object for feature with rel=enclosure
+		let productUrl = Utils.getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
+		if (productUrl !== '') {
+			let product = {
+				ProductInformation : {
+					fileName: {
+						ServiceReference : {
+							'@': {
+								href: productUrl
+							}
 						}
+					},
+					size: {
+						'#': ''
 					}
-				},
-				size: {
-					'#': ''
 				}
-			}
-		};
-		feature.properties.EarthObservation.result.EarthObservationResult.product = product;
+			};
+			feature.properties.EarthObservation.result.EarthObservationResult.product = product;
+		}
 	}
 	return feature;
 
