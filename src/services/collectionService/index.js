@@ -2,10 +2,17 @@ let _ = require('lodash');
 let request = require('request');
 let Promise = require('promise');
 
-let Collection = require('./collection');
+let Configuration = require('config');
+
+// UTILS
 let Xml2JsonParser = require('utils/xml2jsonParser');
 let Logger = require('utils/logger');
-let Configuration = require('config');
+let Utils = require('utils/utils');
+
+// MODELS
+let Collection = require('./collection');
+
+// SERVICES
 let CatalogService = require('../catalogService');
 
 /**
@@ -28,16 +35,17 @@ let CatalogService = require('../catalogService');
  * 
  * @function _buildSearchRequestWithParam
  * @param {string} myUrl 
- * @param {object} params
+ * @param {object} myParams
+ * @returns {string}
  * @private
  */
-let _buildSearchRequestWithParam = function(myUrl, params) {
+let _buildSearchRequestWithParam = function (myUrl, myParams) {
 	let result = '';
 	let uri = myUrl.substring(0, myUrl.indexOf('?'));
 	result += uri + '?';
-	myUrl = myUrl.substring(myUrl.indexOf('?')+1);
+	myUrl = myUrl.substring(myUrl.indexOf('?') + 1);
 	let itemsOfUrl = myUrl.split('&');
-	for (var i=0; i< itemsOfUrl.length; i++) {
+	for (var i = 0; i < itemsOfUrl.length; i++) {
 		if (itemsOfUrl[i].indexOf('=') === -1) {
 			result += itemsOfUrl[i] + '&';
 		} else {
@@ -46,8 +54,8 @@ let _buildSearchRequestWithParam = function(myUrl, params) {
 				result += itemsOfUrl[i] + '&';
 			} else {
 				let param = itemsOfParam[0];
-				if (params[param]) {
-					result += itemsOfParam[0] + '=' + params[param] + '&';
+				if (myParams[param]) {
+					result += itemsOfParam[0] + '=' + myParams[param] + '&';
 				}
 			}
 		}
@@ -75,16 +83,17 @@ let _buildSearchRequestWithParam = function(myUrl, params) {
  * 
  * @function _buildSearchRequestWithValue
  * @param {string} myUrl 
- * @param {object} params 
+ * @param {object} myParams
+ * @returns {string} 
  * @private
  */
-let _buildSearchRequestWithValue = function(myUrl, params) {
+let _buildSearchRequestWithValue = function (myUrl, myParams) {
 	let result = '';
 	let uri = myUrl.substring(0, myUrl.indexOf('?'));
 	result += uri + '?';
-	myUrl = myUrl.substring(myUrl.indexOf('?')+1);
+	myUrl = myUrl.substring(myUrl.indexOf('?') + 1);
 	let itemsOfUrl = myUrl.split('&');
-	for (var i=0; i< itemsOfUrl.length; i++) {
+	for (var i = 0; i < itemsOfUrl.length; i++) {
 		if (itemsOfUrl[i].indexOf('=') === -1) {
 			result += itemsOfUrl[i] + '&';
 		} else {
@@ -92,12 +101,12 @@ let _buildSearchRequestWithValue = function(myUrl, params) {
 			if (itemsOfParam[1].indexOf('{') === -1) {
 				result += itemsOfUrl[i] + '&';
 			} else {
-				let param = itemsOfParam[1].substring(1,itemsOfParam[1].length - 1);
+				let param = itemsOfParam[1].substring(1, itemsOfParam[1].length - 1);
 				if (param.indexOf('?')) {
 					param = param.substr(0, param.length - 1);
 				}
-				if (params[param]) {
-					result += itemsOfParam[0] + '=' + params[param] + '&';
+				if (myParams[param]) {
+					result += itemsOfParam[0] + '=' + myParams[param] + '&';
 				}
 			}
 		}
@@ -116,12 +125,12 @@ class CollectionService {
 	constructor() {
 		// all collections
 		this.collections = [];
-		let startTime = Date.now();
+		let _startTime = Date.now();
 		// last build of this service -> used to refresh collections every refreshDelay (see refresh())
-		this.lastBuild = startTime;
+		this.lastBuild = _startTime;
 		// initialize service
 		this.initialize().then(() => {
-			Logger.info('collectionService.initialize() complete in ' + (Date.now() - startTime) + ' ms');
+			Logger.info('collectionService.initialize() complete in ' + (Date.now() - _startTime) + ' ms');
 		});
 	}
 
@@ -131,36 +140,36 @@ class CollectionService {
 	 */
 	initialize() {
 		Logger.debug('collectionService.initialize()');
-		let startTime = Date.now();
+		let _startTime = Date.now();
 		let _this = this;
 		// reinitialize catalogs with active attribute to true...
 		CatalogService.reinitialize();
 		// for each catalog -> set Total results = count of collections
-		let aPromisesSetTotalResults = [];
-		CatalogService.getCatalogs(true).forEach((catalog) => {
-			let p = CatalogService.setTotalResults(catalog);
-			aPromisesSetTotalResults.push(p);
+		let _aPromisesSetTotalResults = [];
+		CatalogService.getCatalogs(true).forEach((_catalog) => {
+			let _p = CatalogService.setTotalResults(_catalog);
+			_aPromisesSetTotalResults.push(_p);
 		});
-		return Promise.all(aPromisesSetTotalResults).then(() => {
-			Logger.debug('collectionService.initialize - set total results takes ' + (Date.now() - startTime) + ' ms');
-			startTime = Date.now();
+		return Promise.all(_aPromisesSetTotalResults).then(() => {
+			Logger.debug('collectionService.initialize - set total results takes ' + (Date.now() - _startTime) + ' ms');
+			_startTime = Date.now();
 			// for each catalog -> set collections schema
-			let aPromisesSetCollectionsSchema = [];
-			CatalogService.getCatalogs(true).forEach((catalog) => {
-				let p = CatalogService.setCollectionsSchema(catalog);
-				aPromisesSetCollectionsSchema.push(p);
+			let _aPromisesSetCollectionsSchema = [];
+			CatalogService.getCatalogs(true).forEach((_catalog) => {
+				let _p = CatalogService.setCollectionsSchema(_catalog);
+				_aPromisesSetCollectionsSchema.push(_p);
 			});
-			return Promise.all(aPromisesSetCollectionsSchema);
+			return Promise.all(_aPromisesSetCollectionsSchema);
 		}).then(() => {
-			Logger.debug('collectionService.initialize - set collectionsSchemas takes ' + (Date.now() - startTime) + ' ms');
-			startTime = Date.now();
+			Logger.debug('collectionService.initialize - set collectionsSchemas takes ' + (Date.now() - _startTime) + ' ms');
+			_startTime = Date.now();
 			// for each catalog -> add collections
-			let aPromisesAddCollectionsFromCatalog = [];
-			CatalogService.getCatalogs(true).forEach((catalog) => {
-				let p = _this.addCollectionsFromCatalog(catalog);
-				aPromisesAddCollectionsFromCatalog.push(p);
+			let _aPromisesAddCollectionsFromCatalog = [];
+			CatalogService.getCatalogs(true).forEach((_catalog) => {
+				let _p = _this.addCollectionsFromCatalog(_catalog);
+				_aPromisesAddCollectionsFromCatalog.push(_p);
 			});
-			return Promise.all(aPromisesAddCollectionsFromCatalog);
+			return Promise.all(_aPromisesAddCollectionsFromCatalog);
 		});
 	}
 
@@ -172,18 +181,18 @@ class CollectionService {
 	 * @returns {Promise}
 	 */
 	addCollectionsFromCatalog(myCatalog) {
-		Logger.debug('collectionService.addCollectionsFromCatalog(' + myCatalog.name + ') *****');
+		Logger.debug('collectionService.addCollectionsFromCatalog(' + myCatalog.name + ')');
 		let _this = this;
 		if (!myCatalog.collectionsSchema) {
 			myCatalog.active = false;
 			return Promise.resolve();
 		} else {
-			let aPromisesCollectionSchema = [];
-			myCatalog.collectionsSchema.forEach((collectionSchema) => {
-				let p = _this.populateFromCollectionSchema(collectionSchema, myCatalog.id);
-				aPromisesCollectionSchema.push(p);
+			let _aPromisesCollectionSchema = [];
+			myCatalog.collectionsSchema.forEach((_collectionSchema) => {
+				let _p = _this.populateFromCollectionSchema(_collectionSchema, myCatalog.id);
+				_aPromisesCollectionSchema.push(_p);
 			});
-			return Promise.all(aPromisesCollectionSchema);
+			return Promise.all(_aPromisesCollectionSchema);
 		}
 	}
 
@@ -202,37 +211,37 @@ class CollectionService {
 			if (!Array.isArray(myCollectionSchema.entry)) {
 				myCollectionSchema.entry = [myCollectionSchema.entry];
 			}
-			let aPromisesGetOsddCollection = [];
-			myCollectionSchema.entry.forEach((oneEntry) => {
+			let _aPromisesGetOsddCollection = [];
+			myCollectionSchema.entry.forEach((_oneEntry) => {
 				// find url for getting opensearch description
-				let urlOSDD = _.find(oneEntry.link, function(lien) {
-					return (lien['@'].rel === 'search' && lien['@'].type === 'application/opensearchdescription+xml');
+				let _urlOSDD = _.find(_oneEntry.link, function (_lien) {
+					return (_lien['@'].rel === 'search' && _lien['@'].type === 'application/opensearchdescription+xml');
 				});
-				let url = urlOSDD ? urlOSDD['@'].href : oneEntry.id;
+				let _url = _urlOSDD ? _urlOSDD['@'].href : _oneEntry.id;
 				// find id
-				let idCollection = oneEntry[Configuration.opensearch.identifier];
-				if (!_.find(_this.collections, function(item) {return item.id === idCollection})) {
+				let _idCollection = _oneEntry[Configuration.opensearch.identifier];
+				if (!_.find(_this.collections, function (_item) { return _item.id === _idCollection })) {
 					// set collection object
-					let maCollection = new Collection(idCollection, url, oneEntry.title, myCatalogId);
+					let _collection = new Collection(_idCollection, _url, _oneEntry.title, myCatalogId);
 					// add other datas
-					aPromisesGetOsddCollection.push(_this.getOsddCollection(maCollection));
+					_aPromisesGetOsddCollection.push(_this.getOsddCollection(_collection));
 				}
 			});
-			return Promise.all(aPromisesGetOsddCollection).then((values) => {
+			return Promise.all(_aPromisesGetOsddCollection).then((_values) => {
 				Logger.debug('collectionService.populateFromCollectionSchema(' + myCollectionSchema.id + ')');
-				if (values && Array.isArray(values)) {
-					values.forEach((val) => {
-						if (!val.flag) {
-							Logger.warn(`collectionService.populateFromCollectionSchema - Remove myCollection ${val.id} because no results`);
-							_.remove(_this.collections, function(item) {
-								return item.id === val.id;
+				if (_values && Array.isArray(_values)) {
+					_values.forEach((_val) => {
+						if (!_val.flag) {
+							Logger.warn(`collectionService.populateFromCollectionSchema - Remove myCollection ${_val.id} because no results`);
+							_.remove(_this.collections, function (_item) {
+								return _item.id === _val.id;
 							});
 						}
 					});
 				}
 			});
 		} else {
-			Logger.error(`collectionService.populateFromCollectionSchema - Unable to find collectionsSchema for catalog ${catalog.name}`);
+			Logger.error(`collectionService.populateFromCollectionSchema - Unable to find collectionsSchema for catalog ${myCatalogId}`);
 			return Promise.resolve();
 		}
 	}
@@ -247,32 +256,31 @@ class CollectionService {
 	getOsddCollection(myCollection) {
 		let _this = this;
 		// Get osdd
-		return new Promise((resolve,reject) => {
-			let startTime = Date.now();
+		return new Promise((resolve, reject) => {
 			request(myCollection.url, (error, response, body) => {
 				Logger.debug('collectionService.getOsddCollection(' + myCollection.id + ')');
 				Logger.debug('collectionService.getOsddCollection - GET ' + myCollection.url);
 				if (error) {
 					Logger.error('collectionService.getOsddCollection - Unable to get osdd for collection ' + myCollection.id);
-					resolve({flag: false, id: myCollection.id});
+					resolve({ flag: false, id: myCollection.id });
 				} else if (!body) {
 					Logger.error('collectionService.getOsddCollection - Unable to get body for collection ' + myCollection.id);
-					resolve({flag: false, id: myCollection.id});
+					resolve({ flag: false, id: myCollection.id });
 				} else {
-					Xml2JsonParser.parse(body, (result) => {
+					Xml2JsonParser.parse(body, (_result) => {
 						Logger.debug('collectionService.getOsddCollection - osdd retrieve for collection ' + myCollection.id);
 						// put result in osdd attribute
-						myCollection.osdd = result;
+						myCollection.osdd = _result;
 					});
 					_this.collections.push(myCollection);
-					return _this.setTotalResults(myCollection).then((flag)=> {
-						resolve({flag: flag, id: myCollection.id});
+					return _this.setTotalResults(myCollection).then((_flag) => {
+						resolve({ flag: _flag, id: myCollection.id });
 					});
 				}
 			});
-			
+
 		});
-		
+
 	}
 
 	/**
@@ -287,36 +295,38 @@ class CollectionService {
 	setTotalResults(myCollection) {
 		let _this = this;
 		// find node search request description
-		let searchRequestDescription = {};
-		searchRequestDescription = _this.findSearchRequestDescription(myCollection.id);
-		if (!searchRequestDescription) {
-			_.remove(_this.collections, function(item) {
-				return item.id === myCollection.id;
+		let _searchRequestDescription = {};
+		_searchRequestDescription = _this.findSearchRequestDescription(myCollection.id);
+		if (_searchRequestDescription.length === 0) {
+			_.remove(_this.collections, function (_item) {
+				return _item.id === myCollection.id;
 			});
 			Logger.error(`collectionService.setTotalResults - Unable to find searchRequestDescription for collection ${myCollection.id}`);
 			return Promise.resolve(false);
 		} else {
 			// put url in url_search attribute
-			myCollection.url_search = searchRequestDescription['@'].template;
+			myCollection.url_search = this.buildUrlSearch(_searchRequestDescription);
+
 			// create request to retrieve the number of available products
-				let urlCount = _buildSearchRequestWithValue(myCollection.url_search, {count: 1});
+			let _urlCount = _buildSearchRequestWithValue(myCollection.url_search, { count: 1 });
 			// and make first search
-			return new Promise((resolve,reject) => {
-				request(urlCount, (error, response, body) => {
+			return new Promise((resolve, reject) => {
+				request(_urlCount, (error, response, body) => {
 					Logger.debug('collectionService.setTotalResults(' + myCollection.id + ')');
-					Logger.debug('collectionService.setTotalResults - GET urlCount ' + urlCount);
+					Logger.debug('collectionService.setTotalResults - GET urlCount ' + _urlCount);
 					if (error) {
-						Logger.error('collectionService.setTotalResults - Error on ' + urlCount + ' : ' + error);
+						Logger.error('collectionService.setTotalResults - Error on ' + _urlCount + ' : ' + error);
 						resolve(false);
 					} else if (!body) {
-						Logger.warn('collectionService.setTotalResults - No body response for ' + urlCount);
+						Logger.warn('collectionService.setTotalResults - No body response for ' + _urlCount);
 						myCollection.totalResults = '???';
 						resolve(false);
 					} else {
-						Xml2JsonParser.parse(body, (result) => {
-							let endTime = Date.now();
-							Logger.debug(`collectionService.setTotalResults - Total results for ${myCollection.id} = ${result['os:totalResults']}`);
-							myCollection.totalResults = result['os:totalResults'];
+						Xml2JsonParser.parse(body, (_result) => {
+							let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
+							Logger.debug(`collectionService.setTotalResults - Total results for ${myCollection.id} = ${_result[_opensearchTag + 'totalResults']}`);
+							// TODO and FIXME => os: is a prefix from xmlns
+							myCollection.totalResults = _result[_opensearchTag + 'totalResults'];
 							if (!myCollection.totalResults || myCollection.totalResults < 1) {
 								myCollection.totalResults = '?';
 								resolve(false);
@@ -332,9 +342,13 @@ class CollectionService {
 
 	/**
 	 * Get collection with the given id
+	 * 
+	 * @function getCollection
+	 * @param {string} myId
+	 * @returns {object}
 	 */
-	getCollection(id) {
-		return _.find(this.collections, {id: id});
+	getCollection(myId) {
+		return _.find(this.collections, { id: myId });
 	}
 
 	/**
@@ -345,14 +359,14 @@ class CollectionService {
 	 */
 	refresh() {
 		let _this = this;
-		let startTime = Date.now();
+		let _startTime = Date.now();
 		Logger.debug('collectionService.refresh()');
-		if ((startTime - this.lastBuild) > Configuration.collectionService.refreshDelay) { // refresh every refreshDelay ms
+		if ((_startTime - this.lastBuild) > Configuration.collectionService.refreshDelay) { // refresh every refreshDelay ms
 			Logger.debug('collectionService.refresh : outdated... refresh it !');
 			return this.initialize().then(() => {
 				// update attribute last build...
 				_this.lastBuild = Date.now();
-				Logger.debug('collectionService.refresh took ' + (_this.lastBuild - startTime) + ' ms');
+				Logger.debug('collectionService.refresh took ' + (_this.lastBuild - _startTime) + ' ms');
 			});
 		} else {
 			// do nothing
@@ -362,29 +376,39 @@ class CollectionService {
 
 	/**
 	 * Make search on the given collection
+	 * 
+	 * @function search
+	 * @param {string} myCollectionId
+	 * @param {object} myOptions
+	 * @returns {object}
 	 */
-	search(collectionId, options = { params: "" }){
+	search(myCollectionId, myOptions = { params: "" }) {
 
-		let collection = this.getCollection(collectionId);
+		// get collection from id
+		let _collection = this.getCollection(myCollectionId);
+		if (typeof _collection === 'undefined') {
+			Logger.error('collectionService.search - collection ' + myCollectionId + ' not found !');
+			return null;
+		}
 
 		// map params with those of collection
-		let searchParams = {};
-		for (var param in options.params) {
-			if (collection.parameters[param]) {
-				searchParams[collection.parameters[param]] = options.params[param];
+		let _searchParams = {};
+		for (var _param in myOptions.params) {
+			if (_collection.parameters[_param]) {
+				_searchParams[_collection.parameters[_param]] = myOptions.params[_param];
 			}
 		}
 
-		let searchUrlRequest = _buildSearchRequestWithParam(collection.url_search, searchParams);
-		searchUrlRequest += this.addMandatoryAttributes(collection);
-		let startTime = Date.now();
-		Logger.info(`Searching for backend with ${searchUrlRequest}`);
-		request(searchUrlRequest, function (error, response, body) {
-			Logger.info(`Time elapsed searching on backend with ${searchUrlRequest} took ${Date.now() - startTime} ms`);
+		let _searchUrlRequest = _buildSearchRequestWithParam(_collection.url_search, _searchParams);
+		_searchUrlRequest += this.addMandatoryAttributes(_collection);
+		let _startTime = Date.now();
+		Logger.info(`Searching for backend with ${_searchUrlRequest}`);
+		request(_searchUrlRequest, function (error, response, body) {
+			Logger.info(`Time elapsed searching on backend with ${_searchUrlRequest} took ${Date.now() - _startTime} ms`);
 			if (!error && response.statusCode == 200) {
-				Xml2JsonParser.parse(body, options.onSuccess, options.onError);
+				Xml2JsonParser.parse(body, myOptions.onSuccess, myOptions.onError);
 			} else {
-				options.onError('Error while searching on ' + searchUrlRequest);
+				myOptions.onError('Error while searching on ' + _searchUrlRequest);
 			}
 		});
 	}
@@ -398,33 +422,35 @@ class CollectionService {
 	 * @returns {string}
 	 */
 	addMandatoryAttributes(myCollection) {
-		let result = '';
+		let _result = '';
 		let _catalog = CatalogService.getCatalog(myCollection.catalogId);
 		if (typeof _catalog === 'undefined') {
-			return result;
+			Logger.error('collectionService.addMandatoryAttributes - collection ' + myCollectionId + ' not found !');
+			return _result;
 		}
 		if (_catalog.mandatoryAttributes) {
-			Object.getOwnPropertyNames(_catalog.mandatoryAttributes).forEach((key) => {
-				result += '&' + key + '=' + _catalog.mandatoryAttributes[key];
+			Object.getOwnPropertyNames(_catalog.mandatoryAttributes).forEach((_key) => {
+				_result += '&' + _key + '=' + _catalog.mandatoryAttributes[_key];
 			});
 		}
-		return result;
+		return _result;
 	}
 
 	/**
-	 * find description of search request in osdd with criterias as :
+	 * find nodes in osdd with description of search request with these criterias :
 	 * 		type='application/atom+xml'
 	 * 		and get method if exists
 	 * @function findSearchRequestDescription
-	 * @param {*} collectionId 
+	 * @param {string} myCollectionId
+	 * @returns {array}
 	 */
-	findSearchRequestDescription(collectionId) {
-		let jsonOSDD = this.getCollection(collectionId).osdd;
-		let paramTag = this.findTagByXmlns(jsonOSDD, Configuration.opensearch.xmlnsParameter);
-		let nodeFind = _.find(jsonOSDD.Url, function(item) {
-			if (item['@'].type === 'application/atom+xml') {
-				if (item['@'][paramTag+':method']) {
-					if (item['@'][paramTag+'method'].toLowerCase() === 'get') {
+	findSearchRequestDescription(myCollectionId) {
+		let _jsonOSDD = this.getCollection(myCollectionId).osdd;
+		let _paramTag = Utils.findTagByXmlns(_jsonOSDD, Configuration.opensearch.xmlnsParameter);
+		let _nodesFind = _.filter(_jsonOSDD.Url, function (_item) {
+			if (_item['@'].type === 'application/atom+xml') {
+				if (_item['@'][_paramTag + ':method']) {
+					if (_item['@'][_paramTag + 'method'].toLowerCase() === 'get') {
 						return true;
 					} else {
 						return false
@@ -436,88 +462,92 @@ class CollectionService {
 				return false;
 			}
 		});
-		return nodeFind;
+		return _nodesFind;
 	}
 
 	/**
-	 * @function findTagByXmlns
-	 * @param {string} jsonOSDD 
-	 * @param {string} pathXmlns
-	 */
-	findTagByXmlns(jsonOSDD, pathXmlns) {
-		let result = '';
-		for (var node in jsonOSDD['@']) {
-			if (jsonOSDD['@'][node].indexOf(pathXmlns) >= 0) {
-				result = node.split(':')[1] + ':';
-				break;
-			}
-		}
-		return result;
-	}
-
-
-	/**
-	 * Convert backend XML format to ngEO WEBC format
 	 * 
-	 * NB: Only range & list types are handled currently
+	 * @function buildParameter
+	 * @param {object} myParameter
+	 * @param {string} myParamTag
+	 * @returns {object}
 	 */
-	buildParameter(parameter, paramTag) {
-		let res;
-		if (parameter[paramTag + 'Option']) {
+	buildParameter(myParameter, myParamTag) {
+		let _res;
+		if (myParameter[myParamTag + 'Option']) {
 			// Will be rendered as checkboxes in case when maxOccurs > 1, selectbox otherwise
 			// TODO: minOccurs isn't taken into account currently
-			let minOccurs = 0;
-			if (parseInt(parameter['@'].minimum)) {
-				minOccurs = parseInt(parameter['@'].minimum);
+			let _minOccurs = 0;
+			if (parseInt(myParameter['@'].minimum)) {
+				_minOccurs = parseInt(myParameter['@'].minimum);
 			}
-			let maxOccurs = 1;
-			if (parseInt(parameter['@'].maximum)) {
-				maxOccurs = parseInt(parameter['@'].maximum);
+			let _maxOccurs = 1;
+			if (parseInt(myParameter['@'].maximum)) {
+				_maxOccurs = parseInt(myParameter['@'].maximum);
 			}
-			res = {
-				"id": parameter['@'].name,
+			_res = {
+				"id": myParameter['@'].name,
 				"type": "List",
 				"possibleValues": [],
-				"minOccurs": minOccurs,
-				"maxOccurs": maxOccurs
+				"minOccurs": _minOccurs,
+				"maxOccurs": _maxOccurs
 			};
-			if (Array.isArray(parameter[paramTag + 'Option'])) {
-				parameter[paramTag + 'Option'].forEach( (option) => {
-					res.possibleValues.push(option['@'].value);
-				} );
+			if (Array.isArray(myParameter[myParamTag + 'Option'])) {
+				myParameter[myParamTag + 'Option'].forEach((_option) => {
+					_res.possibleValues.push(_option['@'].value);
+				});
 			} else {
-				res.possibleValues.push(parameter[paramTag + 'Option']['@'].value);
+				_res.possibleValues.push(myParameter[myParamTag + 'Option']['@'].value);
 			}
-		} else if ( parameter['@'].minInclusive && parameter['@'].maxInclusive ) {
-			res = {
-				"id": parameter['@'].name,
-				"type": parameter['@'].maximum == 1 ? "Integer" : "Range",
-				"rangeMinValue": parameter['@'].minInclusive,
-				"rangeMaxValue": parameter['@'].maxInclusive
+		} else if (myParameter['@'].minInclusive && myParameter['@'].maxInclusive) {
+			_res = {
+				"id": myParameter['@'].name,
+				"type": myParameter['@'].maximum == 1 ? "Integer" : "Range",
+				"rangeMinValue": myParameter['@'].minInclusive,
+				"rangeMaxValue": myParameter['@'].maxInclusive
 			};
 		}
-		return res;
+		return _res;
 	}
 
 	/**
 	 * Build advanced attributes in ngEO WEBC format
+	 * 
+	 * @function buildAttributes
+	 * @param {object} myCollection
+	 * @param {array} mySearchRequestDescription
+	 * @param {string} myParamTag
+	 * @param {array} myAvoidedAttributes
+	 * @returns {array}
 	 */
-	buildAttributes(myCollection, searchRequestDescription, paramTag, omittedParameters) {
-		let result = [];
-		searchRequestDescription[paramTag+'Parameter'].forEach( (parameter) => {
-			if (omittedParameters.indexOf(parameter['@'].name) == -1) {
-				if (!myCollection.parameters[parameter['@'].name]) {
-					myCollection.parameters[parameter['@'].name] = parameter['@'].name;
+	buildAttributes(myCollection, mySearchRequestDescription, myParamTag, myAvoidedAttributes) {
+		let _result = [];
+		mySearchRequestDescription.forEach((_item) => {
+			_item[myParamTag + 'Parameter'].forEach((_parameter) => {
+				// if param is not in avoidedAttributes, build it !
+				if (myAvoidedAttributes.indexOf(_parameter['@'].name) == -1) {
+					if (!myCollection.parameters[_parameter['@'].name]) {
+						myCollection.parameters[_parameter['@'].name] = _parameter['@'].name;
+					}
+					let _newParameter = this.buildParameter(_parameter, myParamTag);
+					if (_newParameter) {
+						if (!_.find(_result, (_r) => {
+							return _r.id === _newParameter.id;
+						})) {
+							_result.push(_newParameter);
+						}
+					}
 				}
-				let myParameter = this.buildParameter(parameter, paramTag);
-				if (myParameter) {
-					result.push(myParameter);
-				}
-			}
-		} );
-		return result;
+			});
+		});
+		return _result;
 	}
 
+	/**
+	 * @function buildKeywords
+	 * @param {object} myCollection 
+	 * @returns {array}
+	 */
 	buildKeywords(myCollection) {
 		let result = [];
 		// TODO : check usage of these keywords
@@ -531,153 +561,208 @@ class CollectionService {
 	}
 
 	/**
-	 * Build datasetInfo response respecting protocol used by current version of WEBC
+	 * Build DatasetSearchInfo response respecting protocol used by current version of WEBC
+	 * @function buildDatasetSearchInfo
+	 * @param {string} myCollectionId
+	 * @returns {object}
 	 */
-	buildResponse(datasetId) {
-		
-		let myCollection = this.getCollection(datasetId);
-		if (!myCollection) {
-			Logger.error(`Unable to find collection ${datasetId}`);
+	buildDatasetSearchInfo(myCollectionId) {
+
+		let _collection = this.getCollection(myCollectionId);
+		if (!_collection) {
+			Logger.error(`Unable to find collection ${myCollectionId}`);
 			return null;
 		}
 
 		// get catalog
-		let catalog = CatalogService.getCatalog(myCollection.catalogId);
+		let _catalog = CatalogService.getCatalog(_collection.catalogId);
 		// Avoid geo-spatial & catalog parameters since these are not takin part in advanced attributes
-		let avoidedAttributes = catalog.avoidedAttributes;
+		let _avoidedAttributes = _catalog.avoidedAttributes;
 
-		let paramTag = this.findTagByXmlns(myCollection.osdd, Configuration.opensearch.xmlnsParameter);
-		let timeTag = this.findTagByXmlns(myCollection.osdd, Configuration.opensearch.xmlnsTime);
+		let _paramTag = Utils.findTagByXmlns(_collection.osdd, Configuration.opensearch.xmlnsParameter);
+		let _timeTag = Utils.findTagByXmlns(_collection.osdd, Configuration.opensearch.xmlnsTime);
 
 		// find parameters in node Url with type="application/atom+xml"
-		let searchRequestDescription = this.findSearchRequestDescription(datasetId);
+		let _searchRequestDescription = this.findSearchRequestDescription(myCollectionId);
 
-		if (!searchRequestDescription) {
-			Logger.error(`Unable to find searchRequestDescription for collection ${datasetId}`);
+		if (_searchRequestDescription.length === 0) {
+			Logger.error(`Unable to find searchRequestDescription for collection ${myCollectionId}`);
 			return null;
 		}
 
+		// for startDate, endDate, startIndex, count, geom, offset
+		// use first request description find in osdd
+		let _searchRequestDescriptionFirst = _searchRequestDescription[0];
+
 		// start date
-		let startDateConf = _.find(searchRequestDescription[paramTag+'Parameter'], function (item) {
-			return item['@'].value === '{' + timeTag + 'start}';
+		let _startDateConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
+			return _item['@'].value === '{' + _timeTag + 'start}';
 		});
-		let startDate = null;
-		if (startDateConf) {
-			myCollection.parameters.start = startDateConf['@'].name;
-			if (startDateConf['@'] && startDateConf['@'].minInclusive) {
-				startDate = startDateConf['@'].minInclusive;
+		let _startDate = null;
+		if (_startDateConf) {
+			_collection.parameters.start = _startDateConf['@'].name;
+			if (_startDateConf['@'] && _startDateConf['@'].minInclusive) {
+				_startDate = _startDateConf['@'].minInclusive;
 			}
 		}
 
 		// end date
-		let stopDateConf = _.find(searchRequestDescription[paramTag+'Parameter'], function (item) {
-			return item['@'].value === '{' + timeTag + 'end}';
+		let _stopDateConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
+			return _item['@'].value === '{' + _timeTag + 'end}';
 		});
-		let endDate = null;
-		if (stopDateConf) {
-			myCollection.parameters.stop = stopDateConf['@'].name;
-			if (stopDateConf['@'] && stopDateConf['@'].maxInclusive) {
-				endDate = stopDateConf['@'].maxInclusive;
+		let _endDate = null;
+		if (_stopDateConf) {
+			_collection.parameters.stop = _stopDateConf['@'].name;
+			if (_stopDateConf['@'] && _stopDateConf['@'].maxInclusive) {
+				_endDate = _stopDateConf['@'].maxInclusive;
 			}
 		}
 
 		// startIndex
-		let startIndexConf = _.find(searchRequestDescription[paramTag+'Parameter'], function (item) {
-			return item['@'].value === '{startIndex}';
+		let _startIndexConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
+			return _item['@'].value === '{startIndex}';
 		});
-		if (startIndexConf) {
-			myCollection.parameters.startIndex = startIndexConf['@'].name;
+		if (_startIndexConf) {
+			_collection.parameters.startIndex = _startIndexConf['@'].name;
 		}
 
 		// count
-		let countConf = _.find(searchRequestDescription[paramTag+'Parameter'], function (item) {
-			return item['@'].value === '{count}';
+		let _countConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
+			return _item['@'].value === '{count}';
 		});
-		if (countConf) {
-			myCollection.parameters.count = countConf['@'].name;
-		}
-		
-		// geom
-		let geomConf = _.find(searchRequestDescription[paramTag+'Parameter'], function (item) {
-			return item['@'].value === '{geo:geometry}';
-		});
-		if (geomConf) {
-			myCollection.parameters.geom = geomConf['@'].name;
+		if (_countConf) {
+			_collection.parameters.count = _countConf['@'].name;
 		}
 
-		let outputJson = {
+		// geom
+		let _geomConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
+			return _item['@'].value === '{geo:geometry}';
+		});
+		if (_geomConf) {
+			_collection.parameters.geom = _geomConf['@'].name;
+		}
+
+		let _outputJson = {
 			datasetSearchInfo: {
-				datasetId: datasetId,
-				description: myCollection.Description,
-				keywords: this.buildKeywords(myCollection),
+				datasetId: myCollectionId,
+				description: _collection.Description,
+				keywords: this.buildKeywords(_collection),
 				downloadOptions: [], // TODO
-				attributes: this.buildAttributes(myCollection, searchRequestDescription, paramTag, avoidedAttributes),
-				startDate: startDate,
-				endDate: endDate,
-				startIndex: parseInt(searchRequestDescription['@'].indexOffset)
+				attributes: this.buildAttributes(_collection, _searchRequestDescription, _paramTag, _avoidedAttributes),
+				startDate: _startDate,
+				endDate: _endDate,
+				startIndex: parseInt(_searchRequestDescriptionFirst['@'].indexOffset)
 			}
 		};
-		return outputJson;
+		return _outputJson;
 	}
 
+	/**
+	 * Build datasetPouplationMatrix
+	 * 
+	 * @function buildDataSetPopulationMatrix
+	 * @returns {object}
+	 */
 	buildDataSetPopulationMatrix() {
-		let response = {
+		let _response = {
 			"datasetpopulationmatrix": {
 				"criteriaTitles": ["keyword", "mission", "name", "sensor", "productType", "sensorMode"],
 				"datasetPopulationValues": []
 			}
 		};
 
-		let collectionsOptionsConf = require(Configuration['collectionsOptionsPath']);
+		let _collectionsOptionsConf = require(Configuration['collectionsOptionsPath']);
 
-		this.collections.forEach((collection) => {
-			let myCollectionOptionsConf = _.find(collectionsOptionsConf, (collectionOptionsConf) => {
-				return (collection.name === collectionOptionsConf.name)
+		this.collections.forEach((_collection) => {
+			let _collectionOptionsConf = _.find(_collectionsOptionsConf, (_item) => {
+				return (_collection.name === _item.name)
 			});
-			if (myCollectionOptionsConf) {
-				let keywords = myCollectionOptionsConf.keywords || [];
-				if (keywords.length > 0) {
-					keywords.forEach((key) => {
+			if (_collectionOptionsConf) {
+				let _keywords = _collectionOptionsConf.keywords || [];
+				if (_keywords.length > 0) {
+					_keywords.forEach((_key) => {
 						// Add some hardcoded values for now just to make things work..
-						response.datasetpopulationmatrix.datasetPopulationValues.push([
-							key,
+						_response.datasetpopulationmatrix.datasetPopulationValues.push([
+							_key,
 							"REMOTE",
-							collection.name,
+							_collection.name,
 							"REMOTE",
 							"REMOTE",
 							"REMOTE",
-							collection.id,
-							collection.totalResults
+							_collection.id,
+							_collection.totalResults
 						]);
 					});
 				} else {
-					response.datasetpopulationmatrix.datasetPopulationValues.push([
+					_response.datasetpopulationmatrix.datasetPopulationValues.push([
 						"",
 						"REMOTE",
-						collection.name,
+						_collection.name,
 						"REMOTE",
 						"REMOTE",
 						"REMOTE",
-						collection.id,
-						collection.totalResults
+						_collection.id,
+						_collection.totalResults
 					]);
 				}
 			} else {
-				response.datasetpopulationmatrix.datasetPopulationValues.push([
+				_response.datasetpopulationmatrix.datasetPopulationValues.push([
 					"",
 					"REMOTE",
-					collection.name,
+					_collection.name,
 					"REMOTE",
 					"REMOTE",
 					"REMOTE",
-					collection.id,
-					collection.totalResults
+					_collection.id,
+					_collection.totalResults
 				]);
 			}
 		});
-		return response;		
+		return _response;
 	}
-	
+
+	/**
+	 * from an array of request description, build url search with concatenation of parameters
+	 * 
+	 * @function buildUrlSearch
+	 * @param {array} mySearchRequestDescription 
+	 * @returns {string}
+	 */
+	buildUrlSearch(mySearchRequestDescription) {
+		// no item => empty
+		if (mySearchRequestDescription.length === 0) {
+			return '';
+		}
+		// one item > it's easy !
+		if (mySearchRequestDescription.length === 1) {
+			return mySearchRequestDescription[0]['@'].template;
+		}
+
+		// more than 1
+		let _result = mySearchRequestDescription[0]['@'].template;
+
+		for (var _i = 1; _i < mySearchRequestDescription.length; _i++) {
+			let _template = mySearchRequestDescription[_i]['@'].template;
+			let _uri = _template.substring(0, _template.indexOf('?'));
+			if (_result.indexOf(_uri) === -1) {
+				// not the same uri !!!!
+				Logger.error("Not the same URI in request search description");
+				Logger.error("URI 1 : " + _result.substring(0, _result.indexOf('?')));
+				Logger.error("URI 2 : " + _uri);
+				break;
+			}
+			let _query = _template.substring(_template.indexOf('?') + 1);
+			let _itemsOfQuery = _query.split('&');
+			for (var _j = 0; _j < _itemsOfQuery.length; _j++) {
+				let _itemOfQuery = _itemsOfQuery[_j];
+				if (_result.indexOf(_itemOfQuery) === -1) {
+					_result += '&' + _itemOfQuery;
+				}
+			}
+		}
+		return _result;
+	}
+
 }
 
 module.exports = new CollectionService();

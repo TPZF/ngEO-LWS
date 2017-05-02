@@ -8,7 +8,8 @@
     "opensearch" : {
         "xmlnsParameter": "/opensearch/extensions/parameters/",
         "xmlnsTime": "/opensearch/extensions/time/",
-        "identifier": "dc:identifier"
+        "identifier": "dc:identifier",
+        "xmlnsOpensearch": "/spec/opensearch/1.1/"
     },
     "ssoUserId": "SSO-USER-ID"
 }

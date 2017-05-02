@@ -24,7 +24,7 @@ router.get('/:datasetId', function (req, res) {
 	if (req.query.sxcat) {
 		res.send(collection.osdd);
 	} else {
-		let datasetSearchInfo = CollectionService.buildResponse(datasetId);
+		let datasetSearchInfo = CollectionService.buildDatasetSearchInfo(datasetId);
 		if (datasetSearchInfo === null) {
 			res.status(404).send('Not found');
 		} else {

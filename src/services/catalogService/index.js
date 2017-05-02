@@ -4,6 +4,7 @@ let Catalog = require('./catalog');
 let Xml2JsonParser = require('utils/xml2jsonParser');
 let Logger = require('utils/logger');
 let Configuration = require('config');
+let Utils = require('utils/utils');
 
 /**
  * Catalog service designed to manage the available catalogs on different backends
@@ -11,21 +12,21 @@ let Configuration = require('config');
 class CatalogService {
 
 	/**
-	 * 
+	 * constructor
 	 */
 	constructor() {
 		this.catalogs = [];
-		let catalogsConf = require(Configuration['catalogPath']);
-		if (Array.isArray(catalogsConf)) {
+		let _catalogsConf = require(Configuration['catalogPath']);
+		if (Array.isArray(_catalogsConf)) {
 			// Create catalog object from conf
-			catalogsConf.forEach((catalogConf) => {
-				let options = {
-					active : true,
-					avoidedAttributes: catalogConf.avoidedAttributes,
-					mandatoryAttributes: catalogConf.mandatoryAttributes
+			_catalogsConf.forEach((_item) => {
+				let _options = {
+					active: true,
+					avoidedAttributes: _item.avoidedAttributes,
+					mandatoryAttributes: _item.mandatoryAttributes
 				};
-				let catalog = new Catalog(catalogConf.url, catalogConf.name, options);
-				this.catalogs.push(catalog);
+				let _catalog = new Catalog(_item.url, _item.name, _options);
+				this.catalogs.push(_catalog);
 			});
 		}
 	}
@@ -37,8 +38,8 @@ class CatalogService {
 	 */
 	reinitialize() {
 		if (this.catalogs.length > 0) {
-			this.catalogs.forEach((item) => {
-				item.active = true;
+			this.catalogs.forEach((_item) => {
+				_item.active = true;
 			});
 		}
 	}
@@ -54,7 +55,7 @@ class CatalogService {
 		if (typeof myActive === 'undefined') {
 			return this.catalogs;
 		} else {
-			return _.filter(this.catalogs, (item) => {return item.active===myActive;})
+			return _.filter(this.catalogs, (_item) => { return _item.active === myActive; })
 		}
 	}
 
@@ -65,7 +66,7 @@ class CatalogService {
 	 * @param {String} myId
 	 */
 	getCatalog(myId) {
-		return _.find(this.catalogs, {id: myId});
+		return _.find(this.catalogs, { id: myId });
 	}
 
 	/**
@@ -77,8 +78,7 @@ class CatalogService {
 	 * @returns {Promise}
 	 */
 	setTotalResults(myCatalog) {
-		let that = this;
-		return new Promise((resolve,reject) => {
+		return new Promise((resolve, reject) => {
 			Logger.debug('catalogService.setTotalResults(' + myCatalog.name + ')');
 			// 
 			if (Configuration.request && Configuration.request.tlsRejectUnauthorized) {
@@ -94,8 +94,9 @@ class CatalogService {
 					Logger.error('catalogService.setTotalResults - Unreachable url ' + myCatalog.url);
 					myCatalog.active = false;
 				} else {
-					Xml2JsonParser.parse(body, (result) => {
-						myCatalog.totalResults = result['os:totalResults'];
+					Xml2JsonParser.parse(body, (_result) => {
+						let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
+						myCatalog.totalResults = _result[_opensearchTag + 'totalResults'];
 						if (!myCatalog.totalResults || myCatalog.totalResults < 1) {
 							Logger.error('catalogService.setTotalResults - No results for ' + myCatalog.url);
 							myCatalog.active = false;
@@ -118,16 +119,16 @@ class CatalogService {
 	 */
 	setCollectionsSchema(myCatalog) {
 		Logger.debug('catalogService.setCollectionsSchema(' + myCatalog.name + ')');
-		let that = this;
-		let aPromises = [];
+		let _this = this;
+		let _aPromises = [];
 		myCatalog.collectionsSchema = [];
-		let iMax = parseInt(myCatalog.totalResults/50) + 1;
-		for (let i=0; i<iMax; i++) {
-			let p = that.setCollectionsSchemaFrom(myCatalog, 1 + i*50);
-			aPromises.push(p);
+		let _iMax = parseInt(myCatalog.totalResults / 50) + 1;
+		for (let _i = 0; _i < _iMax; _i++) {
+			let _p = _this.setCollectionsSchemaFrom(myCatalog, 1 + _i * 50);
+			_aPromises.push(_p);
 		}
-		Logger.debug('catalogService.setCollectionsSchema - ' + aPromises.length + ' requests to retrieve all collections for catalog ' + myCatalog.name);
-		return Promise.all(aPromises);
+		Logger.debug('catalogService.setCollectionsSchema - ' + _aPromises.length + ' requests to retrieve all collections for catalog ' + myCatalog.name);
+		return Promise.all(_aPromises);
 	}
 
 	/**
@@ -135,27 +136,26 @@ class CatalogService {
 	 * 
 	 * @function setCollectionsSchemaFrom
 	 * @param {object} myCatalog 
-	 * @param {number} start
+	 * @param {number} myStart
 	 * @returns {Promise}
 	 */
-	setCollectionsSchemaFrom(myCatalog, start) {
-		let that = this;
-		return new Promise((resolve,reject) => {
-			request(myCatalog.url + '&startRecord=' + start, (error, response, body) => {
-				Logger.debug('catalogService.setCollectionsSchemaFrom(' + myCatalog.name + ',' + start +')');
-				Logger.debug('catalogService.setCollectionsSchemaFrom - GET ' + myCatalog.url + '&startRecord='+start);
+	setCollectionsSchemaFrom(myCatalog, myStart) {
+		return new Promise((resolve, reject) => {
+			request(myCatalog.url + '&startRecord=' + myStart, (error, response, body) => {
+				Logger.debug('catalogService.setCollectionsSchemaFrom(' + myCatalog.name + ',' + myStart + ')');
+				Logger.debug('catalogService.setCollectionsSchemaFrom - GET ' + myCatalog.url + '&startRecord=' + myStart);
 				if (error) {
 					Logger.error('catalogService.setCollectionsSchemaFrom - Unable to get collections for catalog ' + myCatalog.name);
 				} else if (!body) {
 					Logger.error('catalogService.setCollectionsSchemaFrom - Unable to get body response for catalog ' + myCatalog.name);
 				} else {
 					Logger.debug('catalogService.setCollectionsSchemaFrom - Push result in collectionsSchema for catalog ' + myCatalog.name);
-					Xml2JsonParser.parse(body, (result) => {
-						myCatalog.collectionsSchema.push(result);
+					Xml2JsonParser.parse(body, (_result) => {
+						myCatalog.collectionsSchema.push(_result);
 					});
 				}
 				resolve();
-			});			
+			});
 		});
 	}
 
@@ -165,18 +165,18 @@ class CatalogService {
 	 * @returns {string}
 	 */
 	getXMLFeed(myReferrer) {
-		Logger.debug('catalogService.getDescription()');
-		let nbResults = 0;
-		let xmlEntries = '';
-		this.catalogs.forEach((catalog) => {
-			nbResults += parseInt(catalog.totalResults);
-			xmlEntries += this.setFeedEntries(myReferrer, catalog);
+		Logger.debug('catalogService.getXMLFeed');
+		let _nbResults = 0;
+		let _xmlEntries = '';
+		this.catalogs.forEach((_catalog) => {
+			_nbResults += parseInt(_catalog.totalResults);
+			_xmlEntries += this.setFeedEntries(myReferrer, _catalog);
 		});
-		let xmlDescription = '';
-		xmlDescription += this.setFeedHeader(myReferrer, nbResults);
-		xmlDescription += xmlEntries;
-		xmlDescription += this.setFeedFooter();
-		return xmlDescription;
+		let _xmlDescription = '';
+		_xmlDescription += this.setFeedHeader(myReferrer, _nbResults);
+		_xmlDescription += _xmlEntries;
+		_xmlDescription += this.setFeedFooter();
+		return _xmlDescription;
 	}
 
 	/**
@@ -186,20 +186,21 @@ class CatalogService {
 	 * @returns {string}
 	 */
 	setFeedHeader(myReferrer, myNbResults) {
-		let xmlResult = '<?xml version="1.0" encoding="UTF-8"?>';
-		xmlResult += '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:dc="http://purl.org/dc/elements/1.1/">';
-		xmlResult += '<id>' + myReferrer + '/ngeo/opensearch</id>';
-		xmlResult += '<title type="text">ngEO collections</title>';
-		xmlResult += '<subtitle type="text">Available collections in ngEO</subtitle>';
-		xmlResult += '<updated>' + new Date().toUTCString() + '</updated>';
-		xmlResult += '<author><name>ngEO Super Catalog</name></author>';
-		xmlResult += '<generator version="2.40">ngEO Super catalog</generator>';
-		xmlResult += '<os:totalResults>' + myNbResults + '</os:totalResults>';
-		xmlResult += '<os:startIndex>0</os:startIndex>';
-		xmlResult += '<os:itemsPerPage>100</os:itemsPerPage>';
-		xmlResult += '<os:Query role="request"/>';
-		xmlResult += '<link rel="search" type="application/opensearchdescription+xml" href="' + myReferrer + '/ngeo/opensearch"/>';
-		return xmlResult;
+		Logger.debug('catalogService.setFeedHeader');
+		let _xmlResult = '<?xml version="1.0" encoding="UTF-8"?>';
+		_xmlResult += '<feed xmlns="http://www.w3.org/2005/Atom" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:dc="http://purl.org/dc/elements/1.1/">';
+		_xmlResult += '<id>' + myReferrer + '/ngeo/opensearch</id>';
+		_xmlResult += '<title type="text">ngEO collections</title>';
+		_xmlResult += '<subtitle type="text">Available collections in ngEO</subtitle>';
+		_xmlResult += '<updated>' + new Date().toUTCString() + '</updated>';
+		_xmlResult += '<author><name>ngEO Super Catalog</name></author>';
+		_xmlResult += '<generator version="2.40">ngEO Super catalog</generator>';
+		_xmlResult += '<os:totalResults>' + myNbResults + '</os:totalResults>';
+		_xmlResult += '<os:startIndex>0</os:startIndex>';
+		_xmlResult += '<os:itemsPerPage>100</os:itemsPerPage>';
+		_xmlResult += '<os:Query role="request"/>';
+		_xmlResult += '<link rel="search" type="application/opensearchdescription+xml" href="' + myReferrer + '/ngeo/opensearch"/>';
+		return _xmlResult;
 	}
 
 	/**
@@ -207,8 +208,8 @@ class CatalogService {
 	 * @returns {string}
 	 */
 	setFeedFooter() {
-		let xmlResult = '</feed>';
-		return xmlResult;
+		let _xmlResult = '</feed>';
+		return _xmlResult;
 	}
 
 	/**
@@ -218,30 +219,30 @@ class CatalogService {
 	 * @returns {string}
 	 */
 	setFeedEntries(myReferrer, myCatalog) {
-		let xmlResult = '';
+		let _xmlResult = '';
 		if (myCatalog.collectionsSchema) {
-			myCatalog.collectionsSchema.forEach((collectionSchema) => {
-				if (collectionSchema.entry && Array.isArray(collectionSchema.entry)) {
-					collectionSchema.entry.forEach((entry) => {
-						xmlResult += '<entry>';
-						xmlResult += '<id>' + myReferrer + '/ngeo/' + entry['dc:identifier'] + '</id>';
-						xmlResult += '<title>' + entry.title + '</title>';
-						xmlResult += '<summary type="html"><![CDATA[';
-						xmlResult += 'Collection ' + entry.title + '<p>';
-						xmlResult += '<a href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '" target="_blank">OpenSearch description</a><br>';
-						xmlResult += '<a href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search" target="_blank">OpenSearch GeoJson</a>';
-						xmlResult += '</p>';
-						xmlResult += ']]></summary>';
-						xmlResult += '<updated>' + entry.updated + '</updated>';
-						xmlResult += '<dc:identifier>' + entry['dc:identifier'] + '</dc:identifier>';
-						xmlResult += '<link rel="alternate" type="application/vnd.geo+json" title="Product search" href="' + myReferrer + '/ngeo/catalogue/' + entry['dc:identifier'] + '/search' + '"/>';
-						xmlResult += '<link rel="search" type="application/opensearchdescription+xml" title="OpenSearch description" href="' + myReferrer + '/ngeo/opensearch/' + entry['dc:identifier'] + '"/>';
-						xmlResult += '</entry>';
+			myCatalog.collectionsSchema.forEach((_collectionSchema) => {
+				if (_collectionSchema.entry && Array.isArray(_collectionSchema.entry)) {
+					_collectionSchema.entry.forEach((_entry) => {
+						_xmlResult += '<entry>';
+						_xmlResult += '<id>' + myReferrer + '/ngeo/' + _entry['dc:identifier'] + '</id>';
+						_xmlResult += '<title>' + _entry.title + '</title>';
+						_xmlResult += '<summary type="html"><![CDATA[';
+						_xmlResult += 'Collection ' + _entry.title + '<p>';
+						_xmlResult += '<a href="' + myReferrer + '/ngeo/opensearch/' + _entry['dc:identifier'] + '" target="_blank">OpenSearch description</a><br>';
+						_xmlResult += '<a href="' + myReferrer + '/ngeo/catalogue/' + _entry['dc:identifier'] + '/search" target="_blank">OpenSearch GeoJson</a>';
+						_xmlResult += '</p>';
+						_xmlResult += ']]></summary>';
+						_xmlResult += '<updated>' + _entry.updated + '</updated>';
+						_xmlResult += '<dc:identifier>' + _entry['dc:identifier'] + '</dc:identifier>';
+						_xmlResult += '<link rel="alternate" type="application/vnd.geo+json" title="Product search" href="' + myReferrer + '/ngeo/catalogue/' + _entry['dc:identifier'] + '/search' + '"/>';
+						_xmlResult += '<link rel="search" type="application/opensearchdescription+xml" title="OpenSearch description" href="' + myReferrer + '/ngeo/opensearch/' + _entry['dc:identifier'] + '"/>';
+						_xmlResult += '</entry>';
 					})
 				}
 			});
 		}
-		return xmlResult;
+		return _xmlResult;
 	}
 }
 
