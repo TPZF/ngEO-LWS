@@ -86,6 +86,7 @@
 	"proxyUrl": "http://localhost:3000/proxy?url=",
 	"search": {
 		"geometryPrecision": 2,
+		// labels for advanced crietrias
 		"advancedCriteriaLabels": {
 			"acquisitionType": "Acquisition type",
 			"ailz": "ANX Ill. Zen.",
@@ -163,7 +164,8 @@
 			"wrsLongitudeGrid": "Track"
 		}
 	},
-	"searchResults": {
+	// pagination for shopcart
+	"shopCartResults": {
 		"countPerPage": 50
 	},
 	"keyDates": [
