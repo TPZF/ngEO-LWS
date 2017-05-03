@@ -9,7 +9,11 @@
         "xmlnsParameter": "/opensearch/extensions/parameters/",
         "xmlnsTime": "/opensearch/extensions/time/",
         "identifier": "dc:identifier",
-        "xmlnsOpensearch": "/spec/opensearch/1.1/"
+        "xmlnsOpensearch": "/spec/opensearch/1.1/",
+        "xmlnsGeo": "/opensearch/extensions/geo/"
     },
-    "ssoUserId": "SSO-USER-ID"
+    "ssoUserId": "SSO-USER-ID",
+	"searchResults": {
+		"defaultCountPerPage": 50
+	}
 }

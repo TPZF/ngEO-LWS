@@ -5,9 +5,19 @@
 Put all credentials (username, password) for each catalogs
 Structure :
 credentials : Array of credential
-credential : {
-    'name of catalog' : { username, password }
+
+~~~~json
+{
+    "credentials" : [
+        {
+            "CATALOGID": {
+                "username": "myusername",
+                "password": "mypassword"
+            }
+        }
+    ]
 }
+~~~~
 
 ## commons.json
 
@@ -18,8 +28,9 @@ You cant find :
 - catalogPath : path to json file with description of all catalogs in QS
 - collectionsOptionsPath : path to json file with options parameters for collections (keywords)
 - collectionService.refreshDelay : delay to refresh all collections informations (total results, attributes)
-- opensearch : parameters to find information in opensearch descriptions
+- opensearch : parameters to find information in opensearch descriptions (param, geo, time, ...)
 - ssoUserId : value of userId in header transmitted by SSO
+- searchResults.defaultCountPerPage : default value for pagination on collections - replaced by osdd count value if exists
 
 ## development.json / test.json / production.json
 
