@@ -115,6 +115,42 @@ let _buildSearchRequestWithValue = function (myUrl, myParams) {
 };
 
 /**
+ * With myUrl like http://host/query?key1=val1&key2={val2?}&...
+ * and myParam like val2
+ * find key = key2
+ * 
+ * @function _findKeyInSearchRequestWithValue
+ * @param {*} myUrl 
+ * @param {*} myParam 
+ */
+let _findKeyInSearchRequestWithValue = function (myUrl, myParam) {
+	let _result = '';
+	// remove the begin until first '?'
+	let _query = myUrl.substring(myUrl.indexOf('?') + 1);
+	let _itemsOfQuery = _query.split('&');
+	for (var _i = 0; _i < _itemsOfQuery.length; _i++) {
+		let _itemOfQuery = _itemsOfQuery[_i];
+		// if no equal operator => continue
+		if (_itemOfQuery.indexOf('=') === -1) {
+			continue;
+		}
+		let _itemsOfParam = _itemOfQuery.split('=');
+		let _testParam = '';
+		if (_itemsOfParam[1].indexOf('?') === -1) {
+			_testParam = '{' + myParam + '}';
+		} else {
+			_testParam = '{' + myParam + '?}';
+		}
+		if (_itemsOfParam[1] === _testParam) {
+			_result = _itemsOfParam[0];
+			break;
+		}
+	}
+	return _result;
+};
+
+
+/**
  * Collection service designed to manage the available collections on different backends
  */
 class CollectionService {
@@ -325,7 +361,6 @@ class CollectionService {
 						Xml2JsonParser.parse(body, (_result) => {
 							let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
 							Logger.debug(`collectionService.setTotalResults - Total results for ${myCollection.id} = ${_result[_opensearchTag + 'totalResults']}`);
-							// TODO and FIXME => os: is a prefix from xmlns
 							myCollection.totalResults = _result[_opensearchTag + 'totalResults'];
 							if (!myCollection.totalResults || myCollection.totalResults < 1) {
 								myCollection.totalResults = '?';
@@ -390,7 +425,6 @@ class CollectionService {
 			Logger.error('collectionService.search - collection ' + myCollectionId + ' not found !');
 			return myOptions.onError('404');
 		}
-
 		// map params with those of collection
 		let _searchParams = {};
 		for (var _param in myOptions.params) {
@@ -401,6 +435,7 @@ class CollectionService {
 
 		let _searchUrlRequest = _buildSearchRequestWithParam(_collection.url_search, _searchParams);
 		_searchUrlRequest += this.addMandatoryAttributes(_collection);
+
 		let _startTime = Date.now();
 		Logger.info(`Searching for backend with ${_searchUrlRequest}`);
 		request(_searchUrlRequest, function (error, response, body) {
@@ -467,12 +502,12 @@ class CollectionService {
 
 	/**
 	 * 
-	 * @function buildParameter
+	 * @function buildAdvancedCriteria
 	 * @param {object} myParameter
 	 * @param {string} myParamTag
 	 * @returns {object}
 	 */
-	buildParameter(myParameter, myParamTag) {
+	buildAdvancedCriteria(myParameter, myParamTag) {
 		let _res;
 		if (myParameter[myParamTag + 'Option']) {
 			// Will be rendered as checkboxes in case when maxOccurs > 1, selectbox otherwise
@@ -529,12 +564,12 @@ class CollectionService {
 					if (!myCollection.parameters[_parameter['@'].name]) {
 						myCollection.parameters[_parameter['@'].name] = _parameter['@'].name;
 					}
-					let _newParameter = this.buildParameter(_parameter, myParamTag);
-					if (_newParameter) {
+					let _newAdvancedCriteria = this.buildAdvancedCriteria(_parameter, myParamTag);
+					if (_newAdvancedCriteria) {
 						if (!_.find(_result, (_r) => {
-							return _r.id === _newParameter.id;
+							return _r.id === _newAdvancedCriteria.id;
 						})) {
-							_result.push(_newParameter);
+							_result.push(_newAdvancedCriteria);
 						}
 					}
 				}
@@ -581,6 +616,7 @@ class CollectionService {
 
 		let _paramTag = Utils.findTagByXmlns(_collection.osdd, Configuration.opensearch.xmlnsParameter);
 		let _timeTag = Utils.findTagByXmlns(_collection.osdd, Configuration.opensearch.xmlnsTime);
+		let _geoTag = Utils.findTagByXmlns(_collection.osdd, Configuration.opensearch.xmlnsGeo);
 
 		// find parameters in node Url with type="application/atom+xml"
 		let _searchRequestDescription = this.findSearchRequestDescription(myCollectionId);
@@ -594,53 +630,7 @@ class CollectionService {
 		// use first request description find in osdd
 		let _searchRequestDescriptionFirst = _searchRequestDescription[0];
 
-		// start date
-		let _startDateConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
-			return _item['@'].value === '{' + _timeTag + 'start}';
-		});
-		let _startDate = null;
-		if (_startDateConf) {
-			_collection.parameters.start = _startDateConf['@'].name;
-			if (_startDateConf['@'] && _startDateConf['@'].minInclusive) {
-				_startDate = _startDateConf['@'].minInclusive;
-			}
-		}
-
-		// end date
-		let _stopDateConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
-			return _item['@'].value === '{' + _timeTag + 'end}';
-		});
-		let _endDate = null;
-		if (_stopDateConf) {
-			_collection.parameters.stop = _stopDateConf['@'].name;
-			if (_stopDateConf['@'] && _stopDateConf['@'].maxInclusive) {
-				_endDate = _stopDateConf['@'].maxInclusive;
-			}
-		}
-
-		// startIndex
-		let _startIndexConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
-			return _item['@'].value === '{startIndex}';
-		});
-		if (_startIndexConf) {
-			_collection.parameters.startIndex = _startIndexConf['@'].name;
-		}
-
-		// count
-		let _countConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
-			return _item['@'].value === '{count}';
-		});
-		if (_countConf) {
-			_collection.parameters.count = _countConf['@'].name;
-		}
-
-		// geom
-		let _geomConf = _.find(_searchRequestDescriptionFirst[_paramTag + 'Parameter'], (_item) => {
-			return _item['@'].value === '{geo:geometry}';
-		});
-		if (_geomConf) {
-			_collection.parameters.geom = _geomConf['@'].name;
-		}
+		let _newParamValues = this.buildParameters(_collection, _searchRequestDescriptionFirst, _paramTag, _timeTag, _geoTag);
 
 		let _outputJson = {
 			datasetSearchInfo: {
@@ -649,12 +639,70 @@ class CollectionService {
 				keywords: this.buildKeywords(_collection),
 				downloadOptions: [], // TODO
 				attributes: this.buildAttributes(_collection, _searchRequestDescription, _paramTag, _avoidedAttributes),
-				startDate: _startDate,
-				endDate: _endDate,
-				startIndex: parseInt(_searchRequestDescriptionFirst['@'].indexOffset)
+				startDate: _newParamValues.start,
+				endDate: _newParamValues.stop,
+				startIndex: parseInt(_searchRequestDescriptionFirst['@'].indexOffset),
+				countPerPage: _newParamValues.count
 			}
 		};
 		return _outputJson;
+	}
+
+	/**
+	 * Build parameters, in order to match params from webc to collection search url template
+	 * Search in request description, and if not found search on template url request
+	 * 
+	 * @function buildParameters
+	 * @param {object} myCollection 
+	 * @param {object} mySearchRequestDescriptionFirst 
+	 * @param {string} myParamTag 
+	 * @param {string} myTimeTag 
+	 * @param {string} myGeoTag 
+	 */
+	buildParameters(myCollection, mySearchRequestDescriptionFirst, myParamTag, myTimeTag, myGeoTag) {
+
+		let _result = {
+			start: null,
+			stop: null,
+			startIndex: 0,
+			count: Configuration.searchResults.defaultCountPerPage,
+			bbox: null,
+			geom: null
+		};
+
+		let _aParameters = [
+			{key: 'start', tag: myTimeTag+'start', value: 'minInclusive'},
+			{key: 'stop', tag: myTimeTag+'end', value: 'maxInclusive'},
+			{key: 'startIndex', tag: 'startIndex'},
+			{key: 'count', tag: 'count', value: 'maxInclusive'},
+			{key: 'bbox', tag: myGeoTag+'box'},
+			{key: 'geom', tag: myGeoTag+'geometry'}
+		];
+
+		_aParameters.forEach( (_param) => {
+			let _key = _param.key;
+			let _tag = _param.tag;
+			// find in request description parameters
+			let _findInRequestDescription = _.find(mySearchRequestDescriptionFirst[myParamTag + 'Parameter'], (_item) => {
+				return _item['@'].value === '{' + _tag + '}';
+			});
+			if (typeof _findInRequestDescription !== 'undefined') {
+				if (_findInRequestDescription['@']) {
+					myCollection.parameters[_key] = _findInRequestDescription['@'].name;
+					if (_param.value) {
+						if (_findInRequestDescription['@'][_param.value]) {
+							_result[_key] = _findInRequestDescription['@'][_param.value];
+						}
+					}
+				}
+			} else {
+				let _keyQuery = _findKeyInSearchRequestWithValue(myCollection.url_search, _tag);
+				if (_keyQuery !== '') {
+					myCollection.parameters[_key] = _keyQuery;
+				}
+			}
+		});
+		return _result;
 	}
 
 	/**
