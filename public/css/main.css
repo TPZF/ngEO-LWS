@@ -2171,31 +2171,32 @@ span.ui-datebox-nopad {
   display: inline-block;
   border-radius: 3px;
   background: url('../css/images/icons-18-white.png') no-repeat -432px 0;
+  background-color: rgba(120, 120, 120, 0.5);
 }
-/* line 133, client/css/tableView.less */
+/* line 134, client/css/tableView.less */
 .table-view-checkbox.ui-icon-checkbox-on,
 .browse-visibility-checkbox.ui-icon-checkbox-on {
   background-color: #4596CE;
 }
-/* line 136, client/css/tableView.less */
+/* line 137, client/css/tableView.less */
 .ui-icon-checkbox-off {
   background-color: rgba(120, 120, 120, 0.5);
 }
-/* line 140, client/css/tableView.less */
+/* line 141, client/css/tableView.less */
 .focus-checkbox {
   background: url('../images/eye-white.png') no-repeat center center;
 }
-/* line 143, client/css/tableView.less */
+/* line 144, client/css/tableView.less */
 .focus-checkbox.ui-icon-checkbox-off {
   background: none;
 }
-/* line 147, client/css/tableView.less */
+/* line 148, client/css/tableView.less */
 .directDownload {
   background: url('../images/save.png') no-repeat center center;
   display: inline-block;
   border-radius: 3px;
 }
-/* line 153, client/css/tableView.less */
+/* line 154, client/css/tableView.less */
 .multipleBrowse {
   background: url('../images/multipleBrowseBtn.png') no-repeat center center;
   height: 16px;
@@ -2204,11 +2205,11 @@ span.ui-datebox-nopad {
   margin-right: -8px;
   display: inline-block;
 }
-/* line 162, client/css/tableView.less */
+/* line 163, client/css/tableView.less */
 .multipleBrowse:hover {
   cursor: pointer;
 }
-/* line 167, client/css/tableView.less */
+/* line 168, client/css/tableView.less */
 .outer-container {
   background-color: #ccc;
   position: absolute;
@@ -2217,21 +2218,21 @@ span.ui-datebox-nopad {
   right: 300px;
   bottom: 40px;
 }
-/* line 177, client/css/tableView.less */
+/* line 178, client/css/tableView.less */
 .inner-container {
   height: 81%;
   overflow: hidden;
   position: relative;
 }
-/* line 184, client/css/tableView.less */
+/* line 185, client/css/tableView.less */
 .table-header {
   position: relative;
 }
-/* line 188, client/css/tableView.less */
+/* line 189, client/css/tableView.less */
 .table-body {
   overflow: auto;
 }
-/* line 193, client/css/tableView.less */
+/* line 194, client/css/tableView.less */
 .header-cell {
   background-color: yellow;
   height: 40px;
@@ -2239,37 +2240,37 @@ span.ui-datebox-nopad {
 /*
  * Sorting
  */
-/* line 202, client/css/tableView.less */
+/* line 203, client/css/tableView.less */
 .sorting_asc {
   background: url('../images/sort_asc.png') no-repeat center right;
 }
-/* line 203, client/css/tableView.less */
+/* line 204, client/css/tableView.less */
 .sorting_desc {
   background: url('../images/sort_desc.png') no-repeat center right;
 }
 /**
  * Style for footer elements
  */
-/* line 211, client/css/tableView.less */
+/* line 212, client/css/tableView.less */
 .table-filter label {
   font-size: 13px;
   font-weight: bold;
 }
-/* line 216, client/css/tableView.less */
+/* line 217, client/css/tableView.less */
 .table-filter input {
   display: inline;
   width: auto;
 }
-/* line 222, client/css/tableView.less */
+/* line 223, client/css/tableView.less */
 .table-middleButtons {
   text-align: center;
 }
-/* line 226, client/css/tableView.less */
+/* line 227, client/css/tableView.less */
 .table-rightButtons {
   text-align: right;
 }
 /** underline the product id for direct download */
-/* line 231, client/css/tableView.less */
+/* line 232, client/css/tableView.less */
 .ui-direct-download {
   text-decoration: underline;
   cursor: pointer;

@@ -2421,221 +2421,222 @@ module.exports = new DownloadManagers();
 });
 
 require.register("dataAccess/model/simpleDataAccessRequest", function(exports, require, module) {
- var Configuration = require('configuration');
- var SearchResults = require('searchResults/model/searchResults');
- var DataAccessRequest = require('dataAccess/model/dataAccessRequest');
- var ShopCartCollection = require('shopcart/model/shopcartCollection');
+var Configuration = require('configuration');
+var SearchResults = require('searchResults/model/searchResults');
+var DataAccessRequest = require('dataAccess/model/dataAccessRequest');
+var ShopCartCollection = require('shopcart/model/shopcartCollection');
 
- /**
-  * This module deals with the creation and submission of simple data access requests 
-  * It extends DataAccessRequest module
-  */
- var SimpleDataAccessRequest = {
+/**
+ * This module deals with the creation and submission of simple data access requests 
+ * It extends DataAccessRequest module
+ */
+var SimpleDataAccessRequest = {
 
-   url: Configuration.baseServerUrl + "/simpleDataAccessRequests",
+	url: Configuration.baseServerUrl + "/simpleDataAccessRequests",
 
-   name: "download",
+	name: "download",
 
-   rejectedProductsNB: 0, //nb of products checked but not having a url 
+	rejectedProductsNB: 0, //nb of products checked but not having a url 
 
-   productURLs: [],
+	productURLs: [],
 
-   productSizes: [],
+	productSizes: [],
 
-   totalSize: 0,
+	totalSize: 0,
 
-   dataType: null,
+	dataType: null,
 
-   /**
-    * Reset specific parameters of a simple DAR
-    */
-   resetRequest: function() {
-
-     this.rejectedProductsNB = 0;
-     this.productURLs = [];
-     this.hostedProcessId = null;
-     this.name = "download";
-   },
-
-   /**
-	 *	Get dataset included in request
+	/**
+	 * Reset specific parameters of a simple DAR
 	 */
-	getDataType: function() {
-    return this.dataType;
+	resetRequest: function () {
+
+		this.rejectedProductsNB = 0;
+		this.productURLs = [];
+		this.hostedProcessId = null;
+		this.name = "download";
 	},
 
-   /**
-    * Get the current request to submit
-    */
-   getRequest: function() {
+	/**
+	*	Get dataset included in request
+	*/
+	getDataType: function () {
+		return this.dataType;
+	},
 
-     // The JSON to send to the server
-     if (this.hostedProcessId) {
-       this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequests";
-       var params = [];
-       // Add hosted processing parameters
-       for (var i = 0; i < this.productURLs.length; i++) {
-         params.push({
-           name: "productURL",
-           value: this.productURLs[i]
-         });
-       }
-       params = params.concat(this.parameters);
+	/**
+	 * Get the current request to submit
+	 */
+	getRequest: function () {
 
-       var request = {
-         hostedProcessDataAccessRequest: {
-           requestStage: this.requestStage,
-           hostedProcessId: this.hostedProcessId,
-           downloadLocation: this.downloadLocation,
-           parameter: params,
-           name: this.name
-         }
-       };
-     } else {
-       this.url = Configuration.baseServerUrl + "/simpleDataAccessRequests";
+		// The JSON to send to the server
+		if (this.hostedProcessId) {
+			this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequests";
+			var params = [];
+			// Add hosted processing parameters
+			for (var i = 0; i < this.productURLs.length; i++) {
+				params.push({
+					name: "productURL",
+					value: this.productURLs[i]
+				});
+			}
+			params = params.concat(this.parameters);
 
-       var request = {
-         simpledataaccessrequest: {
-           requestStage: this.requestStage,
-           downloadLocation: this.downloadLocation,
-           productURLs: [],
-           name: this.name
-         }
-       };
-       // Add create bulk order if needed
-       if (this.createBulkOrder) {
-         request.simpledataaccessrequest.createBulkOrder = true;
-       }
+			var request = {
+				hostedProcessDataAccessRequest: {
+					requestStage: this.requestStage,
+					hostedProcessId: this.hostedProcessId,
+					downloadLocation: this.downloadLocation,
+					parameter: params,
+					name: this.name
+				}
+			};
+		} else {
+			this.url = Configuration.baseServerUrl + "/simpleDataAccessRequests";
 
-       // Transform product URLs
-       for (var i = 0; i < this.productURLs.length; i++) {
-         var self = this;
-         var _findExpectedSize = _.find(this.productSizes, function(item) {
-           return item.productURL === self.productURLs[i];
-         });
-         var _expectedSize = "0";
-         if (_findExpectedSize) {
-           _expectedSize = _findExpectedSize.productSize;
-         }
-         request.simpledataaccessrequest.productURLs.push({
-           productURL: this.productURLs[i],
-           expectedSize: _expectedSize
-         });
-       }
-     }
+			var request = {
+				simpledataaccessrequest: {
+					requestStage: this.requestStage,
+					downloadLocation: this.downloadLocation,
+					productURLs: [],
+					name: this.name
+				}
+			};
+			// Add create bulk order if needed
+			if (this.createBulkOrder) {
+				request.simpledataaccessrequest.createBulkOrder = true;
+			}
 
-     //console.log(request);
+			// Transform product URLs
+			for (var i = 0; i < this.productURLs.length; i++) {
+				var self = this;
+				var _findExpectedSize = _.find(this.productSizes, function (item) {
+					return item.productURL === self.productURLs[i];
+				});
+				var _expectedSize = "0";
+				if (_findExpectedSize) {
+					_expectedSize = _findExpectedSize.productSize;
+				}
+				request.simpledataaccessrequest.productURLs.push({
+					productURL: this.productURLs[i],
+					expectedSize: _expectedSize
+				});
+			}
+		}
 
-     return request;
-   },
+		//console.log(request);
 
-   /** 
-    * Get message the display when a simple DAT creation is triggered
-    */
-   getSpecificMessage: function() {
+		return request;
+	},
 
-     /*		var collapsibleContent = "<h5>Selected Products : " + (this.productURLs.length + this.rejectedProductsNB) + "<h5>";
-  				
-  				if (this.rejectedProductsNB == 0){
-  					collapsibleContent += "<p>All the selected items have been included in the request.<p>";
-  				}else{
-  					collapsibleContent += "<p> " + this.rejectedProductsNB + " products are not included in the request since they do not have a url.";
-  				}
-  				
-  				return collapsibleContent; */
+	/** 
+	 * Get message the display when a simple DAT creation is triggered
+	 */
+	getSpecificMessage: function () {
 
-     if (this.productURLs.length == 1) {
-       return "<p>One product is included in the request.</p>";
-     } else {
-       return "<p>" + this.productURLs.length + " products are included in the request.</p>";
-     }
-   },
+		/*		var collapsibleContent = "<h5>Selected Products : " + (this.productURLs.length + this.rejectedProductsNB) + "<h5>";
+		   	
+			 if (this.rejectedProductsNB == 0){
+			   collapsibleContent += "<p>All the selected items have been included in the request.<p>";
+			 }else{
+			   collapsibleContent += "<p> " + this.rejectedProductsNB + " products are not included in the request since they do not have a url.";
+			 }
+		   	
+			 return collapsibleContent; */
+
+		if (this.productURLs.length == 1) {
+			return "<p>One product is included in the request.</p>";
+		} else {
+			return "<p>" + this.productURLs.length + " products are included in the request.</p>";
+		}
+	},
 
 
-   /** 
-    * Set the list of products for the DAR 
-    * if the file name is empty the product is rejected
-    */
-   setProducts: function(products) {
-     this.productURLs = SearchResults.getProductUrls(products);
-     this.productSizes = SearchResults.getProductSizes(products);
-     this.rejectedProductsNB = products.length - this.productURLs.length;
-     // dataType = name of shopcart or catalog
-     if (_.find(products, function(product) {
-       return (typeof product.properties.shopcart_id !== 'undefined');
-      })) {
-      this.dataType = ShopCartCollection._current.get('name');
-     } else {
-       this.dataType = products[0].properties.originDatasetId;
-     }
-   },
+	/** 
+	 * Set the list of products for the DAR 
+	 * if the file name is empty the product is rejected
+	 */
+	setProducts: function (products) {
+		this.productURLs = SearchResults.getProductUrls(products);
+		this.productSizes = SearchResults.getProductSizes(products);
+		this.rejectedProductsNB = products.length - this.productURLs.length;
+		// dataType = name of shopcart or catalog
+		if (_.find(products, function (product) {
+			return (typeof product.properties.shopcart_id !== 'undefined');
+		})) {
+			this.dataType = ShopCartCollection._current.get('name');
+		} else {
+			this.dataType = products[0].properties.originDatasetId;
+		}
+	},
 
-   /**
-    * Check whether the request is valid or not
-    */
-   isValid: function() {
+	/**
+	 * Check whether the request is valid or not
+	 */
+	isValid: function () {
 
-     var dataAccessConfig = Configuration.localConfig.dataAccessRequestStatuses;
+		var dataAccessConfig = Configuration.localConfig.dataAccessRequestStatuses;
 
-     // If request not valid when no download manager then display the specific message
-     // the validate button is not disabled since when the user selects a download manager the request
-     if (this.downloadLocation.DownloadManagerId == "") {
-       this.serverResponse = dataAccessConfig.invalidDownloadManagersError;
-       return false;
-     }
+		// If request not valid when no download manager then display the specific message
+		// the validate button is not disabled since when the user selects a download manager the request
+		if (this.downloadLocation.DownloadManagerId == "") {
+			this.serverResponse = dataAccessConfig.invalidDownloadManagersError;
+			return false;
+		}
 
-     // Request not valid when no product urls set then display the specific message
-     if (this.productURLs.length == 0) {
-       this.serverResponse = Configuration.localConfig.simpleDataAccess.invalidProductURLsError;
-       this.trigger('RequestNotValidEvent');
-       return false;
-     }
+		// Request not valid when no product urls set then display the specific message
+		if (this.productURLs.length == 0) {
+			this.serverResponse = Configuration.localConfig.simpleDataAccess.invalidProductURLsError;
+			this.trigger('RequestNotValidEvent');
+			return false;
+		}
 
-     // Initial request : nominal case
-     if (this.step == 0 &&
-       this.id == "" &&
-       this.requestStage == dataAccessConfig.validationRequestStage) {
-       return true;
-     }
+		// Initial request : nominal case
+		if (this.step == 0 &&
+			this.id == "" &&
+			this.requestStage == dataAccessConfig.validationRequestStage) {
+			return true;
+		}
 
-     // Second stage submission with and without bulk order
-     if (this.step == 1 &&
-       this.id != "" &&
-       this.requestStage == dataAccessConfig.confirmationRequestStage) {
-       return true;
-     }
+		// Second stage submission with and without bulk order
+		if (this.step == 1 &&
+			this.id != "" &&
+			this.requestStage == dataAccessConfig.confirmationRequestStage) {
+			return true;
+		}
 
-     // Disable the request validation if the request is not valid
-     this.trigger('RequestNotValidEvent');
+		// Disable the request validation if the request is not valid
+		this.trigger('RequestNotValidEvent');
 
-     return false;
-   },
+		return false;
+	},
 
-   /** 
-    * Specific simple DAR additional processing after validation request
-    */
-   validationProcessing: function(dataAccessRequestStatus) {
+	/** 
+	 * Specific simple DAR additional processing after validation request
+	 */
+	validationProcessing: function (dataAccessRequestStatus) {
 
-     // Calculate the total download estimated size  
-     this.totalSize = 0;
-     var productStatuses = dataAccessRequestStatus.productStatuses;
-     var aPromises = [];
-     for (var i = 0; i < productStatuses.length; i++) {
-       var _productSize = _.find(this.productSizes, function(item) {
-         return item.productURL === productStatuses[i].productURL;
-       });
-       if (_productSize && _productSize.productSize) {
-          productStatuses[i].expectedSize = _expectedSize;
-          this.totalSize += parseInt(_expectedSize);
-       }
-     }
-   }
- }
+		// Calculate the total download estimated size  
+		this.totalSize = 0;
+		var productStatuses = dataAccessRequestStatus.productStatuses;
+		var aPromises = [];
+		for (var i = 0; i < productStatuses.length; i++) {
+			var _productSize = _.find(this.productSizes, function (item) {
+				return item.productURL === productStatuses[i].productURL;
+			});
+			if (_productSize && _productSize.productSize) {
+				var _expectedSize = _productSize.productSize;
+				productStatuses[i].expectedSize = _expectedSize;
+				this.totalSize += parseInt(_expectedSize);
+			}
+		}
+	}
+}
 
- // Add DataAccessRequest methods to SimpleDataAccessRequest
- _.extend(SimpleDataAccessRequest, DataAccessRequest);
+// Add DataAccessRequest methods to SimpleDataAccessRequest
+_.extend(SimpleDataAccessRequest, DataAccessRequest);
 
- module.exports = SimpleDataAccessRequest;
+module.exports = SimpleDataAccessRequest;
 });
 
 require.register("dataAccess/model/standingOrderDataAccessRequest", function(exports, require, module) {
@@ -4281,10 +4282,11 @@ var Dataset = Backbone.Model.extend({
 		startDate: null,
 		endDate: null,
 		validityEndDate: null,
-		startIndex: 1
+		startIndex: 1,
+		countPerPage: null
 	},
 
-	initialize: function() {
+	initialize: function () {
 		// The base url to retreive the dataset Search Info
 		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('datasetId');
 		this.listenTo(this, "error", this.onError);
@@ -4296,7 +4298,7 @@ var Dataset = Backbone.Model.extend({
 	/** 
 	 * Call when the model cannot be fetched from the server
 	 */
-	onError: function(model, response) {
+	onError: function (model, response) {
 		if (response.status == 0) {
 			location.reload();
 		}
@@ -4305,26 +4307,26 @@ var Dataset = Backbone.Model.extend({
 	/**
 	 * Check if the keywords exists
 	 */
-	hasKeyword: function(val) {
+	hasKeyword: function (val) {
 		return this.get('keywords').indexOf(val) >= 0;
 	},
 
 	/**
 	 * Parse the response from server
 	 */
-	parse: function(response, options) {
+	parse: function (response, options) {
 		var resp = {};
 		if (response.datasetSearchInfo) {
 			resp.description = response.datasetSearchInfo.description;
 			if (_.isArray(response.datasetSearchInfo.downloadOptions)) {
 				// Remove reserved names
-				resp.downloadOptions = _.reject(response.datasetSearchInfo.downloadOptions, function(o) {
+				resp.downloadOptions = _.reject(response.datasetSearchInfo.downloadOptions, function (o) {
 					return _.contains(_ReservedNames, o.argumentName);
 				});
 			}
 			if (_.isArray(response.datasetSearchInfo.attributes)) {
 				// Remove reserved names
-				resp.attributes = _.reject(response.datasetSearchInfo.attributes, function(a) {
+				resp.attributes = _.reject(response.datasetSearchInfo.attributes, function (a) {
 					return _.contains(_ReservedNames, a.id);
 				});
 			}
@@ -4353,8 +4355,12 @@ var Dataset = Backbone.Model.extend({
 				resp.validityEndDate.setUTCFullYear(resp.endDate.getUTCFullYear() + 5);
 			}
 
-			if ( response.datasetSearchInfo.hasOwnProperty('startIndex') ) {
+			if (response.datasetSearchInfo.hasOwnProperty('startIndex')) {
 				resp.startIndex = response.datasetSearchInfo.startIndex;
+			}
+
+			if (response.datasetSearchInfo.hasOwnProperty('countPerPage')) {
+				resp.countPerPage = response.datasetSearchInfo.countPerPage;
 			}
 		}
 		return resp;
@@ -8865,14 +8871,14 @@ var ProductService = require('ui/productService');
 /**
  * Extract the download options from the product url
  */
-var _getProductDownloadOptions = function(feature) {
+var _getProductDownloadOptions = function (feature) {
 
 	var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
 	return DownloadOptions.extractParamsFromUrl(productUrl);
 };
 
 
-var FeatureCollection = function() {
+var FeatureCollection = function () {
 
 	// Dictionary for features containing children feature collections
 	this.children = {};
@@ -8889,8 +8895,8 @@ var FeatureCollection = function() {
 	// The last page
 	this.lastPage = 0;
 
-	// Store the count per page
-	this.countPerPage = Configuration.get('searchResults.countPerPage', 100);
+	// Store the count per page (retrieve from configuration file)
+	this.countPerPage = Configuration.get('shopCartResults.countPerPage', 100);
 
 	// Store the number of total results
 	this.totalResults = -1;
@@ -8923,14 +8929,14 @@ var FeatureCollection = function() {
 	var self = this;
 
 	// fetch the results using the given start index
-	var _fetch = function(startIndex, currentUrl) {
+	var _fetch = function (startIndex, currentUrl) {
 		var searchUrl = _url + "&startIndex=" + startIndex;
 
 		$.ajax({
 			url: searchUrl,
 			dataType: 'json'
 
-		}).done(function(data) {
+		}).done(function (data) {
 
 			if (self.parse)
 				data = self.parse(data);
@@ -8962,7 +8968,7 @@ var FeatureCollection = function() {
 					self.trigger('endLoading', 0);
 				}
 			}
-		}).fail(function(jqXHR, textStatus, errorThrown) {
+		}).fail(function (jqXHR, textStatus, errorThrown) {
 			if (jqXHR.status == 0) {
 				location.reload();
 			} else {
@@ -8975,12 +8981,12 @@ var FeatureCollection = function() {
 	};
 
 	// Add features to collection
-	this.addFeatures = function(features) {
+	this.addFeatures = function (features) {
 		for (var i = 0; i < features.length; i++) {
 
 			// HACK: currently server returns the same id for all children so we modify it to be unique
 			var feature = features[i];
-			if ( this.parent != null ) {
+			if (this.parent != null) {
 				feature.id = feature.id + i;
 			}
 			// HACK: store feature collection on each feature to avoid multiple problems on browse changing
@@ -9009,7 +9015,7 @@ var FeatureCollection = function() {
 	 * 
 	 * @see client/js/shopcart/model#deleteHighlights()
 	 */
-	this.removeFeatures = function(features) {
+	this.removeFeatures = function (features) {
 		this.unselect(features);
 		this.unsetHighlight(features);
 		this.features = _.difference(this.features, features);
@@ -9025,16 +9031,16 @@ var FeatureCollection = function() {
 	 * 
 	 * @see client/js/ui/tableView#filterData()
 	 */
-	this.showFeatures = function(features) {
+	this.showFeatures = function (features) {
 		self.trigger('show:features', features, self);
-		if ( features.length > 0 ) {
+		if (features.length > 0) {
 			// HACK: highlight all highlights, selected all selection for the moment
 			this.trigger("highlightFeatures", this.highlights, this);
 			this.trigger("selectFeatures", this.selections, this);
 		}
 
 	};
-	
+
 	/**
 	 * Hide features of collection
 	 * 
@@ -9042,27 +9048,31 @@ var FeatureCollection = function() {
 	 * @param {array} features
 	 * 
 	 * @see client/js/ui/tableView#filterData()
-	 */ 
-	this.hideFeatures = function(features) { 
+	 */
+	this.hideFeatures = function (features) {
 		self.trigger('hide:features', features, self);
 	};
 
 	// Show browses
-	this.showBrowses = function(features) {
+	this.showBrowses = function (features) {
 		self.trigger('show:browses', features, self);
 	};
 
 	// Hide browses
-	this.hideBrowses = function(features) {
+	this.hideBrowses = function (features) {
 		self.trigger('hide:browses', features, self);
 	};
 
 
 	// Launch a search
-	this.search = function(baseUrl) {
+	this.search = function (baseUrl) {
 
 		// Build base url
 		_url = baseUrl;
+		// if search on dataset, get counterPerPage from dataset
+		if (this.dataset) {
+			this.countPerPage = this.dataset.get('countPerPage');
+		}
 		_url += "&count=" + this.countPerPage;
 
 		// Reset the cache
@@ -9075,13 +9085,13 @@ var FeatureCollection = function() {
 	};
 
 	// Reset the results
-	this.reset = function() {
+	this.reset = function () {
 		// Reset all highlighted/selected features
 		this.unsetHighlight(this.highlights);
 		this.unselect(this.selections);
 
 		// Reset children
-		for ( var x in this.children ) {
+		for (var x in this.children) {
 			this.removeChild(x);
 		}
 		this.children = {};
@@ -9098,7 +9108,7 @@ var FeatureCollection = function() {
 	};
 
 	// Method to change the current page of results
-	this.changePage = function(page) {
+	this.changePage = function (page) {
 		if (page >= 1 && page <= this.lastPage) {
 			this.currentPage = page;
 			this.features.length = 0;
@@ -9107,7 +9117,7 @@ var FeatureCollection = function() {
 			this.unselect(this.selections);
 
 			// Reset children
-			for ( var x in this.children ) {
+			for (var x in this.children) {
 				this.removeChild(x);
 			}
 			this.children = {};
@@ -9123,15 +9133,15 @@ var FeatureCollection = function() {
 	};
 
 	// Append the given page to existing results
-	this.appendPage = function(page) {
+	this.appendPage = function (page) {
 		this.currentPage = page;
 		this.trigger('startLoading', this);
 		_fetch(this.getStartIndex() + (this.currentPage - 1) * this.countPerPage, _url);
 	};
 
 	// Get start index according to current dataset
-	this.getStartIndex = function() {
-		if ( this.dataset ) {
+	this.getStartIndex = function () {
+		if (this.dataset) {
 			// Backend dataset
 			return this.dataset.get('startIndex');
 		} else {
@@ -9146,8 +9156,8 @@ var FeatureCollection = function() {
 	 * @function isBrowsed
 	 * @param {object} feature
 	 * @returns {boolean}
-	 */ 
-	this.isBrowsed = function(feature) {
+	 */
+	this.isBrowsed = function (feature) {
 		return ProductService.getBrowsedProducts().indexOf(feature) >= 0;
 	};
 
@@ -9157,8 +9167,8 @@ var FeatureCollection = function() {
 	 * @function isSelected
 	 * @param {object} feature
 	 * @returns {boolean}
-	 */ 
-	this.isSelected = function(feature) {
+	 */
+	this.isSelected = function (feature) {
 		return this.selections.indexOf(feature) >= 0;
 	};
 
@@ -9169,7 +9179,7 @@ var FeatureCollection = function() {
 	 * @param {object} feature
 	 * @returns {boolean}
 	 */
-	this.isHighlighted = function(feature) {
+	this.isHighlighted = function (feature) {
 		return this.highlights.indexOf(feature) >= 0
 	};
 
@@ -9181,10 +9191,10 @@ var FeatureCollection = function() {
 	 * @function checkAllHighlight
 	 * @returns {void}
 	 */
-	this.checkAllHighlight = function() {
+	this.checkAllHighlight = function () {
 		var _this = this;
 		var unhighlights = [];
-		this.highlights.forEach(function(feat) {
+		this.highlights.forEach(function (feat) {
 			if (!_this.isSelected(feat)) {
 				unhighlights.push(feat);
 			}
@@ -9200,7 +9210,7 @@ var FeatureCollection = function() {
 	 * @param {array} features
 	 * @returns {void}
 	 */
-	this.setHighlight = function(features) {
+	this.setHighlight = function (features) {
 
 		ProductService.addHighlightedProducts(features);
 
@@ -9215,7 +9225,7 @@ var FeatureCollection = function() {
 		this.trigger("highlightFeatures", features, this);
 		// ***OML*** this.showBrowses( _.intersection(features, this.features));
 		// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
-		for ( var x in this.children ) {
+		for (var x in this.children) {
 			// ***OML*** this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
 		}
 	};
@@ -9228,7 +9238,7 @@ var FeatureCollection = function() {
 	 * @param {array} features
 	 * @returns {void}
 	 */
-	this.unsetHighlight = function(features) {
+	this.unsetHighlight = function (features) {
 
 		ProductService.removeHighlightedProducts(features);
 		this.highlights = _.difference(this.highlights, features);
@@ -9243,10 +9253,10 @@ var FeatureCollection = function() {
 	 * @param {array} features
 	 * @returns {void}
 	 */
-	this.select = function(features) {
-		for ( var i=0; i<features.length; i++ ) {
+	this.select = function (features) {
+		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
-			if ( this.selections.indexOf(feature) == -1 ) {
+			if (this.selections.indexOf(feature) == -1) {
 				this.selections.push(feature);
 			}
 		}
@@ -9261,7 +9271,7 @@ var FeatureCollection = function() {
 	 * @param {array} features
 	 * @returns {void}
 	 */
-	this.unselect = function(features) {
+	this.unselect = function (features) {
 		let newSelections = _.difference(this.selections, features);
 		this.selections = newSelections;
 		ProductService.removeCheckedProducts(features);
@@ -9270,9 +9280,9 @@ var FeatureCollection = function() {
 
 
 	// Create a child feature collection for the given feature
-	this.createChild = function(featureId) {
+	this.createChild = function (featureId) {
 		var child = new FeatureCollection();
-		var cleanedId = String(featureId).replace(/\W/g,'_'); // Id without special characters
+		var cleanedId = String(featureId).replace(/\W/g, '_'); // Id without special characters
 		child.id = cleanedId;
 		child.parent = this;
 		child.countPerPage = Configuration.get('expandSearch.countPerPage', 100);
@@ -9286,8 +9296,8 @@ var FeatureCollection = function() {
 	};
 
 	// Remove child feature collection for the given feature
-	this.removeChild = function(featureId) {
-		var cleanedId = String(featureId).replace(/\W/g,'_'); // Id without special characters
+	this.removeChild = function (featureId) {
+		var cleanedId = String(featureId).replace(/\W/g, '_'); // Id without special characters
 		this.trigger('remove:child', this.children[cleanedId], {
 			layerName: "Child Result",
 			style: "results-footprint",
@@ -9300,7 +9310,7 @@ var FeatureCollection = function() {
 	 * Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
 	 */
-	this.getSelectedProductUrls = function() {
+	this.getSelectedProductUrls = function () {
 
 		var productUrls = [];
 
@@ -9318,7 +9328,7 @@ var FeatureCollection = function() {
 	 * Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
 	 */
-	this.getHighlightedProductUrls = function() {
+	this.getHighlightedProductUrls = function () {
 
 		var productUrls = [];
 
@@ -9338,7 +9348,7 @@ var FeatureCollection = function() {
 	 *  The following method appends the download options using this convention ngEO product URI :
 	 *		ngEO_DO={param_1:value1,....,param_n:value_n}
 	 */
-	this.updateProductUrl = function(feature, urlProperty, downloadOptions) {
+	this.updateProductUrl = function (feature, urlProperty, downloadOptions) {
 
 		var url = Configuration.getMappedProperty(feature, urlProperty, null);
 		if (url) {
@@ -9367,10 +9377,10 @@ var FeatureCollection = function() {
 	/**
 	 * Update download options in product url/uri for the current selection
 	 */
-	this.updateDownloadOptions = function(downloadOptions) {
+	this.updateDownloadOptions = function (downloadOptions) {
 
 		var self = this;
-		_.each(this.selections, function(feature) {
+		_.each(this.selections, function (feature) {
 
 			self.updateProductUrl(feature, "productUrl", downloadOptions);
 			// NGEO-1972: Update productUri (metadata report) as well...
@@ -9382,7 +9392,7 @@ var FeatureCollection = function() {
 	/** 
 	 * Get the download options on the selected products
 	 */
-	this.getSelectedDownloadOptions = function() {
+	this.getSelectedDownloadOptions = function () {
 
 		if (this.selections.length == 0)
 			return {};
@@ -9395,17 +9405,17 @@ var FeatureCollection = function() {
 			var dos = _getProductDownloadOptions(this.selections[i]);
 
 			for (var x in dos) {
-				if ( _.isArray(dos[x]) ) {
-					selectedDownloadOptions[x] = _.intersection( selectedDownloadOptions[x], dos[x] );
-				} else if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
+				if (_.isArray(dos[x])) {
+					selectedDownloadOptions[x] = _.intersection(selectedDownloadOptions[x], dos[x]);
+				} else if (!_.isEqual(selectedDownloadOptions[x], dos[x])) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
 
 			for (var x in selectedDownloadOptions) {
-				if ( _.isArray(selectedDownloadOptions[x]) ) {
-					selectedDownloadOptions[x] = _.intersection( selectedDownloadOptions[x], dos[x] );
-				} else if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
+				if (_.isArray(selectedDownloadOptions[x])) {
+					selectedDownloadOptions[x] = _.intersection(selectedDownloadOptions[x], dos[x]);
+				} else if (!_.isEqual(selectedDownloadOptions[x], dos[x])) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
@@ -9417,7 +9427,7 @@ var FeatureCollection = function() {
 	/**
 	 * Get the dataset id of a feature.
 	 */
-	this.getDatasetId = function(feature) {
+	this.getDatasetId = function (feature) {
 
 		// If the feature collection has a dataset, just return its id
 		if (this.dataset) {
@@ -9447,7 +9457,7 @@ var FeatureCollection = function() {
 	/**
 	 * Get the datasets from the highlights
 	 */
-	this.getDatasetIdsFromHighlights = function() {
+	this.getDatasetIdsFromHighlights = function () {
 		var datasetIds = [];
 		for (var i = 0; i < this.highlights.length; i++) {
 			var datasetId = this.getDatasetId(this.highlights[i]);
@@ -9463,7 +9473,7 @@ var FeatureCollection = function() {
 	/** 
 	 * Fetch the available download options for the selected products
 	 */
-	this.fetchAvailableDownloadOptions = function(callback) {
+	this.fetchAvailableDownloadOptions = function (callback) {
 
 		if (this.dataset) {
 			return callback(this.dataset.get('downloadOptions'));
@@ -9472,7 +9482,7 @@ var FeatureCollection = function() {
 		var downloadOptions = [];
 		var datasetIds = this.getDatasetIdsFromHighlights();
 		if (datasetIds.length == 1) {
-			DataSetPopulation.fetchDataset(datasetIds[0], function(dataset) {
+			DataSetPopulation.fetchDataset(datasetIds[0], function (dataset) {
 				callback(dataset.get('downloadOptions'));
 			});
 		} else {
@@ -9500,14 +9510,14 @@ var FeatureCollection = function() {
 	 *   OLD FORMAT: eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl
 	 *	 NEW FORMAT: mapped "productUri" instead of "productUrl"
 	 */
-	this.getDirectDownloadProductUrl = function(feature) {
+	this.getDirectDownloadProductUrl = function (feature) {
 		return Configuration.getMappedProperty(feature, "productUri", "");
 	};
 
 	/**
 	 * Check whether the given feature has a direct download url supported by a browser 
 	 */
-	this.isBrowserSupportedUrl = function(feature) {
+	this.isBrowserSupportedUrl = function (feature) {
 
 		var downloadUrl = this.getDirectDownloadProductUrl(feature);
 		if (downloadUrl.indexOf("http") != -1 || downloadUrl.indexOf("https") != -1) {
@@ -9517,11 +9527,11 @@ var FeatureCollection = function() {
 	};
 
 
-	this.focus = function(feature) {
+	this.focus = function (feature) {
 		this.trigger("focus", feature, this);
 	}
 
-	this.unfocus = function(feature) {
+	this.unfocus = function (feature) {
 		this.trigger("unfocus", feature, this);
 	}
 
@@ -14498,7 +14508,7 @@ var TableView = Backbone.View.extend({
 		// </th>');
 
 		$row.append('<th>\
-			<span class="ui-icon" id="table-columns-button" title="Select columns to display in table" ></span>\
+			<span class="ui-icon ui-shadow" id="table-columns-button" title="Select columns to display in table" ></span>\
 		</th>');
 		
 
