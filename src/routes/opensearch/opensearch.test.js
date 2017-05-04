@@ -41,7 +41,7 @@ describe('Route opensearch', function () {
 		});
 	})
 
-	it('GET /ngeo/opensearch/toto', function (done) {
+	it('GET /ngeo/opensearch/toto - Not found', function (done) {
 
 		request(app)
 		.get('/ngeo/opensearch/toto')
