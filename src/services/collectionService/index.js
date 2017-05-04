@@ -332,7 +332,7 @@ class CollectionService {
 		let _this = this;
 		// find node search request description
 		let _searchRequestDescription = {};
-		_searchRequestDescription = _this.findSearchRequestDescription(myCollection.id);
+		_searchRequestDescription = _this.findSearchRequestDescription(myCollection);
 		if (_searchRequestDescription.length === 0) {
 			_.remove(_this.collections, function (_item) {
 				return _item.id === myCollection.id;
@@ -473,17 +473,18 @@ class CollectionService {
 
 	/**
 	 * find nodes in osdd with description of search request with these criterias :
-	 * 		type='application/atom+xml'
+	 * 		type=catalog.responseFormatOnSearch
 	 * 		and get method if exists
 	 * @function findSearchRequestDescription
-	 * @param {string} myCollectionId
+	 * @param {object} myCollection
 	 * @returns {array}
 	 */
-	findSearchRequestDescription(myCollectionId) {
-		let _jsonOSDD = this.getCollection(myCollectionId).osdd;
+	findSearchRequestDescription(myCollection) {
+		let _jsonOSDD = myCollection.osdd;
+		let _catalog = CatalogService.getCatalog(myCollection.catalogId);
 		let _paramTag = Utils.findTagByXmlns(_jsonOSDD, Configuration.opensearch.xmlnsParameter);
 		let _nodesFind = _.filter(_jsonOSDD.Url, function (_item) {
-			if (_item['@'].type === 'application/atom+xml') {
+			if (_item['@'].type === _catalog.responseFormatOnSearch) {
 				if (_item['@'][_paramTag + ':method']) {
 					if (_item['@'][_paramTag + 'method'].toLowerCase() === 'get') {
 						return true;
@@ -619,7 +620,7 @@ class CollectionService {
 		let _geoTag = Utils.findTagByXmlns(_collection.osdd, Configuration.opensearch.xmlnsGeo);
 
 		// find parameters in node Url with type="application/atom+xml"
-		let _searchRequestDescription = this.findSearchRequestDescription(myCollectionId);
+		let _searchRequestDescription = this.findSearchRequestDescription(_collection);
 
 		if (_searchRequestDescription.length === 0) {
 			Logger.error(`Unable to find searchRequestDescription for collection ${myCollectionId}`);
