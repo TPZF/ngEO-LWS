@@ -41,6 +41,18 @@ describe('Route opensearch', function () {
 		});
 	})
 
+	it('GET /ngeo/opensearch/toto', function (done) {
+
+		request(app)
+		.get('/ngeo/opensearch/toto')
+		.expect(404)
+		.end(function (err, res) {
+			should(res.text).be.a.String();
+			should(res.text).be.equal('Not found');
+			done();
+		});
+	})
+
 	it('GET /ngeo/opensearch/about', function (done) {
 
 		this.timeout(10000);

@@ -55,9 +55,6 @@ router.get('/about', (req, res) => {
 router.get('/:collection_id', function (req, res) {
 	Logger.debug('GET /ngeo/opensearch/:collection_id');
 	let idToGet = req.params['collection_id'];
-    if (!idToGet) {
-        res.status(400).send('Bad request !');
-    }
     let collection = CollectionService.getCollection(idToGet);
     if (!collection) {
         res.status(404).send('Not found');
