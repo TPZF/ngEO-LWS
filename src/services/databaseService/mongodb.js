@@ -239,13 +239,9 @@ class MongoDBService {
 	 * @param {number} myLimit - limit number of documents
 	 * @param {function} myCallbackFn - callback function 
 	 */
-	search(myCollection, myQueryCriterias, mySkip, myLimit, myCallbackFn) {
+	search(myCollection, myQueryCriterias = {}, mySkip = 0, myLimit = 50, myCallbackFn) {
 
 		let dataBase = null;
-
-		myQueryCriterias = myQueryCriterias || {};
-		mySkip = mySkip || 0;
-		myLimit = myLimit || 50;
 
 		try {
 			// connect to mongodb

@@ -392,11 +392,19 @@ router.get('/:shopcart_id/items', (req,res) => {
 
 	let idShopCart = req.params.shopcart_id;
 
-	let start = +req.params.startIndex - 1;
-	let count = +req.params.count;
+	let start = +req.query.startIndex - 1;
+	let count = +req.query.count;
 
 	let myQueryCriteria = {
 		"properties.shopcart_id": idShopCart
+	};
+
+	let objetRep = {
+		type: "FeatureCollection",
+		features: [],
+		properties: {
+			totalResults: 0
+		}
 	};
 
 	let cbSearchFeaturesInShopCart = function(response) {
@@ -408,17 +416,27 @@ router.get('/:shopcart_id/items', (req,res) => {
 				item.id = item._id;
 				delete item._id;
 			});
-			res.json({
-				"type": "FeatureCollection",
-				"features" : response.datas
-			});
+			objetRep.features = response.datas;
+			res.json(objetRep);
 		}
 	};
 	
+	let cbCountFeaturesInShopCart = function(response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			objetRep.properties.totalResults = response.datas;
+			if (response.datas > 0) {
+				DatabaseService.search(SHOPCARTFEATURENAME, myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+			} else {
+				res.json(objetRep);
+			}
+		}
+	};
 
 	let cbAfterCheckAuthorization = function() {
-		// call search service
-		DatabaseService.search(SHOPCARTFEATURENAME, myQueryCriteria, start, count, cbSearchFeaturesInShopCart);
+		// call count service
+		DatabaseService.count(SHOPCARTFEATURENAME, myQueryCriteria, cbCountFeaturesInShopCart);
 	}
 
 	AuthorizationService.isAuthorized(
