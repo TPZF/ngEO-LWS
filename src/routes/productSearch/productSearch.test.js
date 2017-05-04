@@ -37,6 +37,18 @@ describe('Route productSearch', function () {
 		});
 	})
 
+	it('GET /ngeo/catalogue/toto/search - Not found', function (done) {
+
+		request(app)
+		.get('/ngeo/catalogue/toto/search')
+		.expect(404)
+		.end(function (err, res) {
+			should(res.text).be.a.String();
+			should(res.text).be.equal('Not found');
+			done();
+		});
+	})
+
 	it('GET /ngeo/catalogue/SXCAT-Landsat57Merged/search/about', function (done) {
 
 		request(app)
