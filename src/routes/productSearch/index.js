@@ -4,24 +4,9 @@ let _ = require('lodash');
 
 // UTILS
 let Logger = require('utils/logger');
-let configurationConverter = require('utils/backendConfigurationConverter');
 
 // SERVICES
 let collectionService = require('services/collectionService');
-let browseService = require('services/browseService');
-
-/**
- * @function _addOriginDatasetId
- * @param {String} myCollectionId
- * @param {Object} myGeoJson
- * @return {Object}
- */
-function _addOriginDatasetId(myCollectionId, myGeoJson) {
-	_.map(myGeoJson.features, function(feat) {
-		feat.properties.originDatasetId = myCollectionId;
-	});
-	return myGeoJson;
-}
 
 // ROUTER
 let router = express.Router({
@@ -49,20 +34,12 @@ router.get('/', function (req, res) {
 		collectionService.search(collectionId, {
 			params: req.query,
 			onSuccess: (result) => {
-				let geoJsonWebcData = configurationConverter.convertSearchResponse(result, collectionId);
-				if (!geoJsonWebcData) {
+				let finalResult = collectionService.convertResponse(collectionId, result);
+				if (finalResult === null) {
 					res.status(500).send("Some inconsistency with response received from the backend");
-					return;
+				} else {
+					res.status(200).send(finalResult);
 				}
-				// Add browse information for converted collection
-				browseService.addBrowseInfo(collectionId, geoJsonWebcData);
-				// Add originDatasetId for each features (used to retrieve a product from catalog or shopcart)
-				geoJsonWebcData = _addOriginDatasetId(collectionId, geoJsonWebcData);
-				geoJsonWebcData.type = 'FeatureCollection';
-				// send to response
-				// FIXME - test fails if content-type is defined
-				//res.type('Content-Type', 'application/vnd.geo+json').send(geoJsonWebcData);
-				res.send(geoJsonWebcData);
 			},
 			onError: (errorCode) => {
 				if (errorCode === '404') {

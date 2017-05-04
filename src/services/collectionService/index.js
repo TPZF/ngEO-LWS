@@ -8,12 +8,27 @@ let Configuration = require('config');
 let Xml2JsonParser = require('utils/xml2jsonParser');
 let Logger = require('utils/logger');
 let Utils = require('utils/utils');
+let BackEndConfigurationConverter = require('utils/backendConfigurationConverter');
 
 // MODELS
 let Collection = require('./collection');
 
 // SERVICES
 let CatalogService = require('../catalogService');
+let BrowseService = require('../browseService');
+
+/**
+ * @function _addOriginDatasetId
+ * @param {String} myCollectionId
+ * @param {Object} myGeoJson
+ * @return {Object}
+ */
+let _addOriginDatasetId = function(myCollectionId, myGeoJson) {
+	_.map(myGeoJson.features, function(feat) {
+		feat.properties.originDatasetId = myCollectionId;
+	});
+	return myGeoJson;
+};
 
 /**
  * sample of myUrl
@@ -225,7 +240,7 @@ class CollectionService {
 		} else {
 			let _aPromisesCollectionSchema = [];
 			myCatalog.collectionsSchema.forEach((_collectionSchema) => {
-				let _p = _this.populateFromCollectionSchema(_collectionSchema, myCatalog.id);
+				let _p = _this.populateFromCollectionSchema(_collectionSchema, myCatalog);
 				_aPromisesCollectionSchema.push(_p);
 			});
 			return Promise.all(_aPromisesCollectionSchema);
@@ -238,10 +253,10 @@ class CollectionService {
 	 * 
 	 * @function populateFromCollectionSchema
 	 * @param {object} myCollectionSchema
-	 * @param {string} myCatalogId
+	 * @param {object} myCatalog
 	 * @returns {Promise}
 	 */
-	populateFromCollectionSchema(myCollectionSchema, myCatalogId) {
+	populateFromCollectionSchema(myCollectionSchema, myCatalog) {
 		let _this = this;
 		if (myCollectionSchema.entry) {
 			if (!Array.isArray(myCollectionSchema.entry)) {
@@ -258,7 +273,8 @@ class CollectionService {
 				let _idCollection = _oneEntry[Configuration.opensearch.identifier];
 				if (!_.find(_this.collections, function (_item) { return _item.id === _idCollection })) {
 					// set collection object
-					let _collection = new Collection(_idCollection, _url, _oneEntry.title, myCatalogId);
+					let _collection = new Collection(_idCollection, _url, _oneEntry.title, myCatalog.id);
+					_collection.responseFormatOnSearch = myCatalog.responseFormatOnSearch;
 					// add other datas
 					_aPromisesGetOsddCollection.push(_this.getOsddCollection(_collection));
 				}
@@ -358,17 +374,28 @@ class CollectionService {
 						myCollection.totalResults = '???';
 						resolve(false);
 					} else {
-						Xml2JsonParser.parse(body, (_result) => {
-							let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
-							Logger.debug(`collectionService.setTotalResults - Total results for ${myCollection.id} = ${_result[_opensearchTag + 'totalResults']}`);
-							myCollection.totalResults = _result[_opensearchTag + 'totalResults'];
-							if (!myCollection.totalResults || myCollection.totalResults < 1) {
+						if (myCollection.responseFormatOnSearch.indexOf('atom+xml') > -1) {
+							Xml2JsonParser.parse(body, (_result) => {
+								let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
+								Logger.debug(`collectionService.setTotalResults - Total results for ${myCollection.id} = ${_result[_opensearchTag + 'totalResults']}`);
+								myCollection.totalResults = _result[_opensearchTag + 'totalResults'];
+								if (!myCollection.totalResults || myCollection.totalResults < 1) {
+									myCollection.totalResults = '?';
+									resolve(false);
+								} else {
+									resolve(true);
+								}
+							});
+						} else if (myCollection.responseFormatOnSearch.indexOf('geo+json') > -1) {
+							let jsonBody = JSON.parse(body);
+							if (jsonBody.properties && jsonBody.properties.totalResults) {
+								myCollection.totalResults = '' + jsonBody.properties.totalResults;
+								resolve(true);
+							} else {
 								myCollection.totalResults = '?';
 								resolve(false);
-							} else {
-								resolve(true);
 							}
-						});
+						}
 					}
 				});
 			});
@@ -441,7 +468,11 @@ class CollectionService {
 		request(_searchUrlRequest, function (error, response, body) {
 			Logger.info(`Time elapsed searching on backend with ${_searchUrlRequest} took ${Date.now() - _startTime} ms`);
 			if (!error && response.statusCode == 200) {
-				Xml2JsonParser.parse(body, myOptions.onSuccess, myOptions.onError);
+				if (_collection.responseFormatOnSearch.indexOf('atom+xml') > -1) {
+					Xml2JsonParser.parse(body, myOptions.onSuccess, myOptions.onError);
+				} else if (_collection.responseFormatOnSearch.indexOf('geo+json') > -1) {
+					myOptions.onSuccess(body);
+				}
 			} else {
 				myOptions.onError('500');
 			}
@@ -473,7 +504,7 @@ class CollectionService {
 
 	/**
 	 * find nodes in osdd with description of search request with these criterias :
-	 * 		type=catalog.responseFormatOnSearch
+	 * 		type=responseFormatOnSearch
 	 * 		and get method if exists
 	 * @function findSearchRequestDescription
 	 * @param {object} myCollection
@@ -481,10 +512,9 @@ class CollectionService {
 	 */
 	findSearchRequestDescription(myCollection) {
 		let _jsonOSDD = myCollection.osdd;
-		let _catalog = CatalogService.getCatalog(myCollection.catalogId);
 		let _paramTag = Utils.findTagByXmlns(_jsonOSDD, Configuration.opensearch.xmlnsParameter);
 		let _nodesFind = _.filter(_jsonOSDD.Url, function (_item) {
-			if (_item['@'].type === _catalog.responseFormatOnSearch) {
+			if (_item['@'].type === myCollection.responseFormatOnSearch) {
 				if (_item['@'][_paramTag + ':method']) {
 					if (_item['@'][_paramTag + 'method'].toLowerCase() === 'get') {
 						return true;
@@ -810,6 +840,42 @@ class CollectionService {
 			}
 		}
 		return _result;
+	}
+
+	/**
+	 * @function convertResponse
+	 * @param {string} myCollectionId 
+	 * @param {object} myResult
+	 * @returns {object}
+	 */
+	convertResponse(myCollectionId, myResult) {
+		let _result = null;
+		let _collection = this.getCollection(myCollectionId);
+		
+		if (_collection.responseFormatOnSearch.indexOf('atom+xml') > -1) {
+			_result = BackEndConfigurationConverter.convertSearchResponse(myResult, myCollectionId);
+			// Add browse information for converted collection
+			BrowseService.addBrowseInfo(myCollectionId, _result);
+			// Add originDatasetId for each features (used to retrieve a product from catalog or shopcart)
+			_result = _addOriginDatasetId(myCollectionId, _result);
+			_result.type = 'FeatureCollection';
+		} else if (_collection.responseFormatOnSearch.indexOf('geo+json') > -1) {
+			_result = this.convertSearchResponseFromGeoJson(myResult, _collection);
+		}
+		if (!_result) {
+			return null;
+		}
+		return _result;
+	}
+
+	/**
+	 * @function convertSearchResponseFromGeoJson
+	 * @param {object} myResult 
+	 * @param {object} myCollection 
+	 * @returns {object}
+	 */
+	convertSearchResponseFromGeoJson(myResult, myCollection) {
+		return myResult;
 	}
 
 }
