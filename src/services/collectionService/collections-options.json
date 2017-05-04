@@ -2,65 +2,161 @@
     {
         "id": "SXCAT-ASA_APP_1P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-ASA_APS_1P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-ASA_AP__0P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-ASA_IMP_1P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-ASA_IMS_1P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-ASA_IM__0P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-ASA_WSS_1P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-ASA_WS__0P",
         "keywords": [
-            {"Platform": ["Envisat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
@@ -69,17 +165,42 @@
     {
         "id": "SXCAT-IKONOS-2",
         "keywords": [
-            {"Platform": ["IKONOS"]},
-            {"Sensor": ["OSA"]},
-            {"InstrumentType": ["High Res."]}
+            {
+                "Platform": [
+                    "IKONOS"
+                ]
+            },
+            {
+                "Sensor": [
+                    "OSA"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res."
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-Landsat57Merged",
         "keywords": [
-            {"Platform": ["Landsat"]},
-            {"Sensor": ["TM"]},
-            {"InstrumentType": ["High Res.", "Optical"]}
+            {
+                "Platform": [
+                    "Landsat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "TM"
+                ]
+            },
+            {
+                "InstrumentType": [
+                    "High Res.",
+                    "Optical"
+                ]
+            }
         ]
     },
     {
@@ -88,8 +209,16 @@
     {
         "id": "SXCAT-Oceansat2",
         "keywords": [
-            {"Platform": ["OceanSat"]},
-            {"Sensor": ["OPTICAL"]}
+            {
+                "Platform": [
+                    "OceanSat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "OPTICAL"
+                ]
+            }
         ]
     },
     {
@@ -98,22 +227,46 @@
     {
         "id": "SXCAT-RapidEye",
         "keywords": [
-            {"Platform": ["RapidEye"]},
-            {"Sensor": ["OPTICAL"]}
+            {
+                "Platform": [
+                    "RapidEye"
+                ]
+            },
+            {
+                "Sensor": [
+                    "OPTICAL"
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-RapidEye_SouthAmerica",
         "keywords": [
-            {"Platform": ["RapidEye"]},
-            {"Sensor": ["OPTICAL"]}
+            {
+                "Platform": [
+                    "RapidEye"
+                ]
+            },
+            {
+                "Sensor": [
+                    "OPTICAL"
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-RapidEye_Take5",
         "keywords": [
-            {"Platform": ["RapidEye"]},
-            {"Sensor": ["OPTICAL"]}
+            {
+                "Platform": [
+                    "RapidEye"
+                ]
+            },
+            {
+                "Sensor": [
+                    "OPTICAL"
+                ]
+            }
         ]
     },
     {
@@ -125,34 +278,66 @@
     {
         "id": "SXCAT-SPOT1-5",
         "keywords": [
-            {"Platform": ["SPOT"]},
-            {"Sensor": ["OPTICAL"]}
+            {
+                "Platform": [
+                    "SPOT"
+                ]
+            },
+            {
+                "Sensor": [
+                    "OPTICAL"
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-SPOT6-7",
         "keywords": [
-            {"Platform": ["SPOT"]}
+            {
+                "Platform": [
+                    "SPOT"
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-Seasat",
         "keywords": [
-            {"Platform": ["Seasat"]},
-            {"Sensor": ["SAR"]}
+            {
+                "Platform": [
+                    "Seasat"
+                ]
+            },
+            {
+                "Sensor": [
+                    "SAR"
+                ]
+            }
         ]
     },
     {
         "id": "SXCAT-WorldView-2",
         "keywords": [
-            {"Platform": ["WorldView"]},
-            {"Sensor": ["OPTICAL"]}
+            {
+                "Platform": [
+                    "WorldView"
+                ]
+            },
+            {
+                "Sensor": [
+                    "OPTICAL"
+                ]
+            }
         ]
     },
     {
         "id": "FEDEO-ENVISAT.ASA",
         "keywords": [
-            {"Platform": ["Envisat"]}
+            {
+                "Platform": [
+                    "Envisat"
+                ]
+            }
         ]
     },
     {

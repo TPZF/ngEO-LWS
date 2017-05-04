@@ -23,8 +23,8 @@ let BrowseService = require('../browseService');
  * @param {Object} myGeoJson
  * @return {Object}
  */
-let _addOriginDatasetId = function(myCollectionId, myGeoJson) {
-	_.map(myGeoJson.features, function(feat) {
+let _addOriginDatasetId = function (myCollectionId, myGeoJson) {
+	_.map(myGeoJson.features, function (feat) {
 		feat.properties.originDatasetId = myCollectionId;
 	});
 	return myGeoJson;
@@ -702,15 +702,15 @@ class CollectionService {
 		};
 
 		let _aParameters = [
-			{key: 'start', tag: myTimeTag+'start', value: 'minInclusive'},
-			{key: 'stop', tag: myTimeTag+'end', value: 'maxInclusive'},
-			{key: 'startIndex', tag: 'startIndex'},
-			{key: 'count', tag: 'count', value: 'maxInclusive'},
-			{key: 'bbox', tag: myGeoTag+'box'},
-			{key: 'geom', tag: myGeoTag+'geometry'}
+			{ key: 'start', tag: myTimeTag + 'start', value: 'minInclusive' },
+			{ key: 'stop', tag: myTimeTag + 'end', value: 'maxInclusive' },
+			{ key: 'startIndex', tag: 'startIndex' },
+			{ key: 'count', tag: 'count', value: 'maxInclusive' },
+			{ key: 'bbox', tag: myGeoTag + 'box' },
+			{ key: 'geom', tag: myGeoTag + 'geometry' }
 		];
 
-		_aParameters.forEach( (_param) => {
+		_aParameters.forEach((_param) => {
 			let _key = _param.key;
 			let _tag = _param.tag;
 			// find in request description parameters
@@ -851,7 +851,7 @@ class CollectionService {
 	convertResponse(myCollectionId, myResult) {
 		let _result = null;
 		let _collection = this.getCollection(myCollectionId);
-		
+
 		if (_collection.responseFormatOnSearch.indexOf('atom+xml') > -1) {
 			_result = BackEndConfigurationConverter.convertSearchResponse(myResult, myCollectionId);
 			// Add browse information for converted collection

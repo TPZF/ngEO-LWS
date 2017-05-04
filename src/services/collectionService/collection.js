@@ -23,8 +23,8 @@ class Collection {
 
 		// default parameters, provided by webc
 		this.parameters = {
-			start: 'start', 
-			stop: 'end', 
+			start: 'start',
+			stop: 'end',
 			startIndex: 'startIndex',
 			count: 'count',
 			bbox: 'bbox',
