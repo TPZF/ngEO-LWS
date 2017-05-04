@@ -705,9 +705,9 @@ __p+='<fieldset id="toolsChoice" data-role="controlgroup" data-type="horizontal"
 ((__t=(searchArea.getBBox().east))==null?'':__t)+
 '">\r\n\t</div>\r\n\r\n\t<div data-role="fieldcontain">\r\n\t\t<label for="north">North:</label>\r\n\t\t<input type="text" name="north" id="north" data-mini="true" value="'+
 ((__t=(searchArea.getBBox().north))==null?'':__t)+
-'">\r\n\t</div>\r\n\r\n\t<div id="mapExtent" data-role="fieldcontain">\r\n\t\t<label class="mapExtentCheckBoxLabel">Use map extent\r\n\t\t<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" ';
+'">\r\n\t</div>\r\n\t<div class="ui-grid-a" data-role="fieldcontain">\r\n\t\t<div class="ui-block-a">\r\n\t\t\t<label class="mapExtentCheckBoxLabel">Use map extent\r\n\t\t\t<input type="checkbox" name="mapExtent" id="mapExtentView" data-mini="true" ';
  if (attributes.useExtent) print('checked="checked"'); 
-__p+=' ></label>\r\n\t</div>\r\n\t<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>\r\n\r\n</div>\r\n\r\n<div id="polygon">\r\n\t<label>Enter coordinates:\r\n\t<textarea id="polygontext" rows="10"></textarea>\r\n\t</label>\r\n\t<p id="polygonTextError"></p>\r\n\t<button data-role="button" data-mini="true"  id="drawpolygon">Draw</button>\r\n</div>\r\n\r\n<div id="gazetteer">\r\n\t<input type="text" data-type="search" name="search" id="search-gazetteer" value="" />\r\n\t<div id="gazetteer-results"></div>\r\n</div>\r\n\r\n<div id="import">\r\n\t<!-- <input type="file" id="importFile"> -->\r\n\t<div id="dropZone">\r\n\t\tDrop a KML, GeoJSON or GML file\r\n\t</div>\r\n\t<p id="importMessage"></p>\r\n</div>\r\n';
+__p+=' ></label>\r\n\t\t</div>\r\n\t\t<div class="ui-block-b">\r\n\t\t\t<button data-role="button" data-mini="true" class="mapExtentWholeWorldBtn">Use whole world</button>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class="ui-grid-solo" data-role="fieldcontain">\r\n\t\t<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div id="polygon">\r\n\t<label>Enter coordinates:\r\n\t<textarea id="polygontext" rows="10"></textarea>\r\n\t</label>\r\n\t<p id="polygonTextError"></p>\r\n\t<button data-role="button" data-mini="true"  id="drawpolygon">Draw</button>\r\n</div>\r\n\r\n<div id="gazetteer">\r\n\t<input type="text" data-type="search" name="search" id="search-gazetteer" value="" />\r\n\t<div id="gazetteer-results"></div>\r\n</div>\r\n\r\n<div id="import">\r\n\t<!-- <input type="file" id="importFile"> -->\r\n\t<div id="dropZone">\r\n\t\tDrop a KML, GeoJSON or GML file\r\n\t</div>\r\n\t<p id="importMessage"></p>\r\n</div>\r\n';
 }
 return __p;
 };
@@ -1010,7 +1010,7 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<div id="multipleBrowsePopup" data-transition="flip" data-role=popup data-theme="a" data-overlay-theme="a" class="ui-content"> \n    <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a> \n   \n    <h4>Select browse to use in list:</h4> \n    <ul style="max-height: 500px; max-width: 500px; overflow: auto; padding-right: 10px;" id="multipleBrowseSelection" data-role="listview" data-inset="true" \n      data-theme="a"> \n\t\t<fieldset data-role="controlgroup"> \n\t\t    ';
  _.each(browses, function(browse, index) { 
-		    	var url = browse.BrowseInformation.fileName.ServiceReference["@href"]
+		    	var url = browse.BrowseInformation.fileName.ServiceReference["@"]["href"]
 		    	
 __p+=' \n\t\t\t\t<label title="'+
 ((__t=( url ))==null?'':__t)+
