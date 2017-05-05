@@ -9,9 +9,9 @@ let app = require('../../app');
  * Unit test file for service web Shopcarts
  * It allow to test the REST service and the mongodb database
  */
-describe('Route ShopCarts', function() {
+describe('Route ShopCarts', function () {
 
-	before(function(done) {
+	before(function (done) {
 		// if you want to pass parameters before testing
 		done();
 	});
@@ -29,7 +29,7 @@ describe('Route ShopCarts', function() {
 		var idShopCart = 0;
 
 		// create a shopcart
-		it('POST /ngeo/shopcarts - Create a shopcart', function(done) {
+		it('POST /ngeo/shopcarts - Create a shopcart', function (done) {
 
 			var datas = {
 				shopcart: {
@@ -40,42 +40,42 @@ describe('Route ShopCarts', function() {
 			};
 
 			request(app)
-			.post('/ngeo/shopcarts')
-			.send(datas)
-			.expect(201)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcart');
-				should(res.body.shopcart).have.property('id');
-				idShopCart = res.body.shopcart.id;
-				should(res.body.shopcart).have.property('name');
-				done();
-			});
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(201)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
+					should(res.body).have.property('shopcart');
+					should(res.body.shopcart).have.property('id');
+					idShopCart = res.body.shopcart.id;
+					should(res.body.shopcart).have.property('name');
+					done();
+				});
 
 		});
 
 		// list shopcart
-		it('GET /ngeo/shopcarts - list shopcarts (1 item)', function(done) {
+		it('GET /ngeo/shopcarts - list shopcarts (1 item)', function (done) {
 
 			request(app)
-			.get('/ngeo/shopcarts')
-			.send()
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcarts');
-				should(res.body.shopcarts).be.a.Array();
-				res.body.shopcarts.should.have.length(1);
-				res.body.shopcarts[0].id.should.be.equal(idShopCart);
-				done();
-			});
+				.get('/ngeo/shopcarts')
+				.send()
+				.expect(200)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
+					should(res.body).have.property('shopcarts');
+					should(res.body.shopcarts).be.a.Array();
+					res.body.shopcarts.should.have.length(1);
+					res.body.shopcarts[0].id.should.be.equal(idShopCart);
+					done();
+				});
 
 		});
 
 		// update a shopcart
-		it('PUT /ngeo/shopcarts/:id - update shopcart', function(done) {
+		it('PUT /ngeo/shopcarts/:id - update shopcart', function (done) {
 
 			var datas = {
 				shopcart: {
@@ -85,56 +85,56 @@ describe('Route ShopCarts', function() {
 					userId: 'anonymous'
 				}
 			};
-			
+
 			request(app)
-			.put('/ngeo/shopcarts/' + idShopCart)
-			.send(datas)
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcart');
-				should(res.body.shopcart).have.property('id');
-				should(res.body.shopcart).have.property('name');
-				res.body.shopcart.name.should.be.equal('test 002');
-				done();
-			});
+				.put('/ngeo/shopcarts/' + idShopCart)
+				.send(datas)
+				.expect(200)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
+					should(res.body).have.property('shopcart');
+					should(res.body.shopcart).have.property('id');
+					should(res.body.shopcart).have.property('name');
+					res.body.shopcart.name.should.be.equal('test 002');
+					done();
+				});
 
 		});
 
 		// delete a shopcart
-		it('DELETE /ngeo/shopcarts/:id - delete shopcart', function(done) {
+		it('DELETE /ngeo/shopcarts/:id - delete shopcart', function (done) {
 
 			request(app)
-			.delete('/ngeo/shopcarts/' + idShopCart)
-			.send()
-			.expect(204, done);
+				.delete('/ngeo/shopcarts/' + idShopCart)
+				.send()
+				.expect(204, done);
 
 		});
 
 		// list shopcart
-		it('GET /ngeo/shopcarts - list shopcarts (no item)', function(done) {
+		it('GET /ngeo/shopcarts - list shopcarts (no item)', function (done) {
 
 			request(app)
-			.get('/ngeo/shopcarts')
-			.send()
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcarts');
-				should(res.body.shopcarts).be.a.Array();
-				res.body.shopcarts.should.have.length(0);
-				done();
-			});
+				.get('/ngeo/shopcarts')
+				.send()
+				.expect(200)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
+					should(res.body).have.property('shopcarts');
+					should(res.body.shopcarts).be.a.Array();
+					res.body.shopcarts.should.have.length(0);
+					done();
+				});
 
 		});
 
 	});
 
-	describe('Errors for POST /ngeo/shopcarts - create a shopcart', function() {
+	describe('Errors for POST /ngeo/shopcarts - create a shopcart', function () {
 
-		it('No shopcart item', function(done) {
+		it('No shopcart item', function (done) {
 
 			var datas = {
 				bidule: {
@@ -145,19 +145,19 @@ describe('Route ShopCarts', function() {
 			};
 
 			request(app)
-			.post('/ngeo/shopcarts')
-			.send(datas)
-			.expect(400)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.String();
-				should(res.body).be.equal('Request is not valid');
-				done();
-			});
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
 
 		});
 
-		it('No name for shopcart', function(done) {
+		it('No name for shopcart', function (done) {
 
 			var datas = {
 				shopcart: {
@@ -168,19 +168,19 @@ describe('Route ShopCarts', function() {
 			};
 
 			request(app)
-			.post('/ngeo/shopcarts')
-			.send(datas)
-			.expect(400)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.String();
-				should(res.body).be.equal('Request is not valid');
-				done();
-			});
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
 
 		});
 
-		it('Name for shopcart is empty', function(done) {
+		it('Name for shopcart is empty', function (done) {
 
 			var datas = {
 				shopcart: {
@@ -191,23 +191,23 @@ describe('Route ShopCarts', function() {
 			};
 
 			request(app)
-			.post('/ngeo/shopcarts')
-			.send(datas)
-			.expect(400)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.String();
-				should(res.body).be.equal('Request is not valid');
-				done();
-			});
+				.post('/ngeo/shopcarts')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
 
 		});
 
 	});
 
-	describe('Errors for PUT /ngeo/shopcarts/:id - update a shopcart', function() {
+	describe('Errors for PUT /ngeo/shopcarts/:id - update a shopcart', function () {
 
-		it('No shopcart id in URL', function(done) {
+		it('No shopcart id in URL', function (done) {
 
 			var datas = {
 				shopcart: {
@@ -217,15 +217,15 @@ describe('Route ShopCarts', function() {
 					userId: 'anonymous'
 				}
 			};
-			
+
 			request(app)
-			.put('/ngeo/shopcarts/')
-			.send(datas)
-			.expect(404, done);
+				.put('/ngeo/shopcarts/')
+				.send(datas)
+				.expect(404, done);
 
 		});
 
-		it('No valid shopcart id', function(done) {
+		it('No valid shopcart id', function (done) {
 
 			var datas = {
 				shopcart: {
@@ -235,21 +235,21 @@ describe('Route ShopCarts', function() {
 					userId: 'anonymous'
 				}
 			};
-			
+
 			request(app)
-			.put('/ngeo/shopcarts/45f45r78')
-			.send(datas)
-			.expect(400)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.String();
-				should(res.body).be.equal('Request is not valid');
-				done();
-			});
+				.put('/ngeo/shopcarts/45f45r78')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
 
 		});
 
-		it('No matching shopcart ids', function(done) {
+		it('No matching shopcart ids', function (done) {
 
 			var datas = {
 				shopcart: {
@@ -261,15 +261,15 @@ describe('Route ShopCarts', function() {
 			};
 
 			request(app)
-			.put('/ngeo/shopcarts/58c26cd2907fc63264933800')
-			.send(datas)
-			.expect(400)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.String();
-				should(res.body).be.equal('Request is not valid');
-				done();
-			});
+				.put('/ngeo/shopcarts/58c26cd2907fc63264933800')
+				.send(datas)
+				.expect(400)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Request is not valid');
+					done();
+				});
 
 		});
 
@@ -277,12 +277,12 @@ describe('Route ShopCarts', function() {
 
 });
 
-describe('Route shopCart features', function() {
+describe('Route shopCart features', function () {
 
 	var idShopCart = 0;
 	var idFeatures = [];
 
-	before(function(done) {
+	before(function (done) {
 		// if you want to pass parameters before testing
 		// create a shopcart
 		var datas = {
@@ -294,14 +294,14 @@ describe('Route shopCart features', function() {
 		};
 
 		request(app)
-		.post('/ngeo/shopcarts')
-		.send(datas)
-		.expect(201)
-		.expect('Content-Type', /json/)
-		.end(function(err,res) {
-			idShopCart = res.body.shopcart.id;
-			done();
-		});
+			.post('/ngeo/shopcarts')
+			.send(datas)
+			.expect(201)
+			.expect('Content-Type', /json/)
+			.end(function (err, res) {
+				idShopCart = res.body.shopcart.id;
+				done();
+			});
 
 	});
 
@@ -319,27 +319,27 @@ describe('Route shopCart features', function() {
 
 
 		// list shopcart features (empty)
-		it('GET /ngeo/shopcarts/:id/items - list features in a shopcart', function(done) {
+		it('GET /ngeo/shopcarts/:id/items - list features in a shopcart', function (done) {
 
 			request(app)
-			.get('/ngeo/shopcarts/' + idShopCart + '/items')
-			.send()
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('type');
-				should(res.body.type).be.equal('FeatureCollection');
-				should(res.body).have.property('features');
-				should(res.body.features).be.a.Array();
-				res.body.features.should.have.length(0);
-				done();
-			});
+				.get('/ngeo/shopcarts/' + idShopCart + '/items')
+				.send()
+				.expect(200)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
+					should(res.body).have.property('type');
+					should(res.body.type).be.equal('FeatureCollection');
+					should(res.body).have.property('features');
+					should(res.body.features).be.a.Array();
+					res.body.features.should.have.length(0);
+					done();
+				});
 
 		});
 
 		// add 3 features in a shopcart
-		it('POST /ngeo/shopcarts/:id/items - add features in a shopcart', function(done) {
+		it('POST /ngeo/shopcarts/:id/items - add features in a shopcart', function (done) {
 
 			var datas = {
 				shopcartfeatures: [
@@ -420,26 +420,26 @@ describe('Route shopCart features', function() {
 					}
 				]
 			};
-			
+
 			request(app)
-			.post('/ngeo/shopcarts/' + idShopCart + '/items')
-			.send(datas)
-			.expect(201)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcartfeatures');
-				should(res.body.shopcartfeatures).be.a.Array();
-				for (var n=0; n<res.body.shopcartfeatures.length; n++) {
-					idFeatures.push(res.body.shopcartfeatures[n].id);
-				}
-				done();
-			});
+				.post('/ngeo/shopcarts/' + idShopCart + '/items')
+				.send(datas)
+				.expect(201)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
+					should(res.body).have.property('shopcartfeatures');
+					should(res.body.shopcartfeatures).be.a.Array();
+					for (var n = 0; n < res.body.shopcartfeatures.length; n++) {
+						idFeatures.push(res.body.shopcartfeatures[n].id);
+					}
+					done();
+				});
 
 		});
 
 		// delete 2 features in a shopcart
-		it('POST /ngeo/shopcarts/:id/items/delete - delete 2 features', function(done) {
+		it('POST /ngeo/shopcarts/:id/items/delete - delete 2 features', function (done) {
 
 			var datas = {
 				shopcartfeatures: [
@@ -495,47 +495,47 @@ describe('Route shopCart features', function() {
 					}
 				]
 			};
-			
+
 			request(app)
-			.post('/ngeo/shopcarts/' + idShopCart + '/items/delete')
-			.send(datas)
-			.expect(200)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.Object();
-				should(res.body).have.property('shopcartfeatures');
-				should(res.body.shopcartfeatures).be.a.Array();
-				done();
-			});
+				.post('/ngeo/shopcarts/' + idShopCart + '/items/delete')
+				.send(datas)
+				.expect(200)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
+					should(res.body).have.property('shopcartfeatures');
+					should(res.body.shopcartfeatures).be.a.Array();
+					done();
+				});
 
 		});
 	});
 
-	describe('Delete shopcart... what about features ?', function() {
+	describe('Delete shopcart... what about features ?', function () {
 
 		// delete a shopcart
-		it('DELETE /ngeo/shopcarts/:id - delete shopcart', function(done) {
+		it('DELETE /ngeo/shopcarts/:id - delete shopcart', function (done) {
 
 			request(app)
-			.delete('/ngeo/shopcarts/' + idShopCart)
-			.send()
-			.expect(204, done);
+				.delete('/ngeo/shopcarts/' + idShopCart)
+				.send()
+				.expect(204, done);
 
 		});
 
 		// list shopcart features (not found)
-		it('GET /ngeo/shopcarts/:id/items - list features in a shopcart: not found', function(done) {
+		it('GET /ngeo/shopcarts/:id/items - list features in a shopcart: not found', function (done) {
 
 			request(app)
-			.get('/ngeo/shopcarts/' + idShopCart + '/items')
-			.send()
-			.expect(404)
-			.expect('Content-Type', /json/)
-			.end(function(err,res) {
-				should(res.body).be.a.String();
-				should(res.body).be.equal('Not found');
-				done();
-			});
+				.get('/ngeo/shopcarts/' + idShopCart + '/items')
+				.send()
+				.expect(404)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.String();
+					should(res.body).be.equal('Not found');
+					done();
+				});
 
 		});
 	});

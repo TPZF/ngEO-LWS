@@ -13,7 +13,7 @@ let logger = new winston.Logger({
 
 if (Configuration.logger.outputPath) {
 	logger.configure({
-		transports: [ new winston.transports.File({
+		transports: [new winston.transports.File({
 			level: Configuration.logger.level,
 			filename: Configuration.logger.outputPath,
 			handleExceptions: true,
@@ -30,7 +30,7 @@ if (Configuration.logger.outputPath) {
 			handleExceptions: true,
 			json: false,
 			colorize: true,
-			log: function() {
+			log: function () {
 
 			}
 		})]

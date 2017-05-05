@@ -20,44 +20,44 @@ describe('Route productSearch', function () {
 	it('GET /ngeo/catalogue/SXCAT-Landsat57Merged/search', function (done) {
 
 		this.timeout(10000);
-		
+
 		request(app)
-		.get('/ngeo/catalogue/SXCAT-Landsat57Merged/search')
-		.expect(200)
-		.end(function (err, res) {
-			should(res.body).have.property('type');
-			should(res.body.type).be.equal('FeatureCollection');
-			should(res.body).have.property('features');
-			should(res.body.features).be.a.Array();
-			should(res.body.features[0]).have.property('id');
-			should(res.body.features[0]).have.property('type');
-			should(res.body.features[0]).have.property('properties');
-			should(res.body.features[0]).have.property('geometry');
-			done();
-		});
+			.get('/ngeo/catalogue/SXCAT-Landsat57Merged/search')
+			.expect(200)
+			.end(function (err, res) {
+				should(res.body).have.property('type');
+				should(res.body.type).be.equal('FeatureCollection');
+				should(res.body).have.property('features');
+				should(res.body.features).be.a.Array();
+				should(res.body.features[0]).have.property('id');
+				should(res.body.features[0]).have.property('type');
+				should(res.body.features[0]).have.property('properties');
+				should(res.body.features[0]).have.property('geometry');
+				done();
+			});
 	})
 
 	it('GET /ngeo/catalogue/toto/search - Not found', function (done) {
 
 		request(app)
-		.get('/ngeo/catalogue/toto/search')
-		.expect(404)
-		.end(function (err, res) {
-			should(res.text).be.a.String();
-			should(res.text).be.equal('Not found');
-			done();
-		});
+			.get('/ngeo/catalogue/toto/search')
+			.expect(404)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				should(res.text).be.equal('Not found');
+				done();
+			});
 	})
 
 	it('GET /ngeo/catalogue/SXCAT-Landsat57Merged/search/about', function (done) {
 
 		request(app)
-		.get('/ngeo/catalogue/SXCAT-Landsat57Merged/search/about')
-		.expect(200)
-		.end(function (err, res) {
-			should(res.text).be.a.String();
-			done();
-		});
+			.get('/ngeo/catalogue/SXCAT-Landsat57Merged/search/about')
+			.expect(200)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				done();
+			});
 	})
 
 });

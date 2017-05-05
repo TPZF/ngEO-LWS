@@ -9,9 +9,9 @@ let app = require('../../app');
  * Unit test file for service web SimpleDataAccessRequests
  * It allow to test the REST service and the mongodb database
  */
-describe('Route simpleDataAccessRequests', function() {
+describe('Route simpleDataAccessRequests', function () {
 
-	before(function(done) {
+	before(function (done) {
 		// if you want to pass parameters before testing
 		done();
 	});
@@ -28,30 +28,30 @@ describe('Route simpleDataAccessRequests', function() {
 					"DownloadDirectory": "/home/test/tmp/"
 				},
 				"productURLs": [
-					{"productURL": "http://urlproduit1"},
-					{"productURL": "http://urlproduit2"}
+					{ "productURL": "http://urlproduit1" },
+					{ "productURL": "http://urlproduit2" }
 				],
 				"name": "SDAR_001"
 			}
 		};
 
 		request(app)
-		.put('/ngeo/simpleDataAccessRequests')
-		.send(datas)
-		.expect(200)
-		.expect('Content-Type', /json/)
-		.end(function(err,res) {
-			should(res.body).be.a.Object();
-			should(res.body).have.property('dataAccessRequestStatus');
-			should(res.body.dataAccessRequestStatus).have.property('ID');
-			should(res.body.dataAccessRequestStatus).have.property('status');
-			should(res.body.dataAccessRequestStatus.status).be.equal(4);
-			done();
-		});
+			.put('/ngeo/simpleDataAccessRequests')
+			.send(datas)
+			.expect(200)
+			.expect('Content-Type', /json/)
+			.end(function (err, res) {
+				should(res.body).be.a.Object();
+				should(res.body).have.property('dataAccessRequestStatus');
+				should(res.body.dataAccessRequestStatus).have.property('ID');
+				should(res.body.dataAccessRequestStatus).have.property('status');
+				should(res.body.dataAccessRequestStatus.status).be.equal(4);
+				done();
+			});
 
 	});
 
-	it('PUT /ngeo/simpleDataAccessRequests with confirmation requestStage', function(done) {
+	it('PUT /ngeo/simpleDataAccessRequests with confirmation requestStage', function (done) {
 
 		var datas = {
 			simpledataaccessrequest: {
@@ -61,39 +61,39 @@ describe('Route simpleDataAccessRequests', function() {
 					"DownloadDirectory": "/home/test/tmp/"
 				},
 				"productURLs": [
-					{"productURL": "http://urlproduit1"},
-					{"productURL": "http://urlproduit2"}
+					{ "productURL": "http://urlproduit1" },
+					{ "productURL": "http://urlproduit2" }
 				],
 				"name": "SDAR_001"
 			}
 		};
 
 		request(app)
-		.put('/ngeo/simpleDataAccessRequests')
-		.send(datas)
-		.expect(201)
-		.expect('Content-Type', /json/)
-		.end(function(err,res) {
-			should(res.body).be.a.Object();
-			should(res.body).have.property('dataAccessRequestStatus');
-			should(res.body.dataAccessRequestStatus).have.property('ID');
-			should(res.body.dataAccessRequestStatus).have.property('status');
-			should(res.body.dataAccessRequestStatus.status).be.equal(0);
-			done();
-		});
+			.put('/ngeo/simpleDataAccessRequests')
+			.send(datas)
+			.expect(201)
+			.expect('Content-Type', /json/)
+			.end(function (err, res) {
+				should(res.body).be.a.Object();
+				should(res.body).have.property('dataAccessRequestStatus');
+				should(res.body.dataAccessRequestStatus).have.property('ID');
+				should(res.body.dataAccessRequestStatus).have.property('status');
+				should(res.body.dataAccessRequestStatus.status).be.equal(0);
+				done();
+			});
 
 	});
 
 	it('GET /ngeo/simpleDataAccessRequests/about', function (done) {
 
 		request(app)
-		.get('/ngeo/simpleDataAccessRequests/about')
-		.send()
-		.expect(200)
-		.end(function(err,res) {
-			should(res.text).be.a.String();
-			done();
-		});
+			.get('/ngeo/simpleDataAccessRequests/about')
+			.send()
+			.expect(200)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				done();
+			});
 
 	});
 

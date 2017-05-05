@@ -31,7 +31,7 @@ function _checkRequest(request) {
 			Logger.debug('no name for downloadmanager');
 			return false;
 		}
-		if (request.body.downloadmanager.downloadManagerFriendlyName.trim()==='') {
+		if (request.body.downloadmanager.downloadManagerFriendlyName.trim() === '') {
 			Logger.debug('name for downloadmanager is empty');
 			return false;
 		}
@@ -73,16 +73,16 @@ router.get('/', (req, res) => {
 
 	// define call back function after listing downloadmanagers
 	// send response
-	let cbAfterSearch = function(response) {
+	let cbAfterSearch = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			_.map(response.datas, function(item) {
+			_.map(response.datas, function (item) {
 				item.downloadManagerId = item.id;
 				delete item._id;
 				delete item.id;
 			})
-			res.json({"downloadmanagers" : response.datas});
+			res.json({ "downloadmanagers": response.datas });
 		}
 	}
 
@@ -132,20 +132,20 @@ router.get('/:downloadManagerid', (req, res) => {
 	let idToGet = req.params['downloadManagerid'];
 
 	// define callback function after updating
-	let cbAfterUpdate = function(response) {
+	let cbAfterUpdate = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
 			response.datas.downloadManagerId = response.datas.id;
 			delete response.datas._id;
 			delete response.datas.id;
-			res.status(200).json({"downloadmanager": response.datas });
+			res.status(200).json({ "downloadmanager": response.datas });
 		}
 	};
 
 	// define call back function after get downloadmanager
 	// send response
-	let cbAfterList = function(response) {
+	let cbAfterList = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 			return;
@@ -191,7 +191,7 @@ router.get('/:downloadManagerid', (req, res) => {
  * @param req - request {downloadmanager:{name,userId}}
  * @param res - response
  */
-router.post('/', (req,res) => {
+router.post('/', (req, res) => {
 
 	Logger.debug('POST /ngeo/downloadManagers');
 
@@ -203,7 +203,7 @@ router.post('/', (req,res) => {
 
 	// define call back function after adding DownloadManager
 	// send response
-	let cbAddDownloadManager = function(response) {
+	let cbAddDownloadManager = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -211,7 +211,7 @@ router.post('/', (req,res) => {
 			delete response.datas.id;
 			delete response.datas._id;
 			res.setHeader('Location', '/ngeo/downloadManagers/' + response.datas.downloadManagerId)
-			res.status(201).json({"downloadmanager": response.datas });
+			res.status(201).json({ "downloadmanager": response.datas });
 		}
 	};
 
@@ -234,13 +234,13 @@ router.post('/', (req,res) => {
 
 	// call create service for database
 	DatabaseService.create(DOWNLOADMANAGERNAME, myInsertItem, myQueryItemAlreadyExists, cbAddDownloadManager);
-	
+
 });
 
 /**
  * Delete a downloadmanager
  */
-router.delete('/:downloadmanager_id', (req,res) => {
+router.delete('/:downloadmanager_id', (req, res) => {
 
 	Logger.debug('DELETE /ngeo/downloadManagers/:id');
 
@@ -253,7 +253,7 @@ router.delete('/:downloadmanager_id', (req,res) => {
 	let idToDelete = req.params.downloadmanager_id;
 
 	// define callback function after deleting all DARs for a downloadmanager
-	let cbDeleteAllDARsInShopCart = function(response) {
+	let cbDeleteAllDARsInShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -262,7 +262,7 @@ router.delete('/:downloadmanager_id', (req,res) => {
 	};
 
 	// define callback function after deleting DownloadManager
-	let cbDeleteDownloadManager = function(response) {
+	let cbDeleteDownloadManager = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -273,17 +273,17 @@ router.delete('/:downloadmanager_id', (req,res) => {
 			DatabaseService.deleteCascade('DataAccessRequest', myQueryDelete, cbDeleteAllDARsInShopCart);
 		}
 	};
-					
-	let cbAfterCheckAuthorization = function() {
+
+	let cbAfterCheckAuthorization = function () {
 		DatabaseService.delete(DOWNLOADMANAGERNAME, idToDelete, cbDeleteDownloadManager);
 	}
 
 	AuthorizationService.isAuthorized(
-		res, 
-		DatabaseService, 
-		DOWNLOADMANAGERNAME, 
-		ObjectId(idToDelete), 
-		AuthenticationService.getUserId(req), 
+		res,
+		DatabaseService,
+		DOWNLOADMANAGERNAME,
+		ObjectId(idToDelete),
+		AuthenticationService.getUserId(req),
 		cbAfterCheckAuthorization
 	);
 

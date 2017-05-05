@@ -24,7 +24,7 @@ let SHOPCARTFEATURENAME = 'ShopCartFeature';
  */
 function _checkRequest(request) {
 	// only for put and post methods
-	if ((request.method === 'POST') || (request.method==='PUT')) {
+	if ((request.method === 'POST') || (request.method === 'PUT')) {
 		if (!request.body.shopcart) {
 			Logger.debug('no shopcart item');
 			return false;
@@ -33,7 +33,7 @@ function _checkRequest(request) {
 			Logger.debug('no name for shopcart');
 			return false;
 		}
-		if (request.body.shopcart.name.trim()==='') {
+		if (request.body.shopcart.name.trim() === '') {
 			Logger.debug('name for shopcart is empty');
 			return false;
 		}
@@ -60,7 +60,7 @@ function _checkRequest(request) {
  * @private
  */
 function _checkRequestFeatures(request) {
-	if (request.method==='POST') {
+	if (request.method === 'POST') {
 		if (!request.params.shopcart_id) {
 			Logger.debug('no shopcart id');
 			return false;
@@ -116,14 +116,14 @@ router.get('/', (req, res) => {
 
 	// define call back function after listing shopcarts
 	// send response
-	let cbAfterSearch = function(response) {
+	let cbAfterSearch = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			_.map(response.datas, function(item) {
+			_.map(response.datas, function (item) {
 				delete item._id;
 			});
-			res.json({"shopcarts" : response.datas});
+			res.json({ "shopcarts": response.datas });
 		}
 	}
 
@@ -172,11 +172,11 @@ router.get('/:shopcart_id', (req, res) => {
 	let count = 999;
 	let myResp = {};
 
-	let cbSearchFeaturesInShopCart = function(response) {
+	let cbSearchFeaturesInShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			_.map(response.datas, function(item) {
+			_.map(response.datas, function (item) {
 				item.properties.shopcartItemId = item._id;
 				item.id = item._id;
 				delete item._id;
@@ -187,7 +187,7 @@ router.get('/:shopcart_id', (req, res) => {
 		}
 	}
 
-	let cbAfterList = function(response) {
+	let cbAfterList = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 			return;
@@ -196,7 +196,7 @@ router.get('/:shopcart_id', (req, res) => {
 			res.status(400).json('Bad request !');
 			return;
 		}
-		_.map(response.datas, function(item) {
+		_.map(response.datas, function (item) {
 			delete item._id;
 		});
 		myResp = response.datas[0];
@@ -221,7 +221,7 @@ router.get('/:shopcart_id', (req, res) => {
  * @function router.post
  * @param url - /ngeo/shopcarts/
  */
-router.post('/', (req,res) => {
+router.post('/', (req, res) => {
 
 	Logger.debug('POST /ngeo/shopcarts');
 
@@ -233,13 +233,13 @@ router.post('/', (req,res) => {
 
 	// define call back function after creating shop cart
 	// send response
-	let cbCreateShopCart = function(response) {
+	let cbCreateShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
 			delete response.datas._id;
 			res.setHeader('Location', '/ngeo/shopcarts/' + response.datas.id)
-			res.status(201).json({"shopcart": response.datas });
+			res.status(201).json({ "shopcart": response.datas });
 		}
 	};
 
@@ -261,7 +261,7 @@ router.post('/', (req,res) => {
 
 	// call create service for database
 	DatabaseService.create(SHOPCARTNAME, myInsertItem, myQueryItemAlreadyExists, cbCreateShopCart);
-	
+
 });
 
 /**
@@ -270,7 +270,7 @@ router.post('/', (req,res) => {
  * @function router.put
  * @param url - /ngeo/shopcarts/id
  */
-router.put('/:shopcart_id', (req,res) => {
+router.put('/:shopcart_id', (req, res) => {
 
 	Logger.debug('PUT /ngeo/shopcarts/:shopcartId');
 
@@ -308,24 +308,24 @@ router.put('/:shopcart_id', (req,res) => {
 	};
 
 	// define callback function after updating shopcart
-	let cbUpdateShopCart = function(response) {
+	let cbUpdateShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
 			delete response.datas._id;
-			res.status(200).json({"shopcart": response.datas });
+			res.status(200).json({ "shopcart": response.datas });
 		}
 	};
-					
+
 	// call update service
 	DatabaseService.update(SHOPCARTNAME, myUpdateItem, myQueryItemAlreadyExists, myQueryUpdate, cbUpdateShopCart);
-	
+
 });
 
 /**
  * Delete a shopcart
  */
-router.delete('/:shopcart_id', (req,res) => {
+router.delete('/:shopcart_id', (req, res) => {
 
 	Logger.debug('DELETE /ngeo/shopcarts/:shopcart_id');
 
@@ -338,7 +338,7 @@ router.delete('/:shopcart_id', (req,res) => {
 	let idToDelete = req.params.shopcart_id;
 
 	// define callback function after deleting all features in shopcart
-	let cbDeleteAllFeaturesInShopCart = function(response) {
+	let cbDeleteAllFeaturesInShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -347,7 +347,7 @@ router.delete('/:shopcart_id', (req,res) => {
 	};
 
 	// define callback function after deleting shopcart
-	let cbDeleteShopCart = function(response) {
+	let cbDeleteShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -360,16 +360,16 @@ router.delete('/:shopcart_id', (req,res) => {
 	};
 
 
-	let cbAfterCheckAuthorization = function() {
+	let cbAfterCheckAuthorization = function () {
 		DatabaseService.delete(SHOPCARTNAME, idToDelete, cbDeleteShopCart);
 	}
 
 	AuthorizationService.isAuthorized(
-		res, 
-		DatabaseService, 
-		SHOPCARTNAME, 
-		ObjectId(idToDelete), 
-		AuthenticationService.getUserId(req), 
+		res,
+		DatabaseService,
+		SHOPCARTNAME,
+		ObjectId(idToDelete),
+		AuthenticationService.getUserId(req),
 		cbAfterCheckAuthorization
 	);
 
@@ -381,7 +381,7 @@ router.delete('/:shopcart_id', (req,res) => {
 /**
  * Get features for a shopcart
  */
-router.get('/:shopcart_id/items', (req,res) => {
+router.get('/:shopcart_id/items', (req, res) => {
 
 	Logger.debug('GET /ngeo/shopcarts/:shopcartId/items');
 
@@ -407,11 +407,11 @@ router.get('/:shopcart_id/items', (req,res) => {
 		}
 	};
 
-	let cbSearchFeaturesInShopCart = function(response) {
+	let cbSearchFeaturesInShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
-			_.map(response.datas, function(item) {
+			_.map(response.datas, function (item) {
 				item.properties.shopcartItemId = item._id;
 				item.id = item._id;
 				delete item._id;
@@ -420,8 +420,8 @@ router.get('/:shopcart_id/items', (req,res) => {
 			res.json(objetRep);
 		}
 	};
-	
-	let cbCountFeaturesInShopCart = function(response) {
+
+	let cbCountFeaturesInShopCart = function (response) {
 		if (response.code !== 0) {
 			res.status(response.code).json(response.datas);
 		} else {
@@ -434,13 +434,13 @@ router.get('/:shopcart_id/items', (req,res) => {
 		}
 	};
 
-	let cbAfterCheckAuthorization = function() {
+	let cbAfterCheckAuthorization = function () {
 		// call count service
 		DatabaseService.count(SHOPCARTFEATURENAME, myQueryCriteria, cbCountFeaturesInShopCart);
 	}
 
 	AuthorizationService.isAuthorized(
-		res, 
+		res,
 		DatabaseService,
 		SHOPCARTNAME,
 		ObjectId(idShopCart),
@@ -453,7 +453,7 @@ router.get('/:shopcart_id/items', (req,res) => {
 /**
  * Create features on a shopcart
  */
-router.post('/:shopcart_id/items', (req,res) => {
+router.post('/:shopcart_id/items', (req, res) => {
 
 	Logger.debug('POST /ngeo/shopcarts/:shopcartId/items');
 
@@ -467,7 +467,7 @@ router.post('/:shopcart_id/items', (req,res) => {
 	let maxItems = 0;
 	let myNewInsertFeatures = [];
 
-	let cbCreateFeatureInShopCart = function(response) {
+	let cbCreateFeatureInShopCart = function (response) {
 		if (response.code === 0) {
 			delete response.datas._id;
 			myNewInsertFeatures.push(response.datas);
@@ -475,16 +475,16 @@ router.post('/:shopcart_id/items', (req,res) => {
 		maxItems++;
 		if (myInsertFeatures.length === maxItems) {
 			Logger.debug('All is done !');
-			res.status(201).json({"shopcartfeatures": myNewInsertFeatures});
+			res.status(201).json({ "shopcartfeatures": myNewInsertFeatures });
 		}
 	};
 
 	if (myInsertFeatures.length == 0) {
-		res.status(200).json({"shopcartfeatures": []});
+		res.status(200).json({ "shopcartfeatures": [] });
 		return;
 	}
 
-	let cbAfterCheckAuthorization = function() {
+	let cbAfterCheckAuthorization = function () {
 		myInsertFeatures.forEach((item, index) => {
 			item.properties.shopcart_id = idShopCart;
 			// define query to find if item is already in database
@@ -498,7 +498,7 @@ router.post('/:shopcart_id/items', (req,res) => {
 	}
 
 	AuthorizationService.isAuthorized(
-		res, 
+		res,
 		DatabaseService,
 		SHOPCARTNAME,
 		ObjectId(idShopCart),
@@ -511,7 +511,7 @@ router.post('/:shopcart_id/items', (req,res) => {
 /**
  * Delete features for a shopcart
  */
-router.post('/:shopcart_id/items/delete', (req,res) => {
+router.post('/:shopcart_id/items/delete', (req, res) => {
 
 	Logger.debug('POST /ngeo/shopcarts/:shopcartId/items/delete');
 
@@ -525,32 +525,32 @@ router.post('/:shopcart_id/items/delete', (req,res) => {
 	let myDeletedFeatures = req.body.shopcartfeatures;
 	let maxItems = 0;
 
-	let cbDeleteFeatureInShopCart = function(response) {
+	let cbDeleteFeatureInShopCart = function (response) {
 		if (response.code === 0) {
-			myNewDeletedFeatures.push(_.find(myDeletedFeatures, function(elem) {
-				return elem.id==response.datas;
+			myNewDeletedFeatures.push(_.find(myDeletedFeatures, function (elem) {
+				return elem.id == response.datas;
 			}));
 		}
 		maxItems++;
 		if (myDeletedFeatures.length === maxItems) {
 			Logger.info('All is done !');
-			res.status(200).json({"shopcartfeatures": myNewDeletedFeatures});
+			res.status(200).json({ "shopcartfeatures": myNewDeletedFeatures });
 		}
 	};
 
 	if (myDeletedFeatures.length == 0) {
-		res.status(200).json({"shopcartfeatures":[]});
+		res.status(200).json({ "shopcartfeatures": [] });
 		return;
 	}
 
-	let cbAfterCheckAuthorization = function() {
+	let cbAfterCheckAuthorization = function () {
 		myDeletedFeatures.forEach((item, index) => {
 			DatabaseService.delete(SHOPCARTFEATURENAME, item.id, cbDeleteFeatureInShopCart);
 		});
 	};
 
 	AuthorizationService.isAuthorized(
-		res, 
+		res,
 		DatabaseService,
 		SHOPCARTNAME,
 		ObjectId(idShopCart),

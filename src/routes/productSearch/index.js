@@ -24,7 +24,7 @@ router.use(function timeLog(req, res, next) {
  * @param {string} url - /
  */
 router.get('/', function (req, res) {
-	
+
 	// Retrieve collection url from collection service
 	let collectionId = req.params['fCollectionId'];
 	Logger.debug('GET /ngeo/catalogue/' + collectionId + '/search');

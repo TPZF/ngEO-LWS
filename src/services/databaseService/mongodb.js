@@ -22,7 +22,7 @@ class MongoDBService {
 	 * @param myCallbackFn - callback function 
 	 */
 	create(myCollection, myDocument, myQueryItemAlreadyExists, myCallbackFn) {
-		
+
 		let dataBase = null;
 
 		try {
@@ -37,7 +37,7 @@ class MongoDBService {
 					Logger.debug('findOne is done.');
 					if (resultFind) {
 						dataBase.close();
-						return myCallbackFn({"code": 400, "datas": 'This document already exists in collection ' + myCollection + '.'});
+						return myCallbackFn({ "code": 400, "datas": 'This document already exists in collection ' + myCollection + '.' });
 					} else {
 						// insert document
 						dataBase.collection(myCollection).insertOne(myDocument, (errInsert, resultInsert) => {
@@ -46,15 +46,15 @@ class MongoDBService {
 							dataBase.close();
 							let idCreated = resultInsert.insertedId;
 							myDocument.id = idCreated;
-							return myCallbackFn({"code": 0, "datas": myDocument});
+							return myCallbackFn({ "code": 0, "datas": myDocument });
 						})
 					}
 				});
 			});
 		}
-		catch(exc) {
-			if (dataBase!==null) dataBase.close();
-			return myCallbackFn({"code": 400, "datas": exc});
+		catch (exc) {
+			if (dataBase !== null) dataBase.close();
+			return myCallbackFn({ "code": 400, "datas": exc });
 		}
 
 	}
@@ -70,7 +70,7 @@ class MongoDBService {
 	delete(myCollection, myDocumentId, myCallbackFn) {
 
 		let dataBase = null;
-		
+
 		try {
 			// connect to mongodb
 			MongoClient.connect(this.databaseConnnection.url, (errConnect, db) => {
@@ -86,19 +86,19 @@ class MongoDBService {
 					Logger.debug('deleteOne is done');
 					dataBase.close();
 					if (resultDelete.deletedCount === 0) {
-						return myCallbackFn({"code": 404, "datas": 'Unable to find this document in collection ' + myCollection});
+						return myCallbackFn({ "code": 404, "datas": 'Unable to find this document in collection ' + myCollection });
 					} else if (resultDelete.deletedCount === 1) {
-						return myCallbackFn({"code": 0, "datas": myDocumentId});
+						return myCallbackFn({ "code": 0, "datas": myDocumentId });
 					} else {
 						throw '_id for this document is not unique ! (' + myDocumentId + ')';
 					}
 				});
-				
+
 			})
 		}
 		catch (exc) {
-			if (dataBase!==null) dataBase.close();
-			return myCallbackFn({"code": 400, "datas": exc});
+			if (dataBase !== null) dataBase.close();
+			return myCallbackFn({ "code": 400, "datas": exc });
 		}
 
 	}
@@ -114,7 +114,7 @@ class MongoDBService {
 	deleteCascade(myCollection, myQueryCriterias, myCallbackFn) {
 
 		let dataBase = null;
-		
+
 		try {
 			// connect to mongodb
 			MongoClient.connect(this.databaseConnnection.url, (errConnect, db) => {
@@ -126,13 +126,13 @@ class MongoDBService {
 					if (errDelete) throw errDelete;
 					Logger.debug('deleteMany is done');
 					dataBase.close();
-					return myCallbackFn({"code": 0, "datas": null});
-				});				
+					return myCallbackFn({ "code": 0, "datas": null });
+				});
 			})
 		}
 		catch (exc) {
-			if (dataBase!==null) dataBase.close();
-			return myCallbackFn({"code": 400, "datas": exc});
+			if (dataBase !== null) dataBase.close();
+			return myCallbackFn({ "code": 400, "datas": exc });
 		}
 
 	}
@@ -147,9 +147,9 @@ class MongoDBService {
 	 * @param myCallbackFn - callback function 
 	 */
 	update(myCollection, myDocument, myQueryItemAlreadyExists, myQueryUpdate, myCallbackFn) {
-		
+
 		let dataBase = null;
-		
+
 		try {
 			// connect to mongodb
 			MongoClient.connect(this.databaseConnnection.url, (errConnect, db) => {
@@ -162,7 +162,7 @@ class MongoDBService {
 					Logger.debug('findOne is done');
 					if (resultFind) {
 						dataBase.close();
-						return myCallbackFn({"code": 400, "datas": 'A document with the same attributes already exists in collection ' + myCollection});
+						return myCallbackFn({ "code": 400, "datas": 'A document with the same attributes already exists in collection ' + myCollection });
 					} else {
 						// update if not found
 						let queryFindById = {
@@ -174,18 +174,18 @@ class MongoDBService {
 							dataBase.close();
 							if (resultUpdate.matchedCount !== 1) {
 								Logger.debug('unable to find');
-								return myCallbackFn({"code": 404, "datas": 'Unable to find this document in collection ' + myCollection});
+								return myCallbackFn({ "code": 404, "datas": 'Unable to find this document in collection ' + myCollection });
 							} else {
-								return myCallbackFn({"code": 0, "datas": myDocument});
+								return myCallbackFn({ "code": 0, "datas": myDocument });
 							}
 						});
 					}
 				});
 			})
 		}
-		catch(exc) {
-			if (dataBase!==null) dataBase.close();
-			return myCallbackFn({"code": 400, "datas": exc});
+		catch (exc) {
+			if (dataBase !== null) dataBase.close();
+			return myCallbackFn({ "code": 400, "datas": exc });
 		}
 	}
 
@@ -206,7 +206,7 @@ class MongoDBService {
 		}
 		try {
 			// connect to mongodb
-			MongoClient.connect(this.databaseConnnection.url, (errConnect,db) => {
+			MongoClient.connect(this.databaseConnnection.url, (errConnect, db) => {
 				if (errConnect) throw errConnect;
 				Logger.debug('db connection ok');
 				dataBase = db;
@@ -218,13 +218,13 @@ class MongoDBService {
 					resultFindAll.forEach((_document, _index) => {
 						_document.id = _document._id;
 					});
-					return myCallbackFn({"code": 0, "datas": resultFindAll});
+					return myCallbackFn({ "code": 0, "datas": resultFindAll });
 				});
 			});
 		}
-		catch(exc) {
-			if (dataBase!==null) dataBase.close();
-			return myCallbackFn({"code": 400, "datas": exc});
+		catch (exc) {
+			if (dataBase !== null) dataBase.close();
+			return myCallbackFn({ "code": 400, "datas": exc });
 		}
 
 	}
@@ -245,30 +245,30 @@ class MongoDBService {
 
 		try {
 			// connect to mongodb
-			MongoClient.connect(this.databaseConnnection.url, (errConnect,db) => {
+			MongoClient.connect(this.databaseConnnection.url, (errConnect, db) => {
 				if (errConnect) throw errConnect;
 				Logger.debug('db connection ok');
 				dataBase = db;
 				// find and return an array
 				let myCursor = dataBase
-				.collection(myCollection)
-				.find(myQueryCriterias)
-				.skip(mySkip)
-				.limit(myLimit)
-				.toArray((errFindAll, resultFindAll) => {
-					if (errFindAll) throw errFindAll;
-					Logger.debug('search is done');
-					dataBase.close();
-					resultFindAll.forEach((_document, _index) => {
-						_document.id = _document._id;
+					.collection(myCollection)
+					.find(myQueryCriterias)
+					.skip(mySkip)
+					.limit(myLimit)
+					.toArray((errFindAll, resultFindAll) => {
+						if (errFindAll) throw errFindAll;
+						Logger.debug('search is done');
+						dataBase.close();
+						resultFindAll.forEach((_document, _index) => {
+							_document.id = _document._id;
+						});
+						return myCallbackFn({ "code": 0, "datas": resultFindAll });
 					});
-					return myCallbackFn({"code": 0, "datas": resultFindAll});
-				});
 			});
 		}
-		catch(exc) {
-			if (dataBase!==null) dataBase.close();
-			return myCallbackFn({"code": 400, "datas": exc});
+		catch (exc) {
+			if (dataBase !== null) dataBase.close();
+			return myCallbackFn({ "code": 400, "datas": exc });
 		}
 
 	}
@@ -289,26 +289,26 @@ class MongoDBService {
 
 		try {
 			// connect to mongodb
-			MongoClient.connect(this.databaseConnnection.url, (errConnect,db) => {
+			MongoClient.connect(this.databaseConnnection.url, (errConnect, db) => {
 				if (errConnect) throw errConnect;
 				Logger.debug('db connection ok');
 				dataBase = db;
 				// find and return count documents
 				let count = 0;
 				dataBase
-				.collection(myCollection)
-				.find(myQueryCriterias)
-				.count((errCount, value) => {
-					if (errCount) throw errCount;
-					Logger.debug('count is done');
-					dataBase.close();
-					return myCallbackFn({"code": 0, "datas": value});
-				});
+					.collection(myCollection)
+					.find(myQueryCriterias)
+					.count((errCount, value) => {
+						if (errCount) throw errCount;
+						Logger.debug('count is done');
+						dataBase.close();
+						return myCallbackFn({ "code": 0, "datas": value });
+					});
 			});
 		}
-		catch(exc) {
-			if (dataBase!==null) dataBase.close();
-			return myCallbackFn({"code": 400, "datas": exc});
+		catch (exc) {
+			if (dataBase !== null) dataBase.close();
+			return myCallbackFn({ "code": 400, "datas": exc });
 		}
 
 	}

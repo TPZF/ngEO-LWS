@@ -7,7 +7,7 @@ let logger = require('./logger');
  * Allows us to change quickly the implementation of xml2json parser
  */
 class Xml2JsonParser {
-	constructor() {}
+	constructor() { }
 
 	/**
 	 * Parse the given xml

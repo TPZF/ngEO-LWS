@@ -24,7 +24,7 @@ module.exports = {
 	 * @param {object} defaultValue - default value if property is not found
 	 * @returns {object}
 	 */
-	getValue: function(object, property, defaultValue) {
+	getValue: function (object, property, defaultValue) {
 		if (object) {
 			var value = null;
 			var kv = property.split("="); // Split by "=" to handle arrays
@@ -55,19 +55,19 @@ module.exports = {
 	 * @param {object} defaultValue - value if path not found
 	 * @returns {object}
 	 */
-	getFromPath: function(object, path, defaultValue) {
+	getFromPath: function (object, path, defaultValue) {
 		var names = path.split('.');
 		var obj = object;
 		for (var i = 0; obj && i < names.length - 1; i++) {
 			var nameKV = names[i].split('[]');
 			if (nameKV.length === 2) {
 				var obj2 = null;
-				for (var j=0; j<obj[nameKV[0]].length; j++) {
+				for (var j = 0; j < obj[nameKV[0]].length; j++) {
 					var obj2 = obj[nameKV[0]][j];
-					for (var k=i+1; obj2 && k < names.length -1; k++) {
+					for (var k = i + 1; obj2 && k < names.length - 1; k++) {
 						obj2 = this.getValue(obj2, names[k]);
 					}
-					if (obj2) {i=k; break;}
+					if (obj2) { i = k; break; }
 				}
 				obj = obj2;
 			} else {
@@ -84,7 +84,7 @@ module.exports = {
 	 * @param {string} myPathXmlns
 	 * @returns {string}
 	 */
-	findTagByXmlns: function(myJsonOSDD, myPathXmlns) {
+	findTagByXmlns: function (myJsonOSDD, myPathXmlns) {
 		let _result = '';
 		for (var _node in myJsonOSDD['@']) {
 			if (myJsonOSDD['@'][_node].indexOf(myPathXmlns) >= 0) {

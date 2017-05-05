@@ -33,7 +33,7 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry, collectionId) {
 	if (posList['#']) {
 		stringPosList = posList['#'];
 	}
-	
+
 	let arrList = stringPosList.split(" ", -1);
 
 	for (let i = 0; i < arrList.length; i = i + 2) {
@@ -56,7 +56,7 @@ let _convertGmlFpToInternalFp = function (gmlFpEntry, collectionId) {
  * @param {string} myGeo 
  * @return {object}
  */
-let _addPolygonGeometry = function(myGeo) {
+let _addPolygonGeometry = function (myGeo) {
 	let geometry = {};
 	geometry.type = "Polygon";
 	geometry.coordinates = [];
@@ -71,7 +71,7 @@ let _addPolygonGeometry = function(myGeo) {
 		geometry.coordinates[0].push(coord);
 	}
 	return geometry;
-	
+
 }
 
 /**
@@ -79,7 +79,7 @@ let _addPolygonGeometry = function(myGeo) {
  * @param {string} myGeo 
  * @return {object}
  */
-let _addBoxGeometry = function(myGeo) {
+let _addBoxGeometry = function (myGeo) {
 	let geometry = {};
 	geometry.type = "Polygon";
 	geometry.coordinates = [];
@@ -94,7 +94,7 @@ let _addBoxGeometry = function(myGeo) {
 		geometry.coordinates[0].push(coord);
 	}
 	return geometry;
-	
+
 }
 
 /**
@@ -102,7 +102,7 @@ let _addBoxGeometry = function(myGeo) {
  * @param {string} myGeo 
  * @return {object}
  */
-let _addLineGeometry = function(myGeo) {
+let _addLineGeometry = function (myGeo) {
 	let geometry = {};
 	geometry.type = "LineString";
 	geometry.coordinates = [];
@@ -117,7 +117,7 @@ let _addLineGeometry = function(myGeo) {
 		geometry.coordinates[0].push(coord);
 	}
 	return geometry;
-	
+
 }
 
 /**
@@ -125,7 +125,7 @@ let _addLineGeometry = function(myGeo) {
  * @param {string} myGeo 
  * @return {object}
  */
-let _addPointGeometry = function(myGeo) {
+let _addPointGeometry = function (myGeo) {
 	let geometry = {};
 	geometry.type = "Point";
 	geometry.coordinates = [];
@@ -140,7 +140,7 @@ let _addPointGeometry = function(myGeo) {
 		geometry.coordinates = coord;
 	}
 	return geometry;
-	
+
 }
 
 /**
@@ -151,7 +151,7 @@ let _addPointGeometry = function(myGeo) {
 let _convertGeoRssFpToInternalFp = function (myEntry) {
 
 	let geo;
-	
+
 	geo = Utils.getFromPath(myEntry, 'polygon', '');
 	if (geo !== '') {
 		return _addPolygonGeometry(geo);
@@ -175,7 +175,7 @@ let _convertGeoRssFpToInternalFp = function (myEntry) {
  * @function _addProductInformationForFeature
  * @param {object} feature 
  */
-let _addProductInformationForFeature = function(feature) {
+let _addProductInformationForFeature = function (feature) {
 	let product = Utils.getFromPath(feature, 'properties.EarthObservation.result.EarthObservationResult.product', null);
 	if (product === null) {
 		Logger.warn('No product information for feature ' + (feature.id ? feature.id : feature));
@@ -183,9 +183,9 @@ let _addProductInformationForFeature = function(feature) {
 		let productUrl = Utils.getFromPath(feature, 'properties.link[].@.rel=enclosure.href', '');
 		if (productUrl !== '') {
 			let product = {
-				ProductInformation : {
+				ProductInformation: {
 					fileName: {
-						ServiceReference : {
+						ServiceReference: {
 							'@': {
 								href: productUrl
 							}
@@ -206,7 +206,7 @@ let _addProductInformationForFeature = function(feature) {
  * Convert a single entry to GeoJSON feature
  * if feature has no EarthObservation attribute, then remove it
  */
-let _convertEntryToFeature = function(entry, collectionId) {
+let _convertEntryToFeature = function (entry, collectionId) {
 	let feature = {};
 	feature.id = (entry.id ? entry.id : collectionId + '-' + Math.round(Math.random() * 10000).toString());
 	feature.type = "Feature";
@@ -227,20 +227,20 @@ let _convertEntryToFeature = function(entry, collectionId) {
 let _convertEntriesIntoFeatureCollection = function (parsedJson, collectionId) {
 	let featureCollection = {
 		features: [],
-		properties: _.omit(parsedJson, ['@','entry','generator'])
+		properties: _.omit(parsedJson, ['@', 'entry', 'generator'])
 	};
 
 	let entries = parsedJson['entry'];
 	if (entries) {
 
 		// If there is only one feature, the entries is not an array but the literal object
-		if ( !Array.isArray(entries) ) {
+		if (!Array.isArray(entries)) {
 			let feat = _convertEntryToFeature(entries, collectionId);
-			if (feat) {featureCollection.features.push(feat); }
+			if (feat) { featureCollection.features.push(feat); }
 		} else {
 			entries.forEach((entry) => {
 				let feat = _convertEntryToFeature(entry, collectionId);
-				if (feat) {featureCollection.features.push(feat); }
+				if (feat) { featureCollection.features.push(feat); }
 			});
 		}
 
@@ -251,9 +251,9 @@ let _convertEntriesIntoFeatureCollection = function (parsedJson, collectionId) {
 /**
  * Extract all the declared namespaces in xml and add ':' at the end to simplify removing in tags
  */
-let _getNamespaces = function(parsedXml) {
+let _getNamespaces = function (parsedXml) {
 
-	let namespaceRegexp = new RegExp('xmlns[^"]+(?=":"http)','g');
+	let namespaceRegexp = new RegExp('xmlns[^"]+(?=":"http)', 'g');
 	return JSON.stringify(parsedXml).match(namespaceRegexp).map(item => {
 		return item.split(':')[1] + ":";
 	});

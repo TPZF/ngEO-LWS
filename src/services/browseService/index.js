@@ -36,7 +36,7 @@ class BrowseService {
 	 */
 	extractFeatureProps(feature) {
 		let properties = null;
-		if ( feature.properties.EarthObservation ) {
+		if (feature.properties.EarthObservation) {
 			properties = {
 				"plateformId": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName', '*'),//"Landsat",
 				"serialId": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier', '*'),//"5",
@@ -56,7 +56,7 @@ class BrowseService {
 	getBrowseUrl(feature) {
 		let browseConf = null;
 		let featureProps = this.extractFeatureProps(feature);
-		if ( featureProps ) {
+		if (featureProps) {
 			browseConf = _.find(this.browseConfiguration, (confItem) => {
 				let pattern = confItem.pattern;
 				let applies = true;
@@ -76,13 +76,13 @@ class BrowseService {
 		let startTime = Date.now();
 		fc.features.forEach((feature) => {
 			let browseConf = this.getBrowseUrl(feature);
-			if ( browseConf ) {
+			if (browseConf) {
 				// Add a single browse for now
 				let browseInfo = [{
 					BrowseInformation: {
 						fileName: {
 							ServiceReference: {
-								'@' : {
+								'@': {
 									'href': browseConf.url,
 									'title': collectionId
 								}

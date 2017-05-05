@@ -20,50 +20,50 @@ describe('Route opensearch', function () {
 	it('GET /ngeo/opensearch', function (done) {
 
 		this.timeout(10000);
-		
+
 		request(app)
-		.get('/ngeo/opensearch')
-		.expect(200)
-		.end(function (err, res) {
-			should(res.text).be.a.String();
-			done();
-		});
+			.get('/ngeo/opensearch')
+			.expect(200)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				done();
+			});
 	})
 
 	it('GET /ngeo/opensearch/SXCAT-Landsat57Merged', function (done) {
 
 		request(app)
-		.get('/ngeo/opensearch/SXCAT-Landsat57Merged')
-		.expect(200)
-		.end(function (err, res) {
-			should(res.text).be.a.String();
-			done();
-		});
+			.get('/ngeo/opensearch/SXCAT-Landsat57Merged')
+			.expect(200)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				done();
+			});
 	})
 
 	it('GET /ngeo/opensearch/toto - Not found', function (done) {
 
 		request(app)
-		.get('/ngeo/opensearch/toto')
-		.expect(404)
-		.end(function (err, res) {
-			should(res.text).be.a.String();
-			should(res.text).be.equal('Not found');
-			done();
-		});
+			.get('/ngeo/opensearch/toto')
+			.expect(404)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				should(res.text).be.equal('Not found');
+				done();
+			});
 	})
 
 	it('GET /ngeo/opensearch/about', function (done) {
 
 		this.timeout(10000);
-		
+
 		request(app)
-		.get('/ngeo/opensearch/about')
-		.expect(200)
-		.end(function (err, res) {
-			should(res.text).be.a.String();
-			done();
-		});
+			.get('/ngeo/opensearch/about')
+			.expect(200)
+			.end(function (err, res) {
+				should(res.text).be.a.String();
+				done();
+			});
 	})
 
 });

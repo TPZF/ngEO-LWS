@@ -28,7 +28,7 @@ function _checkRequest(request) {
 			Logger.debug('no name for simpledataaccessrequest');
 			return false;
 		}
-		if (request.body.simpledataaccessrequest.name.trim()==='') {
+		if (request.body.simpledataaccessrequest.name.trim() === '') {
 			Logger.debug('name for simpledataaccessrequest is empty');
 			return false;
 		}
@@ -54,7 +54,7 @@ router.use(function timeLog(req, res, next) {
  * @function router.post
  * @param url - /ngeo/simpleDataAccessRequests/
  */
-router.put('/', (req,res) => {
+router.put('/', (req, res) => {
 
 	Logger.debug('simpleDataAccessRequests create is calling');
 
@@ -66,17 +66,17 @@ router.put('/', (req,res) => {
 
 	let response = {
 		dataAccessRequestStatus: {
-	        ID: "NO_ID-validation_stage",
-	        type: "Simple Data Access Request",
-	        status: 4,
-	        message: "Data Access Request validated",
-	        dlManagerId: req.body.simpledataaccessrequest.downloadLocation.DownloadManagerId,
+			ID: "NO_ID-validation_stage",
+			type: "Simple Data Access Request",
+			status: 4,
+			message: "Data Access Request validated",
+			dlManagerId: req.body.simpledataaccessrequest.downloadLocation.DownloadManagerId,
 			downloadDirectory: req.body.simpledataaccessrequest.downloadLocation.DownloadDirectory,
-	        productStatuses: []
-	    }
+			productStatuses: []
+		}
 	};
 
-	_.each(req.body.simpledataaccessrequest.productURLs, function(product) {
+	_.each(req.body.simpledataaccessrequest.productURLs, function (product) {
 		product.productStatus = 'NOT_STARTED';
 		product.percentageCompleted = '0';
 		response.dataAccessRequestStatus.productStatuses.push(product);
@@ -84,7 +84,7 @@ router.put('/', (req,res) => {
 
 	// validation
 	if (req.body.simpledataaccessrequest.requestStage === 'validation') {
-		response.dataAccessRequestStatus.status=4;
+		response.dataAccessRequestStatus.status = 4;
 		res.status(200).json(response);
 		return;
 	}
@@ -92,10 +92,10 @@ router.put('/', (req,res) => {
 	// confirmation
 	if (req.body.simpledataaccessrequest.requestStage === 'confirmation') {
 		response.dataAccessRequestStatus.name = req.body.simpledataaccessrequest.name;
-		response.dataAccessRequestStatus.status=0;
+		response.dataAccessRequestStatus.status = 0;
 		// define call back function after creating
 		// send response
-		let cbAfterCreate = function(response) {
+		let cbAfterCreate = function (response) {
 			if (response.code !== 0) {
 				res.status(response.code).json(response.datas);
 			} else {
@@ -103,7 +103,7 @@ router.put('/', (req,res) => {
 				delete response.datas._id;
 				delete response.datas.id;
 				res.setHeader('Location', '/ngeo/dataAccessRequestStatuses/' + response.datas.ID)
-				res.status(201).json({"dataAccessRequestStatus": response.datas });
+				res.status(201).json({ "dataAccessRequestStatus": response.datas });
 			}
 		};
 
@@ -114,12 +114,12 @@ router.put('/', (req,res) => {
 		let myQueryItemAlreadyExists = {
 			exist: false // Not already exists in all cases
 		};
-		
+
 		// call create service for database
 		DatabaseService.create(DATA_ACCESS_REQUEST_STATUS_NAME, myInsertItem, myQueryItemAlreadyExists, cbAfterCreate);
 	}
 
-	
+
 });
 
 /**

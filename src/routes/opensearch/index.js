@@ -25,8 +25,8 @@ router.use(function timeLog(req, res, next) {
  * @param res - response
  */
 router.get('/', function (req, res) {
-    Logger.debug('GET /ngeo/opensearch');
-    let referrer = Configuration['host'];
+	Logger.debug('GET /ngeo/opensearch');
+	let referrer = Configuration['host'];
 	res.set('Content-Type', 'application/atom+xml').send(CatalogService.getXMLFeed(referrer));
 });
 
@@ -55,12 +55,12 @@ router.get('/about', (req, res) => {
 router.get('/:collection_id', function (req, res) {
 	Logger.debug('GET /ngeo/opensearch/:collection_id');
 	let idToGet = req.params['collection_id'];
-    let collection = CollectionService.getCollection(idToGet);
-    if (!collection) {
-        res.status(404).send('Not found');
-    }
-    // TODO : retrieve opensearch request template and rewrite it for QS
-    // redirect
+	let collection = CollectionService.getCollection(idToGet);
+	if (!collection) {
+		res.status(404).send('Not found');
+	}
+	// TODO : retrieve opensearch request template and rewrite it for QS
+	// redirect
 	res.redirect(collection.url);
 });
 
