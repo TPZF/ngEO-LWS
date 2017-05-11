@@ -619,11 +619,7 @@ class CollectionService {
 	 */
 	buildAttributes(myCollection, mySearchRequestDescription, myParamTag, myAvoidedAttributes) {
 		let _result = [];
-		var i = 0;
-		console.log(mySearchRequestDescription);
 		mySearchRequestDescription.forEach((_item) => {
-			i++;
-			console.log(_item[myParamTag + 'Parameter']);
 			_item[myParamTag + 'Parameter'].forEach((_parameter) => {
 				// if param is not in avoidedAttributes, build it !
 				if (myAvoidedAttributes.indexOf(_parameter['@'].name) == -1) {
