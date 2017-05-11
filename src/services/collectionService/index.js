@@ -490,6 +490,7 @@ class CollectionService {
 	 * @returns {string}
 	 */
 	addCredentials(myCollection) {
+		Logger.debug('collectionService.addCredentials(' + myCollection.id + ')');
 		let _result = '';
 		let _credentials = _.find(Configuration['credentials'], (_cred) => {
 			return (Object.keys(_cred)[0] === myCollection.catalogId);
@@ -498,7 +499,7 @@ class CollectionService {
 			_result += '&username=' + _credentials[myCollection.catalogId].username;
 			_result += '&password=' + _credentials[myCollection.catalogId].password;
 		}
-		console.log(_result);
+		Logger.debug(_result);
 		return _result;
 	}
 
