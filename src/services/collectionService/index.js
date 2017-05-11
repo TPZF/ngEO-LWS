@@ -360,7 +360,9 @@ class CollectionService {
 			myCollection.url_search = this.buildUrlSearch(_searchRequestDescription);
 
 			// create request to retrieve the number of available products
-			let _urlCount = _buildSearchRequestWithValue(myCollection.url_search, { count: 1 });
+			let _urlCount = _buildSearchRequestWithValue(myCollection.url_search, {count: 1});
+			// add credentials if exists
+			_urlCount += this.addCredentials(myCollection);
 			// and make first search
 			return new Promise((resolve, reject) => {
 				request(_urlCount, (error, response, body) => {
@@ -459,9 +461,10 @@ class CollectionService {
 				_searchParams[_collection.parameters[_param]] = myOptions.params[_param];
 			}
 		}
-
+		
 		let _searchUrlRequest = _buildSearchRequestWithParam(_collection.url_search, _searchParams);
 		_searchUrlRequest += this.addMandatoryAttributes(_collection);
+		_searchUrlRequest += this.addCredentials(_collection);
 
 		let _startTime = Date.now();
 		Logger.info(`Searching for backend with ${_searchUrlRequest}`);
@@ -477,6 +480,26 @@ class CollectionService {
 				myOptions.onError('500');
 			}
 		});
+	}
+
+	/**
+	 * Add credentials if exists
+	 * 
+	 * @function addCredentials
+	 * @param {object} myCollection
+	 * @returns {string}
+	 */
+	addCredentials(myCollection) {
+		let _result = '';
+		let _credentials = _.find(Configuration['credentials'], (_cred) => {
+			return (Object.keys(_cred)[0] === myCollection.catalogId);
+		});
+		if (_credentials) {
+			_result += '&username=' + _credentials[myCollection.catalogId].username;
+			_result += '&password=' + _credentials[myCollection.catalogId].password;
+		}
+		console.log(_result);
+		return _result;
 	}
 
 	/**
