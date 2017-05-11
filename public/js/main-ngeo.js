@@ -3176,9 +3176,10 @@ require.register("dataAccess/widget/directDownloadWidget", function(exports, req
 var Configuration = require('configuration');
 var DownloadManagers = require('dataAccess/model/downloadManagers');
 var directDownload_template = require('dataAccess/template/directDownloadWidgetContent');
+var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
+var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
 
-
-var DirectDownloadWidget = function(url) {
+var DirectDownloadWidget = function(feature, url) {
 
 	var parentElement = $('<div id="directDownloadPopup" data-role="popup" data-overlay-theme="a" class="popup-widget-background">');
 	parentElement = parentElement.appendTo('.ui-page-active');
@@ -3187,7 +3188,7 @@ var DirectDownloadWidget = function(url) {
 	 *	Open the popup
 	 */
 	this.open = function(event) {
-
+		var _this = this;
 
 		parentElement.bind({
 			popupafterclose: function(event, ui) {
@@ -3224,6 +3225,13 @@ var DirectDownloadWidget = function(url) {
 			x: event.pageX,
 			y: event.pageY,
 			positionTo: "origin"
+		});
+
+		parentElement.find('.viaDownloadManager').click( function() {
+			SimpleDataAccessRequest.initialize();
+			SimpleDataAccessRequest.setProducts([feature]);
+			DataAccessWidget.open(SimpleDataAccessRequest);
+			_this.close();
 		});
 
 	};
@@ -5872,6 +5880,7 @@ module.exports = StandingOrder;
 require.register("search/view/advancedSearchView", function(exports, require, module) {
 var Configuration = require('configuration');
 var advancedCriteria_template = require('search/template/advancedCriteriaContent');
+var Logger = require('logger');
 
 var AdvancedSearchView = Backbone.View.extend({
 
@@ -6005,6 +6014,19 @@ var AdvancedSearchView = Backbone.View.extend({
 		if (name.match(/_from|_to/)) {
 			name = name.replace(/_from|_to/, '');
 			this.updateRange(name);
+		} else if (event.currentTarget.pattern) {
+			var value = $(event.currentTarget).val();
+			if (value !== '') {
+				if (value.match(event.currentTarget.pattern)) {
+					var attributeToUpdate = _.findWhere(this.advancedAttributes, {
+						id: name
+					});
+					var value = $(event.currentTarget).val();
+					attributeToUpdate.value = value;
+				} else {
+					Logger.error("Advanced criteria " + name + " is not valid.");
+				}
+			}
 		} else {
 			var attributeToUpdate = _.findWhere(this.advancedAttributes, {
 				id: name
@@ -6152,7 +6174,7 @@ var BoxView = Backbone.View.extend({
 			};
 			this.model.searchArea.setBBox(bbox);
 			this.updateInputs(bbox);
-			this.deactivateUseExtent();
+			this.parentView.updateSearchAreaLayer();
 		},
 
 	},
@@ -8699,8 +8721,6 @@ var _onUnselectFeatures = function(features, fc) {
 	Map.trigger("unselectFeatures");
 };
 
-var _keyCode = 0;
-
 // Selected or highlighted features with browse
 var _featuresWithBrowse = [];
 var waitTimeout = 10; // in ms
@@ -8768,7 +8788,7 @@ module.exports = {
 			var featsToAdd = [];
 			var featsToRemove = [];
 			// if ctrl key is pressed and one or more features are picked
-			if (_keyCode === 17 && features.length > 0) {
+			if (event.ctrlKey && features.length > 0) {
 				features.forEach (function(_feat) {
 					// if feature is already highlighted > add to remove array
 					// if feature is not already highlighted > add to add array
@@ -8798,7 +8818,7 @@ module.exports = {
 			for (var i = 0; i < featureCollections.length; i++) {
 				// Ctrl key not pressed > unhighlight unchecked products
 				// no features picked > unhighlight unchecked products
-				if (_keyCode !== 17 || features.length === 0) {
+				if (!event.ctrlKey || features.length === 0) {
 					featureCollections[i].checkAllHighlight();
 				}
 				featureCollections[i].setHighlight(highlights[featureCollections[i].id]);
@@ -8808,12 +8828,6 @@ module.exports = {
 				var fc = featsToRemove[i]._featureCollection;
 				fc.unsetHighlight([featsToRemove[i]]);
 			}
-		});
-		Map.on('keyDown', function(code) {
-			_keyCode = code;
-		});
-		Map.on('keyUp', function(code) {
-			_keyCode = 0;
 		});
 	},
 
@@ -9875,7 +9889,7 @@ var SearchResultsTableView = TableView.extend({
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
-				var directDownloadWidget = new DirectDownloadWidget(SearchResults.getDirectDownloadProductUrl(feature));
+				var directDownloadWidget = new DirectDownloadWidget(feature, SearchResults.getDirectDownloadProductUrl(feature));
 				directDownloadWidget.open(event);
 			} else {
 				Logger.inform("Cannot download the product : missing permissions.");
@@ -11002,10 +11016,11 @@ var ShopcartTableView = TableView.extend({
 
 		//Called when the user clicks on the product id of an item
 		'click .directDownload': function (event) {
+			event.stopPropagation();
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
-				var directDownloadWidget = new DirectDownloadWidget(this.model.getDirectDownloadProductUrl(feature));
+				var directDownloadWidget = new DirectDownloadWidget(feature, this.model.getDirectDownloadProductUrl(feature));
 				directDownloadWidget.open(event);
 			} else {
 				Logger.inform("Cannot download the product : missing permissions.");
@@ -13443,10 +13458,10 @@ var TableView = Backbone.View.extend({
 		var self = this;
 
 		var onKeyDown = function(e) {
-			if ( e.keyCode == '17' ) {
+			if ( e.ctrlKey ) {
 				ctrlPressed = true;
 			}
-			if ( e.keyCode == '16' ) {
+			if ( e.shiftKey ) {
 				shiftPressed = true;
 			}
 
@@ -13464,16 +13479,12 @@ var TableView = Backbone.View.extend({
 				//	$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
 				
 			}
-			Map.trigger('keyDown', e.keyCode);
+			//Map.trigger('keyDown', e.keyCode);
 		}
 		var onKeyUp = function(e) {
-			if ( e.keyCode == '17' ) {
-				ctrlPressed = false;
-			}
-			if ( e.keyCode == '16' ) {
-				shiftPressed = false;
-			}
-			Map.trigger('keyUp', e.keyCode);
+			ctrlPressed = e.ctrlKey;
+			shiftPressed = e.shiftKey;
+			//Map.trigger('keyUp', e.keyCode);
 		}
 		document.addEventListener('keydown', onKeyDown);
 		document.addEventListener('keyup', onKeyUp);

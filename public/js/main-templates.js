@@ -409,13 +409,7 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="a">\r\n\t\r\n\t<li data-role="divider" data-theme="a">Direct Download Links</li>\r\n\t<li>\r\n\t\t<a href="'+
 ((__t=( url ))==null?'':__t)+
-'" target="_blank">Via Browser</a>\r\n\t</li>\r\n\t';
- if (downloadHelperUrl){ 
-__p+='\r\n\t\t<li>\r\n\t\t\t<a href="'+
-((__t=( downloadHelperUrl ))==null?'':__t)+
-'" target="_blank">Via Local Download Manager</a>\r\n\t\t</li>\r\n\t';
- } 
-__p+='\t\r\n</ul>\r\n';
+'" target="_blank">Via Browser</a>\r\n\t</li>\r\n\t<li>\r\n\t\t<a href="#" target="_blank" class="viaDownloadManager">Via Download Manager</a>\r\n\t</li>\r\n</ul>\r\n';
 }
 return __p;
 };
@@ -548,6 +542,7 @@ __p+='\r\n\r\n\t<!-- Display search criteria -->\r\n\t<form>\t\t\t\r\n\r\n\t';
 			var value = criterion.value;
 			var label = criterionLabels[criterion.id] || criterion.id;
 			var criterionType = criterion.type.toLowerCase();
+			var pattern = criterion.pattern;
 			
 __p+='\r\n\t\t   <!-- The criterion is an enumeration has multiple options so create a list of checkboxes  -->\r\n\t\t   <!-- NGEO-1862 possibleValues contains now a list of String which are the direct value to display instead of object mapped with the string possibleValue -->\r\n\t\t\t';
  if (criterionType == 'list' || criterionType == 'string') { 
@@ -555,15 +550,13 @@ __p+=' \r\n\t\t\t\t<!-- NGEO-2233: list and string must have possible values for
  if ( criterion.possibleValues && criterion.possibleValues.length > 0 ) { 
 __p+='\r\n\t\t\t\t\t';
  if ( criterion.maxOccurs == 1 ) { 
-__p+='\r\n\t\t\t\t\t\t<label id="'+
-((__t=( label ))==null?'':__t)+
-'_label" for="'+
+__p+='\r\n\t\t\t\t\t\t<!-- Selectbox -->\r\n\t\t\t\t\t\t<select id="'+
 ((__t=( criterion.id ))==null?'':__t)+
-'">'+
+'" data-mini="true"" title="Select '+
 ((__t=( label ))==null?'':__t)+
-' : </label>\r\n\t\t\t\t\t\t<!-- Selectbox -->\r\n\t\t\t\t\t\t<select id="'+
-((__t=( criterion.id ))==null?'':__t)+
-'" data-mini="true"">\r\n\t\t\t\t\t\t\t<option value="">Any</option>\r\n\t\t\t\t\t\t\t';
+'">\r\n\t\t\t\t\t\t\t<option value="">'+
+((__t=( label ))==null?'':__t)+
+' : Any</option>\r\n\t\t\t\t\t\t\t';
  _.each(criterion.possibleValues, function(possibleValue) { 
 __p+='\r\n\t\t\t\t\t\t\t\t<option value="'+
 ((__t=( possibleValue ))==null?'':__t)+
@@ -593,13 +586,15 @@ __p+='\r\n\t\t\t\t\t\t\t</fieldset>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t';
  } 
 __p+='\r\n\t\t\t\t';
  } else { 
-__p+='\r\n\t\t\t\t\t<!-- The criterion has no possible values, show text field -->\r\n\t\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t\t\t\t<label class="capitalize" for="'+
+__p+='\r\n\t\t\t\t\t<!-- The criterion has no possible values, show text field -->\r\n\t\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t\t\t\t<input type="text" name="'+
 ((__t=( criterion.id ))==null?'':__t)+
-'">'+
+'" title="'+
 ((__t=( label ))==null?'':__t)+
-':</label>\r\n\t\t\t\t\t\t<input type="text" name="'+
-((__t=( criterion.id ))==null?'':__t)+
-'" id="'+
+'" ';
+ if ( pattern ) print('pattern='+pattern); 
+__p+=' placeHolder="Set '+
+((__t=( label ))==null?'':__t)+
+'..." id="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '" ';
  if ( value ) print('value='+value); 
@@ -628,7 +623,7 @@ __p+='\t\r\n\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t    \t<div data-role
 '_from">'+
 ((__t=( label ))==null?'':__t)+
 ':</label>\r\n\t\t\t\t        <input data-theme="a" type="range" step="';
- criterionType == "integer" ? print("1") : print(".1") 
+ criterionType == "float" ? print(".1") : print("1") 
 __p+='" name="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '_from" id="'+
@@ -644,7 +639,7 @@ __p+='">\r\n\t\t\t\t        <label class="capitalize" for="'+
 '_to">'+
 ((__t=( label ))==null?'':__t)+
 ':</label>\r\n\t\t\t\t        <input data-theme="a" type="range" step="';
- criterionType == "integer" ? print("1") : print(".1") 
+ criterionType == "float" ? print(".1") : print("1") 
 __p+='" name="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '_to" id="'+
@@ -707,7 +702,7 @@ __p+='<fieldset id="toolsChoice" data-role="controlgroup" data-type="horizontal"
 ((__t=(searchArea.getBBox().north))==null?'':__t)+
 '">\r\n\t</div>\r\n\t<div class="ui-grid-a" data-role="fieldcontain">\r\n\t\t<div class="ui-block-a">\r\n\t\t\t<label class="mapExtentCheckBoxLabel">Use map extent\r\n\t\t\t<input type="checkbox" name="mapExtent" id="mapExtentView" data-mini="true" ';
  if (attributes.useExtent) print('checked="checked"'); 
-__p+=' ></label>\r\n\t\t</div>\r\n\t\t<div class="ui-block-b">\r\n\t\t\t<button data-role="button" data-mini="true" class="mapExtentWholeWorldBtn">Use whole world</button>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class="ui-grid-solo" data-role="fieldcontain">\r\n\t\t<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div id="polygon">\r\n\t<label>Enter coordinates:\r\n\t<textarea id="polygontext" rows="10"></textarea>\r\n\t</label>\r\n\t<p id="polygonTextError"></p>\r\n\t<button data-role="button" data-mini="true"  id="drawpolygon">Draw</button>\r\n</div>\r\n\r\n<div id="gazetteer">\r\n\t<input type="text" data-type="search" name="search" id="search-gazetteer" value="" />\r\n\t<div id="gazetteer-results"></div>\r\n</div>\r\n\r\n<div id="import">\r\n\t<!-- <input type="file" id="importFile"> -->\r\n\t<div id="dropZone">\r\n\t\tDrop a KML, GeoJSON or GML file\r\n\t</div>\r\n\t<p id="importMessage"></p>\r\n</div>\r\n';
+__p+=' ></label>\r\n\t\t</div>\r\n\t\t<div class="ui-block-b">\r\n\t\t\t<button data-role="button" data-mini="true" class="mapExtentWholeWorldBtn">Set whole world</button>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class="ui-grid-solo" data-role="fieldcontain">\r\n\t\t<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div id="polygon">\r\n\t<label>Enter coordinates:\r\n\t<textarea id="polygontext" rows="10"></textarea>\r\n\t</label>\r\n\t<p id="polygonTextError"></p>\r\n\t<button data-role="button" data-mini="true"  id="drawpolygon">Draw</button>\r\n</div>\r\n\r\n<div id="gazetteer">\r\n\t<input type="text" data-type="search" name="search" id="search-gazetteer" value="" />\r\n\t<div id="gazetteer-results"></div>\r\n</div>\r\n\r\n<div id="import">\r\n\t<!-- <input type="file" id="importFile"> -->\r\n\t<div id="dropZone">\r\n\t\tDrop a KML, GeoJSON or GML file\r\n\t</div>\r\n\t<p id="importMessage"></p>\r\n</div>\r\n';
 }
 return __p;
 };
@@ -982,7 +977,7 @@ require.register("search/template/searchCriteriaContent_template", function(expo
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='\r\n<div id="sc-content">\r\n\t\r\n\t<div id="sc-date-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Acquisition Dates</h3>\r\n\t\t<div id="date">\t</div>\r\n\t</div>\r\n\t\r\n\t<div id="sc-area-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Area Of Interest</h3>\r\n\t\t<div id="area">\t</div>\r\n\t</div>\r\n\t<div id="sc-datasets-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Advanced Filters and Download Options</h3>\r\n\t\t<div class="datasetSearch"></div>\r\n\t</div>\r\n</div>\r\n<!--\r\n<div data-role="collapsible-set" data-inset="false" data-mini="true">\r\n</div>\r\n-->\t\r\n\r\n<!-- The footer for buttons -->\r\n<div id="sc-footer">\r\n\t<div class="widget-footer-right">\r\n\t\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' class="scSubmit" >'+
+__p+='\r\n<div id="sc-content">\r\n\t\r\n\t<div id="sc-date-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Acquisition Dates</h3>\r\n\t\t<div id="date">\t</div>\r\n\t</div>\r\n\t\r\n\t<div id="sc-area-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Area Of Interest</h3>\r\n\t\t<div id="area">\t</div>\r\n\t</div>\r\n\t<div id="sc-datasets-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Advanced Filters Options</h3>\r\n\t\t<div class="datasetSearch"></div>\r\n\t</div>\r\n</div>\r\n<!--\r\n<div data-role="collapsible-set" data-inset="false" data-mini="true">\r\n</div>\r\n-->\t\r\n\r\n<!-- The footer for buttons -->\r\n<div id="sc-footer">\r\n\t<div class="widget-footer-right">\r\n\t\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' class="scSubmit" >'+
 ((__t=( submitText ))==null?'':__t)+
 '</button>\r\n\t</div>\r\n\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' id="share">Share</button>\r\n\t<!-- NGEO-1971 : add special button to import criteria from search panel -->\r\n\t';
  if (submitText == "Subscribe") { 

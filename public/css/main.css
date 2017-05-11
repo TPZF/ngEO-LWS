@@ -775,7 +775,7 @@ Red dot with number of features
   position: absolute;
   right: 0;
   top: 10%;
-  background: rgba(15, 15, 15, 0.8);
+  background: rgba(15, 15, 15, 0.6);
   border-right: 0 solid black;
   -webkit-border-top-right-radius: 0;
   -webkit-border-bottom-right-radius: 0;
@@ -789,10 +789,11 @@ Red dot with number of features
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
+  border: 0px solid black;
   /* Highlighting issue on Safari */
   -webkit-user-select: none;
 }
-/* line 23, client/css/mapPopup.less */
+/* line 24, client/css/mapPopup.less */
 #mapPopup .widget-content {
   -webkit-border-top-right-radius: 0;
   -webkit-border-bottom-right-radius: 0;
@@ -807,7 +808,7 @@ Red dot with number of features
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 28, client/css/mapPopup.less */
+/* line 29, client/css/mapPopup.less */
 .mapPopup p {
   margin: 3px;
   padding: 0;
@@ -816,29 +817,29 @@ Red dot with number of features
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* line 39, client/css/mapPopup.less */
+/* line 40, client/css/mapPopup.less */
 .ui-icon-save {
   background-image: url("../images/save.png");
 }
-/* line 44, client/css/mapPopup.less */
+/* line 45, client/css/mapPopup.less */
 .ui-icon-shop {
   background-image: url("../images/shop.png");
 }
-/* line 49, client/css/mapPopup.less */
+/* line 50, client/css/mapPopup.less */
 .ui-icon-browse {
   background: url("../images/browse.png") 50% 50% no-repeat;
   background-color: #252525;
 }
-/* line 53, client/css/mapPopup.less */
+/* line 54, client/css/mapPopup.less */
 .ui-icon-browse-multiple {
   background: url("../images/browse_multiple.png") 50% 50% no-repeat;
   background-color: #252525;
 }
-/* line 59, client/css/mapPopup.less */
+/* line 60, client/css/mapPopup.less */
 .ui-btn-active .ui-icon-browse {
   background-color: #395E7B !important;
 }
-/* line 64, client/css/mapPopup.less */
+/* line 65, client/css/mapPopup.less */
 .btnNext {
   display: inline-block;
   width: 18px;
