@@ -17,8 +17,28 @@
         ]
     },
     {
-        "name": "FEDEO",
+        "name": "OADS",
         "url": "http://geo.spacebel.be/opensearch/request/?httpAccept=application/atom%2Bxml&amp;query=%22OADS%22",
+        "responseFormatOnSearch": "application/atom+xml",
+        "avoidedAttributes": [
+            "bbox",
+            "endDate",
+            "geometry",
+            "grel",
+            "maximumRecords",
+            "recordSchema",
+            "startDate",
+            "startPage",
+            "startRecord",
+            "trel"
+        ],
+        "mandatoryAttributes": {
+            "recordSchema": "om"
+        }
+    },
+    {
+        "name": "EOP-ESA-SENTINEL",
+        "url": "http://ngeo-light.evo-pdgs.com/ngeo-qs/ngeo/opensearch/request/?httpAccept=application/atom+xml&query=EOP:ESA:SENTINEL",
         "responseFormatOnSearch": "application/atom+xml",
         "avoidedAttributes": [
             "bbox",
