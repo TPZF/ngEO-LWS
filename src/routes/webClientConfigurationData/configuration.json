@@ -137,6 +137,7 @@
 			"orbitNumber": "Orbit number",
 			"path": "Path",
 			"pgrpi": "Product group Id",
+			"platform": "Platform",
 			"platformSerialIdentifier": "Satellite",
 			"polarisationChannels": "Polarisation channels",
 			"processingLevel": "Processing level",
