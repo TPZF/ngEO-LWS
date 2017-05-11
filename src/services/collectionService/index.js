@@ -592,9 +592,16 @@ class CollectionService {
 		} else if (myParameter['@'].minInclusive && myParameter['@'].maxInclusive) {
 			_res = {
 				"id": myParameter['@'].name,
-				"type": myParameter['@'].maximum == 1 ? "Integer" : "Range",
+				"type": "Range",
 				"rangeMinValue": myParameter['@'].minInclusive,
 				"rangeMaxValue": myParameter['@'].maxInclusive
+			};
+		} else if (myParameter['@'].pattern) {
+			// pattern
+			_res = {
+				"id": myParameter['@'].name,
+				"type": "String",
+				"pattern": myParameter['@'].pattern
 			};
 		}
 		return _res;
@@ -612,7 +619,11 @@ class CollectionService {
 	 */
 	buildAttributes(myCollection, mySearchRequestDescription, myParamTag, myAvoidedAttributes) {
 		let _result = [];
+		var i = 0;
+		console.log(mySearchRequestDescription);
 		mySearchRequestDescription.forEach((_item) => {
+			i++;
+			console.log(_item[myParamTag + 'Parameter']);
 			_item[myParamTag + 'Parameter'].forEach((_parameter) => {
 				// if param is not in avoidedAttributes, build it !
 				if (myAvoidedAttributes.indexOf(_parameter['@'].name) == -1) {
