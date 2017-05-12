@@ -697,7 +697,7 @@ class CollectionService {
 		let _outputJson = {
 			datasetSearchInfo: {
 				datasetId: myCollectionId,
-				description: _collection.Description,
+				description: _collection.osdd.Description,
 				keywords: this.buildKeywords(_collection),
 				downloadOptions: [], // TODO
 				attributes: this.buildAttributes(_collection, _searchRequestDescription, _paramTag, _avoidedAttributes),
