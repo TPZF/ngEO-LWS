@@ -2,161 +2,89 @@
     {
         "id": "SXCAT-ASA_APP_1P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Natural Disasters","Soil","Vegetation","Sea Ice","Oil Slick","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management"]}
         ]
     },
     {
         "id": "SXCAT-ASA_APS_1P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Natural Disasters","Soil","Vegetation","Sea Ice","Oil Slick","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management"]}
         ]
     },
     {
         "id": "SXCAT-ASA_AP__0P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Natural Disasters","Soil","Vegetation","Sea Ice","Oil Slick","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management"]}
         ]
     },
     {
         "id": "SXCAT-ASA_IMP_1P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Natural Disasters","Soil","Vegetation","Sea Ice","Oil Slick","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management","Topography/Mapping","Tectonics/Seismic Activity"]}
         ]
     },
     {
         "id": "SXCAT-ASA_IMS_1P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Natural Disasters","Soil","Vegetation","Sea Ice","Oil Slick","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management"]}
         ]
     },
     {
         "id": "SXCAT-ASA_IM__0P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Soil","Vegetation","Sea Ice","Oil Slick","Natural Disasters","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management"]}
         ]
     },
     {
         "id": "SXCAT-ASA_WSS_1P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean Currents and Topography"]}
         ]
     },
     {
         "id": "SXCAT-ASA_WS__0P",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean Currents and Topography"]}
         ]
     },
     {
@@ -165,42 +93,24 @@
     {
         "id": "SXCAT-IKONOS-2",
         "keywords": [
-            {
-                "Platform": [
-                    "IKONOS"
-                ]
-            },
-            {
-                "Sensor": [
-                    "OSA"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res."
-                ]
-            }
+            {"Platform": ["IKONOS"]},
+            {"Instrument": ["OSA"]},
+            {"Instrument Type": ["High resolution optical imagers","Imaging multi-spectral radiometers (Vis/IR)"]},
+            {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+            {"Spatial Resolution": ["1m - 10m"]},
+            {"Earth Topic": ["Land","Landscape Topography","Floods","Oil Slicks","Landslides","Natural Disasters"]}
         ]
     },
     {
         "id": "SXCAT-Landsat57Merged",
         "keywords": [
-            {
-                "Platform": [
-                    "Landsat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "TM"
-                ]
-            },
-            {
-                "InstrumentType": [
-                    "High Res.",
-                    "Optical"
-                ]
-            }
+            {"Platform": ["Landsat"]},
+            {"Instrument": ["TM","ETM"]},
+            {"Instrument Type": ["Imaging multi-spectral radiometers (Vis/IR)"]},
+            {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)","SWIR (~1.3µm - ~3.0µm)","TIR (~6.0µm - ~15.0µm)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Land","Soil","Landscape Topography","Vegetation"]}
+
         ]
     },
     {
@@ -209,138 +119,133 @@
     {
         "id": "SXCAT-Oceansat2",
         "keywords": [
-            {
-                "Platform": [
-                    "OceanSat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "OPTICAL"
-                ]
-            }
+            {"Platform": ["OceanSat"]},
+            {"Instrument": ["OCM-2"]},
+            {"Instrument Type": ["Imaging multi-spectral radiometers (Vis/IR)"]},
+            {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+            {"Spatial Resolution": [">100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Snow and Ice","Natural Disasters"]}
         ]
     },
     {
-        "id": "SXCAT-Pleiades"
+        "id": "SXCAT-Pleiades",
+        "keywords": [
+            {"Platform": ["Pleiades"]},
+            {"Instrument": ["HiRI"]},
+            {"Instrument Type": ["Imaging multi-spectral radiometers (Vis/IR)"]},
+            {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+            {"Spatial Resolution": ["<1m"]},
+            {"Earth Topic": ["Agriculture","Forestry","Crop/Plant Yields","Forest Fires","Land","Landscape Topography","Atmosphere","Atmospheric Phenomenon (cyclone, storm, hurricane)"]}
+        ]
     },
     {
         "id": "SXCAT-RapidEye",
         "keywords": [
-            {
-                "Platform": [
-                    "RapidEye"
-                ]
-            },
-            {
-                "Sensor": [
-                    "OPTICAL"
-                ]
-            }
+            {"Platform": ["RapidEye"]},
+            {"Instrument": ["MSI"]},
+            {"Instrument Type": ["High resolution optical imagers","Imaging multi-spectral radiometers (Vis/IR)"]},
+            {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Land","Vegetation"]}
         ]
     },
     {
         "id": "SXCAT-RapidEye_SouthAmerica",
         "keywords": [
-            {
-                "Platform": [
-                    "RapidEye"
-                ]
-            },
-            {
-                "Sensor": [
-                    "OPTICAL"
-                ]
-            }
+          {"Platform": ["RapidEye"]},
+          {"Instrument": ["MSI"]},
+          {"Instrument Type": ["High resolution optical imagers","Imaging multi-spectral radiometers (Vis/IR)"]},
+          {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+          {"Spatial Resolution": ["10-100m"]},
+          {"Earth Topic": ["Land","Vegetation","Agriculture","Forestry"]}
         ]
     },
     {
         "id": "SXCAT-RapidEye_Take5",
         "keywords": [
-            {
-                "Platform": [
-                    "RapidEye"
-                ]
-            },
-            {
-                "Sensor": [
-                    "OPTICAL"
-                ]
-            }
+          {"Platform": ["RapidEye"]},
+          {"Instrument": ["MSI"]},
+          {"Instrument Type": ["High resolution optical imagers","Imaging multi-spectral radiometers (Vis/IR)"]},
+          {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+          {"Spatial Resolution": ["10-100m"]},
+          {"Earth Topic": ["Land","Vegetation","Agriculture","Forestry","Ocean and Coast"]}
         ]
     },
     {
-        "id": "SXCAT-SAR_IM__0P"
-    },
-    {
-        "id": "SXCAT-SMOS_Open"
+        "id": "SXCAT-SMOS_Open",
+        "keywords": [
+            {"Platform": ["SMOS"]},
+            {"Instrument": ["MIRAS"]},
+            {"Instrument Type": ["Imaging multi-spectral radiometers (passive microwave)","Multiple direction/polarisation radiometers"]},
+            {"Waveband": ["L-band (2-1 GHz)","MW (~1.0cm - ~100cm)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Land"]}
+        ]
     },
     {
         "id": "SXCAT-SPOT1-5",
         "keywords": [
-            {
-                "Platform": [
-                    "SPOT"
-                ]
-            },
-            {
-                "Sensor": [
-                    "OPTICAL"
-                ]
-            }
+            {"Platform": ["SPOT"]},
+            {"Instrument": ["HRV","HRVIR","HRG"]},
+            {"Instrument Type": ["Imaging multi-spectral radiometers (Vis/IR)"]},
+            {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Land","Landscape Topography","Agriculture","Forestry","Forest Fires","Crop/Plant Yields","Atmosphere","Atmospheric Phenomenon (cyclone, storm, hurricane)"]}
         ]
     },
     {
         "id": "SXCAT-SPOT6-7",
         "keywords": [
-            {
-                "Platform": [
-                    "SPOT"
-                ]
-            }
+          {"Platform": ["SPOT"]},
+          {"Instrument": ["NAOMI"]},
+          {"Instrument Type": ["Imaging multi-spectral radiometers (Vis/IR)"]},
+          {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+          {"Spatial Resolution": ["10-100m"]},
+          {"Earth Topic": ["Land","Landscape Topography","Agriculture","Forestry","Forest Fires","Crop/Plant Yields","Atmosphere","Atmospheric Phenomenon (cyclone, storm, hurricane)"]}
         ]
     },
     {
         "id": "SXCAT-Seasat",
         "keywords": [
-            {
-                "Platform": [
-                    "Seasat"
-                ]
-            },
-            {
-                "Sensor": [
-                    "SAR"
-                ]
-            }
+            {"Platform": ["Seasat"]},
+            {"Instrument": ["SAR"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["L-band (2-1 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Sea Ice","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Landscape Topography"]}
+
         ]
     },
     {
         "id": "SXCAT-WorldView-2",
         "keywords": [
-            {
-                "Platform": [
-                    "WorldView"
-                ]
-            },
-            {
-                "Sensor": [
-                    "OPTICAL"
-                ]
-            }
+            {"Platform": ["WorldView"]},
+            {"Instrument": ["WV1"]},
+            {"Instrument Type": ["Imaging multi-spectral radiometers (Vis/IR)"]},
+            {"Waveband": ["VIS (~0.40µm - ~0.75µm)","NIR (~0.75µm - ~1.3µm)"]},
+            {"Earth Topic": ["Agriculture","Forestry","Land","Vegetation","Natural Disasters","Ocean and Coast","Snow and Ice"]}
         ]
     },
     {
-        "id": "FEDEO-ENVISAT.ASA",
+        "id": "OADS-ENVISAT.ASA",
         "keywords": [
-            {
-                "Platform": [
-                    "Envisat"
-                ]
-            }
+            {"Platform": ["Envisat"]},
+            {"Instrument": ["ASAR (image mode)","ASAR (wave mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Natural Disasters","Soil","Vegetation","Sea Ice","Oil Slick","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management"]}
         ]
     },
     {
-        "id": "FEDEO-ERS.SAR"
+        "id": "OADS-ERS.SAR",
+        "keywords": [
+            {"Platform": ["ERS"]},
+            {"Instrument": ["SAR (image mode)"]},
+            {"Instrument Type": ["Imaging microwave radars"]},
+            {"Waveband": ["C-band (8-4 GHz)"]},
+            {"Spatial Resolution": ["10-100m"]},
+            {"Earth Topic": ["Ocean and Coast","Water","Natural Disasters","Soil","Vegetation","Sea Ice","Oil Slick","Snow and Ice","Ocean Currents and Topography","Ocean Waves","Coastal Geomorphology","Water Management"]}
+        ]
     }
 ]
