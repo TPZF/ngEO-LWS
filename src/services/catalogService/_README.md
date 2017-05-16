@@ -9,3 +9,8 @@ Structure :
 - responseFormatOnSearch: what format is answered when a search is made on a collection of this catalog
 - avoidedAttributes: what attributes are not displayed in advanced filters criterias
 - mandatoryAttributes: mandatory attributes used in search requests (for example requests on spacebel need recordSchema=om to retrieve EarthObservation metadatas)
+-credentials : {
+     "username": "the username",
+     "password": "the password"
+}
+credentials are not mandatory, nut if exists then it shoumd contain the usename/pass for this catalog access

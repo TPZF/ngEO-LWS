@@ -1,24 +1,5 @@
 # Description of configuration files
 
-## account.json
-
-Put all credentials (username, password) for each catalogs
-Structure :
-credentials : Array of credential
-
-~~~~json
-{
-    "credentials" : [
-        {
-            "CATALOGID": {
-                "username": "myusername",
-                "password": "mypassword"
-            }
-        }
-    ]
-}
-~~~~
-
 ## commons.json
 
 Put in this file all commons configuration parameters (independant of environment platform)
