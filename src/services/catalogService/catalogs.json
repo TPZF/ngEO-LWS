@@ -54,6 +54,10 @@
         ],
         "mandatoryAttributes": {
             "recordSchema": "om"
+        },
+        "credentials": {
+            "username": "xxxxxxxx",
+            "password": "xxxxxxxx"
         }
     }
 ]

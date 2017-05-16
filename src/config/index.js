@@ -19,8 +19,8 @@ class Configuration {
 				console.error(`Unrecognized NODE_ENV: ${process.env.NODE_ENV} using development configuration by default`);
 				Object.assign(this, require('./development.json'));
 		}
-		// add account.json and commons.json configuration files
-		Object.assign(this, require('./account'), require('./commons'));
+		// commons.json configuration files
+		Object.assign(this, require('./commons'));
 	}
 }
 

@@ -275,6 +275,9 @@ class CollectionService {
 					// set collection object
 					let _collection = new Collection(_idCollection, _url, _oneEntry.title, myCatalog.id);
 					_collection.responseFormatOnSearch = myCatalog.responseFormatOnSearch;
+					if(myCatalog.credentials){
+						_collection.credentials = myCatalog.credentials;
+					}
 					// add other datas
 					_aPromisesGetOsddCollection.push(_this.getOsddCollection(_collection));
 				}
@@ -492,12 +495,13 @@ class CollectionService {
 	addCredentials(myCollection) {
 		Logger.debug('collectionService.addCredentials(' + myCollection.id + ')');
 		let _result = '';
-		let _credentials = _.find(Configuration['credentials'], (_cred) => {
+		/*let _credentials = _.find(Configuration['credentials'], (_cred) => {
 			return (Object.keys(_cred)[0] === myCollection.catalogId);
-		});
+		});*/
+		let _credentials = myCollection.credentials;
 		if (_credentials) {
-			_result += '&username=' + _credentials[myCollection.catalogId].username;
-			_result += '&password=' + _credentials[myCollection.catalogId].password;
+			_result += '&username=' + _credentials.username;
+			_result += '&password=' + _credentials.password;
 		}
 		Logger.debug(_result);
 		return _result;

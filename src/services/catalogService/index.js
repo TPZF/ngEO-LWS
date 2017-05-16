@@ -24,7 +24,8 @@ class CatalogService {
 					active: true,
 					avoidedAttributes: _item.avoidedAttributes,
 					mandatoryAttributes: _item.mandatoryAttributes,
-					responseFormatOnSearch: _item.responseFormatOnSearch
+					responseFormatOnSearch: _item.responseFormatOnSearch,
+					credentials: _item.credentials
 				};
 				let _catalog = new Catalog(_item.url, _item.name, _options);
 				this.catalogs.push(_catalog);
