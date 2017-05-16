@@ -86,10 +86,12 @@ module.exports = {
 	 */
 	findTagByXmlns: function (myJsonOSDD, myPathXmlns) {
 		let _result = '';
-		for (var _node in myJsonOSDD['@']) {
-			if (myJsonOSDD['@'][_node].indexOf(myPathXmlns) >= 0) {
-				_result = _node.split(':')[1] + ':';
-				break;
+		if (myJsonOSDD['@']) {
+			for (var _node in myJsonOSDD['@']) {
+				if (myJsonOSDD['@'][_node].indexOf(myPathXmlns) >= 0) {
+					_result = _node.split(':')[1] + ':';
+					break;
+				}
 			}
 		}
 		return _result;
