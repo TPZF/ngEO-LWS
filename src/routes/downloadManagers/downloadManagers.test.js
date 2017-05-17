@@ -22,7 +22,7 @@ describe('Route downloadManagers', function () {
 
 		var idDownloadManager = 0;
 
-		// create a shopcart
+		// create a download manager
 		it('POST /ngeo/downloadManagers - Create a downloadManager', function (done) {
 
 			var datas = {
@@ -51,7 +51,7 @@ describe('Route downloadManagers', function () {
 
 		});
 
-		// list shopcart
+		// list download managers
 		it('GET /ngeo/downloadManagers - list downloadManagers (1 item)', function (done) {
 
 			request(app)
@@ -93,6 +93,24 @@ describe('Route downloadManagers', function () {
 					should(res.body).have.property('downloadmanagers');
 					should(res.body.downloadmanagers).be.a.Array();
 					res.body.downloadmanagers.should.have.length(0);
+					done();
+				});
+
+		});
+
+	});
+
+	describe('Get latest versions of download managers installers', function () {
+
+		// get
+		it('GET /ngeo/downloadManagers/releases/latest - Get latests', function (done) {
+
+			request(app)
+				.get('/ngeo/downloadManagers/releases/latest')
+				.expect(200)
+				.expect('Content-Type', /json/)
+				.end(function (err, res) {
+					should(res.body).be.a.Object();
 					done();
 				});
 
