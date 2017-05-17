@@ -1,7 +1,11 @@
 // CORE
 let express = require('express');
+let fs = require('fs');
+let path = require('path');
 let ObjectId = require('mongodb').ObjectID;
 let _ = require('lodash');
+
+let Configuration = require('config');
 
 // UTILS
 let Logger = require('utils/logger');
@@ -48,6 +52,68 @@ function _checkRequest(request) {
 		}
 	}
 	return true;
+}
+
+/**
+ * Get latest version of download manager for myOs
+ * 
+ * @function _getLatestRelease
+ * @param {string} myOs
+ * @returns {string}
+ * @private
+ */
+function _getLatestRelease(myOs) {
+	
+	const dir = `${__dirname}/releases/${myOs}`;
+
+	const versionsDesc = fs.readdirSync(dir).filter((file) => {
+		const filePath = path.join(dir, file);
+		return fs.statSync(filePath).isDirectory();
+	}).reverse();
+
+	return versionsDesc[0];
+}
+
+function _getAllLatestRelease() {
+
+	const _json = {};
+
+	const dir = `${__dirname}/releases/`;
+
+	fs.readdirSync(dir).forEach((os) => {
+		const versionDesc = fs.readdirSync(dir + '/' + os).filter((file) => {
+			const filePath = path.join(dir + '/' + os, file);
+			return fs.statSync(filePath).isDirectory();
+		}).reverse();
+		if (versionDesc[0]) {
+			if (os.indexOf('linux') > -1) {
+				_json[os] = {
+					readme: 'Latest release : ' + versionDesc[0],
+					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
+					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
+					version: versionDesc[0]
+				};
+			}
+			if (os.indexOf('win') === 0) {
+				_json[os] = {
+					readme: 'Latest release : ' + versionDesc[0],
+					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
+					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
+					version: versionDesc[0]
+				};
+			}
+			if (os.indexOf('darwin') > -1) {
+				_json[os] = {
+					readme: 'Latest release : ' + versionDesc[0],
+					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.dmg',
+					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.dmg',
+					version: versionDesc[0]
+				};
+			}
+		}
+	});
+	return _json;
+
 }
 
 // ROUTER
@@ -107,6 +173,52 @@ router.get('/', (req, res) => {
 router.get('/about', (req, res) => {
 	Logger.debug('GET /ngeo/downloadManagers/about');
 	res.status(200).send("Description of downloadManagers requests");
+});
+
+/**
+ * Get latest version of download manager installer
+ * 
+ * @function router.get
+ * @param {String} url - /ngeo/downloadManagers/releases/latest
+ * @param {object} req - empty
+ * @param {object} res - response
+ */
+router.get('/releases/latest', (req, res) => {
+	Logger.debug('GET /ngeo/downloadManagers/releases/latest');
+	const jsonLatest = _getAllLatestRelease();
+	if (jsonLatest !== {}) {
+		res.json(jsonLatest);
+	} else {
+		res.sendStatus(404);
+	}
+});
+
+/**
+ * Get a specific version of download manager installer
+ * 
+ * @function router.get
+ * @param {String} url - /ngeo/downloadManagers/releases/download/:os/:version/:file
+ * @param {object} req - empty
+ * @param {object} res - response
+ */
+router.get('/releases/download/:os/:version/:file', (req, res) => {
+	Logger.debug('GET /ngeo/downloadManagers/releases/download/:os/:version/:file');
+	if (!req.params.os || !req.params.version || !req.params.file) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+	const os = req.params.os;
+	const version = req.params.version;
+	const file = req.params.file;
+	const dir = `${__dirname}/releases/${os}/${version}/${file}`;
+	if (!fs.existsSync(dir)) {
+		res.sendStatus(404);
+		return;
+	}
+	let options = {
+		root: __dirname
+	};
+	res.status(200).sendFile('./releases/' + os + '/' + version + '/' + file, options);
 });
 
 /**
