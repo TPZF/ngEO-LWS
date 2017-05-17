@@ -12,4 +12,5 @@ public/**/*.map
 # Tests
 coverage/*
 
-# Mine
+# Temp folder
+tmp
