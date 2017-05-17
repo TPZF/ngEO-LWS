@@ -55,30 +55,21 @@ function _checkRequest(request) {
 }
 
 /**
- * Get latest version of download manager for myOs
+ * Get latest version of download manager for each os
  * 
- * @function _getLatestRelease
- * @param {string} myOs
- * @returns {string}
+ * @function _getAllLatestRelease
+ * @returns {Object}
  * @private
  */
-function _getLatestRelease(myOs) {
-	
-	const dir = `${__dirname}/releases/${myOs}`;
-
-	const versionsDesc = fs.readdirSync(dir).filter((file) => {
-		const filePath = path.join(dir, file);
-		return fs.statSync(filePath).isDirectory();
-	}).reverse();
-
-	return versionsDesc[0];
-}
-
 function _getAllLatestRelease() {
 
 	const _json = {};
 
 	const dir = `${__dirname}/releases/`;
+
+	if (!fs.existsSync(dir)) {
+		return _json;
+	}
 
 	fs.readdirSync(dir).forEach((os) => {
 		const versionDesc = fs.readdirSync(dir + '/' + os).filter((file) => {
