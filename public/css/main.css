@@ -808,38 +808,41 @@ Red dot with number of features
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 29, client/css/mapPopup.less */
+/* line 30, client/css/mapPopup.less */
 .mapPopup p {
   margin: 3px;
   padding: 0;
-  max-width: 16em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* line 40, client/css/mapPopup.less */
+/* line 38, client/css/mapPopup.less */
+.mapPopup .oneproduct {
+  font-size: 12px;
+}
+/* line 44, client/css/mapPopup.less */
 .ui-icon-save {
   background-image: url("../images/save.png");
 }
-/* line 45, client/css/mapPopup.less */
+/* line 49, client/css/mapPopup.less */
 .ui-icon-shop {
   background-image: url("../images/shop.png");
 }
-/* line 50, client/css/mapPopup.less */
+/* line 54, client/css/mapPopup.less */
 .ui-icon-browse {
   background: url("../images/browse.png") 50% 50% no-repeat;
   background-color: #252525;
 }
-/* line 54, client/css/mapPopup.less */
+/* line 58, client/css/mapPopup.less */
 .ui-icon-browse-multiple {
   background: url("../images/browse_multiple.png") 50% 50% no-repeat;
   background-color: #252525;
 }
-/* line 60, client/css/mapPopup.less */
+/* line 64, client/css/mapPopup.less */
 .ui-btn-active .ui-icon-browse {
   background-color: #395E7B !important;
 }
-/* line 65, client/css/mapPopup.less */
+/* line 69, client/css/mapPopup.less */
 .btnNext {
   display: inline-block;
   width: 18px;

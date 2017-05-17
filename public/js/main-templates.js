@@ -552,11 +552,11 @@ __p+='\r\n\t\t\t\t\t';
  if ( criterion.maxOccurs == 1 ) { 
 __p+='\r\n\t\t\t\t\t\t<!-- Selectbox -->\r\n\t\t\t\t\t\t<select id="'+
 ((__t=( criterion.id ))==null?'':__t)+
-'" data-mini="true"" title="Select '+
+'" data-mini="true"" title="'+
 ((__t=( label ))==null?'':__t)+
-'">\r\n\t\t\t\t\t\t\t<option value="">'+
+'...">\r\n\t\t\t\t\t\t\t<option value="">Any '+
 ((__t=( label ))==null?'':__t)+
-' : Any</option>\r\n\t\t\t\t\t\t\t';
+'</option>\r\n\t\t\t\t\t\t\t';
  _.each(criterion.possibleValues, function(possibleValue) { 
 __p+='\r\n\t\t\t\t\t\t\t\t<option value="'+
 ((__t=( possibleValue ))==null?'':__t)+
@@ -798,7 +798,9 @@ __p+='\t\r\n\t\t\t\t\t<div class="ui-block-c"> \t\r\n\t\t\t\t';
  } 
 __p+='\r\n\r\n\t\t\t\t<select id="criteria_'+
 ((__t=( i))==null?'':__t)+
-'" data-mini="true">\r\n\t\t\t\t</select>\r\n\t\t\t\t\t\r\n\t\t\t\t</div>\r\n\t\t\t';
+'" data-mini="true" title="'+
+((__t=(get("criterias")[i].title))==null?'':__t)+
+'...">\r\n\t\t\t\t</select>\r\n\t\t\t\t\t\r\n\t\t\t\t</div>\r\n\t\t\t';
  }); 
 __p+='\r\n\t\t</div>\r\n\t</div>\r\n\r\n\t<div id="datasetListContainer">\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div data-role="popup"  data-theme="e" id="dsPopupDescription">\r\n</div>\r\n\r\n<!-- Range isn\'t valid popup -->\r\n<div id="dateWarningPopup" data-theme="e" data-role="popup">\r\n\t<div data-role="header" class="ui-corner-top ui-content">\r\n\t\t<h1 class="ui-title">Warning</h1>\r\n\t</div>\r\n\t<div data-role="content" class="ui-corner-bottom ui-content">\r\n\t\tSearch date range is not correct\r\n\t</div>\r\n</div>\r\n\r\n\r\n<!-- The footer for buttons -->\r\n<div id="ds-footer">\r\n\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' id="dsSearch" >Search</button>\r\n</div>\r\n';
 }
