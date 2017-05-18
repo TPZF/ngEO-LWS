@@ -30,11 +30,10 @@ See on src/config directory and define :
 
 - database access, account, password,
 - host,
-- account / password for authentication on catalogs
 - etc.
 
 ## Starting/Stoping/Testing Server
->Linux commands
+>Linux or Macosx commands
 
 |Commands | Production command | Development command | Test command      |
 |-------- | ------------------ | ------------------- | ------------      |
