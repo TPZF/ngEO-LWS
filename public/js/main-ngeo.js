@@ -3758,6 +3758,8 @@ var SearchCriteriaView = require('search/view/searchCriteriaView');
 var StandingOrder = require('search/model/standingOrder');
 var StandingOrderView = require('search/view/standingOrderView');
 
+var Configuration = require('configuration');
+
 module.exports = {
 
 	/**
@@ -3828,6 +3830,9 @@ module.exports = {
 		panelManager.left.add(standingOrderView, '#subscribe');
 		searchView.render();
 		standingOrderView.render();
+		if (!Configuration.data.susbcribe) {
+			$('#subscribe').hide();
+		}
 
 		// Route search shared url
 		router.route(
