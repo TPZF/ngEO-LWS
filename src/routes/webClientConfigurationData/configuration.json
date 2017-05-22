@@ -180,8 +180,11 @@
 			"Super date"
 		]
 	],
-	"subscribe": false,
+	"subscribe": {
+		"enable": false
+	},
 	"downloadManager": {
+		"enable": false,
 		"downloadManagerInstallationLink": {
 			"Windows": "/files/ngEODownloadManager-2.0.5-RC06-windows-installer.exe",
 			"Linux": "/files/ngEODownloadManager-2.0.5-RC06-linux-x64-installer.run",
