@@ -180,6 +180,7 @@
 			"Super date"
 		]
 	],
+	"subscribe": false,
 	"downloadManager": {
 		"downloadManagerInstallationLink": {
 			"Windows": "/files/ngEODownloadManager-2.0.5-RC06-windows-installer.exe",
