@@ -38,7 +38,7 @@
     },
     {
         "name": "EOP-ESA-SENTINEL",
-        "url": "http://ngeo-light.evo-pdgs.com/ngeo-qs/ngeo/opensearch/request/?httpAccept=application/atom+xml&query=EOP:ESA:SENTINEL",
+        "url": "http://geo.spacebel.be/opensearch/request/?httpAccept=application/atom%2Bxml&uid=%22EOP:ESA:SENTINEL%22",
         "responseFormatOnSearch": "application/atom+xml",
         "avoidedAttributes": [
             "bbox",
