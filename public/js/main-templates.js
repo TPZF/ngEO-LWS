@@ -1090,18 +1090,18 @@ module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
 __p+='<div id="account">\r\n<h2 id="account-header">My Account</h2> <a class="ui-link" data-ajax="false" target=\'_blank\' href="account">Access to UMSSO profile management</a>\r\n\t<div id="tabs">\r\n\t\t<ul>\r\n\t\t\t<li><a data-help="'+
+((__t=( shopcart ))==null?'':__t)+
+'"href="#shopcarts">Shopcarts</a></li>\r\n\t\t\t<li><a data-help="'+
 ((__t=( downloadManagers ))==null?'':__t)+
 '" href="#downloadManagersMonitoring">Download Managers</a></li>\r\n\t\t\t<li><a data-help="'+
 ((__t=( dar ))==null?'':__t)+
-'" href="#DARMonitoring">Data Access Requests</a></li>\r\n\t\t\t<li><a data-help="'+
-((__t=( shopcart ))==null?'':__t)+
-'"href="#shopcarts">Shopcarts</a></li>\r\n\t\t\t<!-- <li><a data-help="'+
+'" href="#DARMonitoring">Data Access Requests</a></li>\r\n\t\t\t<!-- <li><a data-help="'+
 ((__t=( inquiries ))==null?'':__t)+
 '"href="#inquiries">Inquiries</a></li> -->\r\n\t\t\t<li><a data-help="'+
 ((__t=( userPrefs ))==null?'':__t)+
 '"href="#userPrefs">User Preferences</a></li>\r\n\t\t\t<li><a data-help="'+
 ((__t=( layerManager ))==null?'':__t)+
-'"href="#layerManager">Layer Manager</a></li>\r\n\t\t</ul>\r\n\t\t<div id="downloadManagersMonitoring"></div>\r\n\t\t<div id="DARMonitoring"></div>\r\n\t\t<div id="shopcarts"></div>\r\n\t\t<!-- NGEO-1967: Replace inquiries view by "Contact Us" link -->\r\n\t\t<!-- <div id="inquiries"></div> -->\r\n\t\t<div id="userPrefs"></div>\r\n\t\t<div id="layerManager"></div>\r\n\t</div>\r\n</div>';
+'"href="#layerManager">Layer Manager</a></li>\r\n\t\t</ul>\r\n\t\t<div id="shopcarts"></div>\r\n\t\t<div id="downloadManagersMonitoring"></div>\r\n\t\t<div id="DARMonitoring"></div>\r\n\t\t<!-- NGEO-1967: Replace inquiries view by "Contact Us" link -->\r\n\t\t<!-- <div id="inquiries"></div> -->\r\n\t\t<div id="userPrefs"></div>\r\n\t\t<div id="layerManager"></div>\r\n\t</div>\r\n</div>';
 }
 return __p;
 };
