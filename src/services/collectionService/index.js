@@ -542,7 +542,7 @@ class CollectionService {
 		let _jsonOSDD = myCollection.osdd;
 		let _paramTag = Utils.findTagByXmlns(_jsonOSDD, Configuration.opensearch.xmlnsParameter);
 		let _nodesFind = _.filter(_jsonOSDD.Url, function (_item) {
-			if (_item['@'].type === myCollection.responseFormatOnSearch) {
+			if (_item['@'] && (_item['@'].type === myCollection.responseFormatOnSearch)) {
 				if (_item['@'][_paramTag + ':method']) {
 					if (_item['@'][_paramTag + 'method'].toLowerCase() === 'get') {
 						return true;
@@ -624,22 +624,26 @@ class CollectionService {
 	buildAttributes(myCollection, mySearchRequestDescription, myParamTag, myAvoidedAttributes) {
 		let _result = [];
 		mySearchRequestDescription.forEach((_item) => {
-			_item[myParamTag + 'Parameter'].forEach((_parameter) => {
-				// if param is not in avoidedAttributes, build it !
-				if (myAvoidedAttributes.indexOf(_parameter['@'].name) == -1) {
-					if (!myCollection.parameters[_parameter['@'].name]) {
-						myCollection.parameters[_parameter['@'].name] = _parameter['@'].name;
-					}
-					let _newAdvancedCriteria = this.buildAdvancedCriteria(_parameter, myParamTag);
-					if (_newAdvancedCriteria) {
-						if (!_.find(_result, (_r) => {
-							return _r.id === _newAdvancedCriteria.id;
-						})) {
-							_result.push(_newAdvancedCriteria);
+			if (_item[myParamTag + 'Parameter']) {
+				_item[myParamTag + 'Parameter'].forEach((_parameter) => {
+					if (_parameter['@']) {
+						// if param is not in avoidedAttributes, build it !
+						if (myAvoidedAttributes.indexOf(_parameter['@'].name) == -1) {
+							if (!myCollection.parameters[_parameter['@'].name]) {
+								myCollection.parameters[_parameter['@'].name] = _parameter['@'].name;
+							}
+							let _newAdvancedCriteria = this.buildAdvancedCriteria(_parameter, myParamTag);
+							if (_newAdvancedCriteria) {
+								if (!_.find(_result, (_r) => {
+									return _r.id === _newAdvancedCriteria.id;
+								})) {
+									_result.push(_newAdvancedCriteria);
+								}
+							}
 						}
 					}
-				}
-			});
+				});
+			}
 		});
 		return _result;
 	}
