@@ -176,6 +176,11 @@ let _convertGeoRssFpToInternalFp = function (myEntry) {
  * @param {object} feature 
  */
 let _addProductInformationForFeature = function (feature) {
+	let eoResult = Utils.getFromPath(feature, 'properties.EarthObservation.result.EarthObservationResult', null);
+	if (eoResult === null) {
+		Logger.warn('No Earth Observation Result for feature ' + (feature.id ? feature.id : feature));
+		return feature;
+	}
 	let product = Utils.getFromPath(feature, 'properties.EarthObservation.result.EarthObservationResult.product', null);
 	if (product === null) {
 		Logger.warn('No product information for feature ' + (feature.id ? feature.id : feature));
