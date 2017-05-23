@@ -554,7 +554,7 @@ __p+='\r\n\t\t\t\t\t\t<!-- Selectbox -->\r\n\t\t\t\t\t\t<label for="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '">'+
 ((__t=( label ))==null?'':__t)+
-':</label><br/>\r\n\t\t\t\t\t\t<select id="'+
+':</label>\r\n\t\t\t\t\t\t<select id="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '" data-mini="true"" title="'+
 ((__t=( label ))==null?'':__t)+
@@ -592,15 +592,13 @@ __p+='\r\n\t\t\t\t';
  } else { 
 __p+='\r\n\t\t\t\t\t<!-- The criterion has no possible values, show text field -->\r\n\t\t\t\t\t<div data-role="fieldcontain">\r\n\t\t\t\t\t\t<label>'+
 ((__t=(label))==null?'':__t)+
-':\r\n\t\t\t\t\t\t<input type="text" name="'+
+':<br/>\r\n\t\t\t\t\t\t<input type="text" name="'+
 ((__t=( criterion.id ))==null?'':__t)+
-'" title="'+
-((__t=( label ))==null?'':__t)+
+'" title="Pattern : '+
+((__t=( pattern ))==null?'':__t)+
 '" ';
  if ( pattern ) print('pattern='+pattern); 
-__p+=' placeHolder="Set '+
-((__t=( label ))==null?'':__t)+
-'..." id="'+
+__p+=' id="'+
 ((__t=( criterion.id ))==null?'':__t)+
 '" ';
  if ( value ) print('value='+value); 
@@ -770,7 +768,7 @@ require.register("search/template/datasetsListContent_template", function(export
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='\r\n<!-- NGEOL-2: Manual filter input in order to filter on name only and not on count -->\r\n<input placeholder="Filter on dataset names..." data-type="search" class="ui-input-text ui-body-a">\r\n<ul id="datasetList" data-role="listview" data-inset="true">\t\r\n\r\n\t';
+__p+='\r\n<!-- NGEOL-2: Manual filter input in order to filter on name only and not on count -->\r\n<ul id="datasetList" data-role="listview" data-inset="true">\t\r\n\r\n\t';
  _.each(datasets, function(dataset) { 
 __p+='\r\n\t\t<li  id="'+
 ((__t=( dataset.tagFriendlyId ))==null?'':__t)+
@@ -808,7 +806,7 @@ __p+='\r\n\r\n\t\t\t<select id="criteria_'+
 ((__t=(get("criterias")[i].title))==null?'':__t)+
 '...">\r\n\t\t\t</select>\r\n\t\t\t</div>\r\n\t\t';
  }); 
-__p+='\r\n\t</div>\r\n</div>\r\n<div id="ds-content">\r\n\r\n\t<div id="datasetListContainer">\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div data-role="popup"  data-theme="e" id="dsPopupDescription">\r\n</div>\r\n\r\n<!-- Range isn\'t valid popup -->\r\n<div id="dateWarningPopup" data-theme="e" data-role="popup">\r\n\t<div data-role="header" class="ui-corner-top ui-content">\r\n\t\t<h1 class="ui-title">Warning</h1>\r\n\t</div>\r\n\t<div data-role="content" class="ui-corner-bottom ui-content">\r\n\t\tSearch date range is not correct\r\n\t</div>\r\n</div>\r\n\r\n\r\n<!-- The footer for buttons -->\r\n<div id="ds-footer">\r\n\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' id="dsSearch" >Search</button>\r\n</div>\r\n';
+__p+='\r\n\t</div>\r\n\t<input placeholder="Filter on dataset names..." data-type="search" class="ui-input-text ui-body-a">\r\n</div>\r\n<div id="ds-content">\r\n\r\n\t<div id="datasetListContainer">\r\n\t</div>\r\n\r\n</div>\r\n\r\n<div data-role="popup"  data-theme="e" id="dsPopupDescription">\r\n</div>\r\n\r\n<!-- Range isn\'t valid popup -->\r\n<div id="dateWarningPopup" data-theme="e" data-role="popup">\r\n\t<div data-role="header" class="ui-corner-top ui-content">\r\n\t\t<h1 class="ui-title">Warning</h1>\r\n\t</div>\r\n\t<div data-role="content" class="ui-corner-bottom ui-content">\r\n\t\tSearch date range is not correct\r\n\t</div>\r\n</div>\r\n\r\n';
 }
 return __p;
 };
@@ -985,13 +983,13 @@ require.register("search/template/searchCriteriaContent_template", function(expo
 module.exports = function(obj){
 var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};
 with(obj||{}){
-__p+='\r\n<div id="sc-content">\r\n\t\r\n\t<div id="sc-date-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Acquisition Dates</h3>\r\n\t\t<div id="date">\t</div>\r\n\t</div>\r\n\t\r\n\t<div id="sc-area-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Area Of Interest</h3>\r\n\t\t<div id="area">\t</div>\r\n\t</div>\r\n\t<div id="sc-datasets-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Advanced Filters Options</h3>\r\n\t\t<div class="datasetSearch"></div>\r\n\t</div>\r\n</div>\r\n<!--\r\n<div data-role="collapsible-set" data-inset="false" data-mini="true">\r\n</div>\r\n-->\t\r\n\r\n<!-- The footer for buttons -->\r\n<div id="sc-footer">\r\n\t<div class="widget-footer-right">\r\n\t\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' class="scSubmit" >'+
+__p+='\r\n<div id="sc-content">\r\n\t\r\n\t<div id="sc-date-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Acquisition Dates</h3>\r\n\t\t<div id="date">\t</div>\r\n\t</div>\r\n\t\r\n\t<div id="sc-area-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Area Of Interest</h3>\r\n\t\t<div id="area">\t</div>\r\n\t</div>\r\n\t<div id="sc-datasets-container" data-role="collapsible" data-inset="false" data-mini="true">\r\n\t\t<h3>Advanced Filters Options</h3>\r\n\t\t<div class="datasetSearch"></div>\r\n\t</div>\r\n</div>\r\n<!--\r\n<div data-role="collapsible-set" data-inset="false" data-mini="true">\r\n</div>\r\n-->\t\r\n\r\n<!-- The footer for buttons -->\r\n<!--div id="sc-footer">\r\n\t<div class="widget-footer-right">\r\n\t\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' class="scSubmit" >'+
 ((__t=( submitText ))==null?'':__t)+
 '</button>\r\n\t</div>\r\n\t<button data-role=\'button\' data-inline=\'true\' data-mini=\'true\' id="share">Share</button>\r\n\t<!-- NGEO-1971 : add special button to import criteria from search panel -->\r\n\t';
  if (submitText == "Subscribe") { 
 __p+='\r\n\t\t<button title="Import criteria from search panel" data-role=\'button\' data-inline=\'true\' data-mini=\'true\' class="scImport" >Get Criteria</button>\r\n\t';
  } 
-__p+='\r\n</div>\r\n\r\n';
+__p+='\r\n</div-->\r\n\r\n';
 }
 return __p;
 };
@@ -1119,7 +1117,7 @@ var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments
 with(obj||{}){
 __p+='<div id="data-services-area">\r\n\t<!-- A button to show/hide the toolbar -->\r\n\t<!-- <a id="showHideToolbar" data-role="button" data-mini="true" data-inline="true" data-icon="minus" data-iconpos="notext">Show/Hide</a> -->\r\n\r\n\t<!-- The main toolbar in the data-services-area -->\r\n\t<menu id="searchToolbar" type="toolbar" direction="vertical">\r\n\t\t<command id="dataset" class="ui-disabled" label="Datasets" data-help="Select a dataset for searching products.<br>\r\n\t\t\tSee <a target=\'_blank\' href=\'help.html#chapter/dataAccessServices/datasetSelection\'>here</a> for more details."></command>\r\n\t\t<command id="search" class="ui-disabled" label="Filters" data-help="Submit a search for the selected dataset.<br>\r\n\t\t\tSee <a target=\'_blank\' href=\'help.html#chapter/dataAccessServices/searchCriteria\'>here</a> for more details."></command>\r\n\t\t<command id="subscribe"  class="ui-disabled" label="Subscribe" data-help="Submit an order for the selected dataset.<br>"></command>\r\n\t</menu>\r\n\t\r\n\t\r\n\t<menu id="mapToolbar" type="toolbar">\r\n\t\t<command id="home" label="Start View" data-help="Return to map start view"/>\r\n\t\t<command id="zoomOut" label="Zoom Out" data-help="Zoom out on the map"/>\r\n\t\t<command id="zoomIn" label="Zoom In" data-help="Zoom in on the map"/>\r\n\t\t<command id="background" label="Background" data-help="Change the background layer used by the map"/>\r\n\t\t<command id="layers" label="Layers" data-help="Configure layers on the map"/>\r\n\t\t<command id="switch" label="2D/3D" data-help="Switch map mode between 2D and 3D"/>\r\n\t</menu>\r\n\t\r\n\t\r\n\t<!-- bottom panel -->\r\n\t<div id="bottom-panel" class="panel ui-body-'+
 ((__t=( theme ))==null?'':__t)+
-'">\r\n\t\t<!-- The date range slide use for product search -->\r\n\t\t<div style="height: 0px; display: none;" id="dateRangeSlider">\r\n\t\t</div>\r\n\r\n\t\t<menu id="bottomToolbar" type="toolbar">\r\n\t\t\t<command id="table" data-notext="true" label="Show table"/>\r\n\t\t\t<div id="bottomDatasets">\r\n\t\t\t<!--\t<command id="result" label="Results"/> -->\r\n\t\t\t\t<command id="shopcart" data-icon="shopcart" label="Shopcart"/>\r\n\t\t\t</div>\r\n\t\t\t<span id="statusPagination"></span>\r\n\t\t</menu>\r\n\t</div>\r\n\t\r\n\t<!-- left panel -->\r\n\t<div id="left-panel" class="panel ui-body-'+
+'">\r\n\t\t<!-- The date range slide use for product search -->\r\n\t\t<div style="height: 0px; display: none;" id="dateRangeSlider">\r\n\t\t</div>\r\n\r\n\t\t<menu id="bottomToolbar" type="toolbar">\r\n\t\t\t<command id="table" data-notext="true" label="Show table"/>\r\n\t\t\t<div id="bottomDatasets">\r\n\t\t\t<!--\t<command id="result" label="Results"/> -->\r\n\t\t\t\t<command id="shopcart" data-icon="shopcart" label="Shopcart"/>\r\n\t\t\t</div>\r\n\t\t\t<span id="statusSearchBtn"><a id="statusBtnSearch" data-role="button" title="Search"></a></span>\r\n\t\t\t<span id="statusPagination"></span>\r\n\t\t\t<span id="statusShareBtn"><a id="statusBtnShare" data-role="button" title="Share"></a></span></span>\r\n\t\t</menu>\r\n\t</div>\r\n\t\r\n\t<!-- left panel -->\r\n\t<div id="left-panel" class="panel ui-body-'+
 ((__t=( theme ))==null?'':__t)+
 '">\r\n\t</div>\r\n</div>';
 }

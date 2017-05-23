@@ -341,6 +341,53 @@ Red dot with number of features
   margin-top: 3px;
   margin-left: 5em;
 }
+/* line 134, client/css/toolbar.less */
+#statusSearchBtn {
+  display: inline-block;
+  position: absolute;
+  bottom: 7px;
+  height: 40px;
+  width: 40px;
+}
+/* line 140, client/css/toolbar.less */
+#statusSearchBtn a {
+  border-radius: 3px;
+  background: url('../css/images/search.png') no-repeat center;
+  height: 30px;
+  width: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
+  position: absolute;
+  cursor: pointer;
+}
+/* line 150, client/css/toolbar.less */
+#statusSearchBtn a:hover {
+  background-color: rgba(120, 120, 120, 0.5);
+}
+/* line 155, client/css/toolbar.less */
+#statusShareBtn {
+  display: inline-block;
+  position: absolute;
+  bottom: 7px;
+  height: 40px;
+  width: 40px;
+  right: 3px;
+}
+/* line 162, client/css/toolbar.less */
+#statusShareBtn a {
+  border-radius: 3px;
+  background: url('../css/images/share.png') no-repeat center;
+  height: 30px;
+  width: 30px;
+  margin-left: 5px;
+  margin-top: 5px;
+  position: absolute;
+  cursor: pointer;
+}
+/* line 172, client/css/toolbar.less */
+#statusShareBtn a:hover {
+  background-color: rgba(120, 120, 120, 0.5);
+}
 /**
  * To add a title in the widget
  */
@@ -522,7 +569,7 @@ Red dot with number of features
 /* line 14, client/css/datasetSelection.less */
 #ds-keywords h3 {
   margin-top: 0.5em;
-  margin-bottom: 0.3em;
+  margin-bottom: 0em;
   margin-left: 1em;
 }
 /* line 21, client/css/datasetSelection.less */
@@ -1381,7 +1428,7 @@ menu[type=toolbar] {
 #statusPagination {
   display: inline-block;
   text-align: left;
-  right: 0px;
+  right: 40px;
   position: absolute;
   bottom: 7px;
   max-width: 360px;
