@@ -519,26 +519,40 @@ Red dot with number of features
   text-align: right;
   border-top: 1px solid grey;
 }
-/* line 13, client/css/datasetSelection.less */
+/* line 14, client/css/datasetSelection.less */
+#ds-keywords h3 {
+  margin-top: 0.5em;
+  margin-bottom: 0.3em;
+  margin-left: 1em;
+}
+/* line 21, client/css/datasetSelection.less */
+#ds-keywords .ui-select .ui-btn-text span {
+  color: grey;
+}
+/* line 28, client/css/datasetSelection.less */
+#ds-keywords .ui-select.oneValue .ui-btn-text span {
+  color: white;
+}
+/* line 34, client/css/datasetSelection.less */
 #ds-content {
   overflow-y: auto;
   overflow-x: hidden;
 }
-/* line 18, client/css/datasetSelection.less */
+/* line 39, client/css/datasetSelection.less */
 #ds-content .ui-listview-filter-inset {
   margin: 0;
 }
-/* line 23, client/css/datasetSelection.less */
+/* line 44, client/css/datasetSelection.less */
 #ds-content ul {
   cursor: pointer;
   background-color: #333333;
 }
-/* line 28, client/css/datasetSelection.less */
+/* line 49, client/css/datasetSelection.less */
 #ds-content li img {
   float: right;
   margin-left: 8px;
 }
-/* line 34, client/css/datasetSelection.less */
+/* line 55, client/css/datasetSelection.less */
 #ds-content li {
   padding-left: 2.5em;
   font-size: 13px;
@@ -546,7 +560,7 @@ Red dot with number of features
   overflow: hidden;
   white-space: nowrap;
 }
-/* line 43, client/css/datasetSelection.less */
+/* line 64, client/css/datasetSelection.less */
 #ds-content li .ui-icon {
   border-radius: 3px;
   top: 50%;
@@ -554,19 +568,19 @@ Red dot with number of features
   position: absolute;
   left: 10px;
 }
-/* line 51, client/css/datasetSelection.less */
+/* line 72, client/css/datasetSelection.less */
 #ds-content li .ui-icon-checkbox-on {
   background-color: #4596CE;
 }
-/* line 56, client/css/datasetSelection.less */
+/* line 77, client/css/datasetSelection.less */
 #ds-content .ui-collapsible-content {
   background-color: #333333;
 }
-/* line 62, client/css/datasetSelection.less */
+/* line 83, client/css/datasetSelection.less */
 #datasetList {
   border-radius: 0px;
 }
-/* line 64, client/css/datasetSelection.less */
+/* line 85, client/css/datasetSelection.less */
 #datasetList .ui-btn-up-c {
   border: 0px;
   border-bottom: 1px solid black;
@@ -675,15 +689,23 @@ Red dot with number of features
 .sc-dataset-container #searchCriteria input[data-type="range"] {
   width: 45px;
 }
-/* line 102, client/css/searchCriteria.less */
+/* line 103, client/css/searchCriteria.less */
+.sc-dataset-container #searchCriteria .ui-select .ui-btn-text span {
+  color: grey;
+}
+/* line 110, client/css/searchCriteria.less */
+.sc-dataset-container #searchCriteria .ui-select.oneValue .ui-btn-text span {
+  color: white;
+}
+/* line 118, client/css/searchCriteria.less */
 .sc-dataset-container #downloadOptions {
   margin: 1em 0px;
 }
-/* line 107, client/css/searchCriteria.less */
+/* line 123, client/css/searchCriteria.less */
 #sc-mode {
   vertical-align: middle;
 }
-/* line 112, client/css/searchCriteria.less */
+/* line 128, client/css/searchCriteria.less */
 #polygonTextError {
   color: red;
   white-space: normal;

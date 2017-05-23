@@ -4254,7 +4254,7 @@ var DataSetPopulation = Backbone.Model.extend({
 			var datasetInfos = this.datasetInfoMap[datasetId];
 			var passedFilter = true;
 
-			var selectedCriterias = _.filter(this.get('criterias'), function(o) { return o.selectedValue });
+			var selectedCriterias = _.filter(criteriaFilter, function(o) { return o.selectedValue });
 			if ( selectedCriterias.length ) {
 
 				var row = datasetInfos.rows[0];
@@ -5934,8 +5934,10 @@ var AdvancedSearchView = Backbone.View.extend({
 			});
 			if ( value != "" ) {
 				attributeToUpdate.value = value;
+				$(event.currentTarget).closest('.ui-select').addClass('oneValue');
 			} else {
 				delete attributeToUpdate.value;
+				$(event.currentTarget).closest('.ui-select').removeClass('oneValue');
 			}
 		},
 
@@ -6423,7 +6425,21 @@ var DatasetSelectionView = Backbone.View.extend({
 			SearchResults.launch(DatasetSearch);
 		},
 
+		"click #dsResetKeywords": function() {
+			var self = this;
+			var index = 0;
+			this.model.get('criterias').forEach(function(criteria) {
+				criteria.selectedValue = "";
+				self.$el.find("#criteria_" + index).val("").change();
+				self.$el.find("#criteria_" + index).closest('.ui-select').removeClass('oneValue');
+				index++;
+			});
+			this.updateDatasetsList();
+			this.updateSelectCriteria();
+		},
+
 		'keyup [data-type="search"]' : 'filterDatasets',
+
 		'change [data-type="search"]': 'filterDatasets'
 	},
 
@@ -6497,7 +6513,8 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Call to set the height of content when the view size is changed
 	 */
 	updateContentHeight: function() {
-		this.$el.find('#ds-content').css('height', this.$el.height() - this.$el.find('#ds-footer').outerHeight());
+		var newHeight = this.$el.height() - this.$el.find('#ds-footer').outerHeight() - this.$el.find('#ds-keywords').outerHeight() - 10;
+		this.$el.find('#ds-content').css('height', newHeight);
 	},
 
 	/**
@@ -6534,10 +6551,15 @@ var DatasetSelectionView = Backbone.View.extend({
 				
 				var value = $(this).val() ? $(this).val() : "";
 				criteria.selectedValue = value;
+				if (value !== '') {
+					$(event.currentTarget).closest('.ui-select').addClass('oneValue');
+				} else {
+					$(event.currentTarget).closest('.ui-select').removeClass('oneValue');
+				}
 
 				// Update datasets list and criteria according to the new criteria filter
 				self.updateDatasetsList();
-				self.updateSelectCriteria();
+				self.updateSelectCriteria(index);
 			});
 		});
 
@@ -6548,18 +6570,27 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Update the select elements for criterias with the given datasets
 	 * The <option>'s should be updated according to filtered datasets
 	 */
-	updateSelectCriteria: function() {
+	updateSelectCriteria: function(idx) {
 
 		// Rebuilt the criterias to select
 		var criterias = this.model.get('criterias');
+
 		for (var i = 0; i < criterias.length; i++) {
+
+			var criteriasForAllGroupsExceptThisOne = JSON.parse(JSON.stringify(criterias));
+			if (typeof idx !== 'undefined') {
+				criteriasForAllGroupsExceptThisOne[i].selectedValue = '';
+			}
+			let datasetsFilteredForAllGroupsExceptThisOne = this.model.filterDatasets(criteriasForAllGroupsExceptThisOne);
+
 			var criteria = criterias[i];
 			var $selectCriteria = this.$el.find("#criteria_" + i);
 
 			$selectCriteria.empty();
 			$selectCriteria.append('<option value="">Any ' + criterias[i].title + '</option>');
 
-			var criteriaValues = this.model.filterCriteriaValues( this.filteredDatasets, criteria );
+			var criteriaValues = this.model.filterCriteriaValues( datasetsFilteredForAllGroupsExceptThisOne, criteriasForAllGroupsExceptThisOne[i] );
+
 			for (var j = 0; j < criteriaValues.length; j++) {
 
 				// Add the option to the select element
@@ -6581,7 +6612,7 @@ var DatasetSelectionView = Backbone.View.extend({
 	updateDatasetsList: function() {
 
 		// Retrieve the datasets according to the current criteria
-		var datasets = this.model.filterDatasets();
+		var datasets = this.model.filterDatasets(this.model.get('criterias'));
 
 		// NGEO-2129: Sort by name
 		datasets = _.sortBy(datasets, function(dataset) { return dataset.name.toLowerCase() });
