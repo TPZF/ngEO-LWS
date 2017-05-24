@@ -12,8 +12,12 @@
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier"
 			},
 			{
-				"sTitle": "Sensor",
+				"sTitle": "Instrument",
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
+			},
+			{
+				"sTitle": "Product Type",
+				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
 			},
 			{
 				"sTitle": "Start",
@@ -36,7 +40,7 @@
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"
 			},
 			{
-				"sTitle": "Polarisation Channels",
+				"sTitle": "Polarisation",
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationChannels"
 			},
 			{
@@ -56,12 +60,8 @@
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"
 			},
 			{
-				"sTitle": "Product",
+				"sTitle": "Product URL",
 				"mData": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href"
-			},
-			{
-				"sTitle": "Product Type",
-				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
 			},
 			{
 				"sTitle": "Illumination Azimuth Angle",
