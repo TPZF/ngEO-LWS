@@ -845,82 +845,105 @@ Red dot with number of features
   right: 0;
   top: 10%;
   background: rgba(15, 15, 15, 0.6);
-  border-right: 0 solid black;
-  -webkit-border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -webkit-border-bottom-left-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
-  -moz-border-radius-topright: 0;
-  -moz-border-radius-bottomright: 0;
-  -moz-border-radius-bottomleft: 5px;
-  -moz-border-radius-topleft: 5px;
-  border-radius: 5px 0 0 5px;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-  border: 0px solid black;
   /* Highlighting issue on Safari */
   -webkit-user-select: none;
+  padding: 10px;
 }
-/* line 24, client/css/mapPopup.less */
-#mapPopup .widget-content {
-  -webkit-border-top-right-radius: 0;
-  -webkit-border-bottom-right-radius: 0;
-  -webkit-border-bottom-left-radius: 5px;
-  -webkit-border-top-left-radius: 5px;
-  -moz-border-radius-topright: 0;
-  -moz-border-radius-bottomright: 0;
-  -moz-border-radius-bottomleft: 5px;
-  -moz-border-radius-topleft: 5px;
-  border-radius: 5px 0 0 5px;
-  -moz-background-clip: padding;
-  -webkit-background-clip: padding-box;
-  background-clip: padding-box;
-}
-/* line 30, client/css/mapPopup.less */
-.mapPopup p {
+/* line 20, client/css/mapPopup.less */
+#mapPopup .mapPopup p {
   margin: 3px;
   padding: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* line 38, client/css/mapPopup.less */
-.mapPopup .oneproduct {
+/* line 28, client/css/mapPopup.less */
+#mapPopup .mapPopup .oneproduct {
   font-size: 12px;
 }
-/* line 44, client/css/mapPopup.less */
-.ui-icon-save {
-  background-image: url("../images/save.png");
+/* line 31, client/css/mapPopup.less */
+#mapPopup .mapPopup a {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  margin: 5px;
+  margin-right: 1px;
+  margin-bottom: 0;
+  padding: 5px;
+  background-color: #000;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
-/* line 49, client/css/mapPopup.less */
-.ui-icon-shop {
-  background-image: url("../images/shop.png");
+/* line 43, client/css/mapPopup.less */
+#mapPopup .mapPopup a span {
+  width: 24px;
+  height: 24px;
+  display: block;
+  background-repeat: no-repeat;
+  background-position: center;
 }
-/* line 54, client/css/mapPopup.less */
-.ui-icon-browse {
-  background: url("../images/browse.png") 50% 50% no-repeat;
-  background-color: #252525;
+/* line 50, client/css/mapPopup.less */
+#mapPopup .mapPopup a.active {
+  opacity: 1;
+  background-color: #999;
+  cursor: pointer;
+}
+/* line 55, client/css/mapPopup.less */
+#mapPopup .mapPopup a.select {
+  background-color: #395E7B;
 }
 /* line 58, client/css/mapPopup.less */
-.ui-icon-browse-multiple {
-  background: url("../images/browse_multiple.png") 50% 50% no-repeat;
-  background-color: #252525;
+#mapPopup .mapPopup a.active:hover {
+  background-color: #444;
+}
+/* line 61, client/css/mapPopup.less */
+#mapPopup .mapPopup a.select:hover {
+  background-color: #4596CE;
 }
 /* line 64, client/css/mapPopup.less */
-.ui-btn-active .ui-icon-browse {
-  background-color: #395E7B !important;
+#mapPopup .mapPopup a.check span {
+  background-image: url("../images/pin.png");
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
-/* line 69, client/css/mapPopup.less */
-.btnNext {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  background: url('../css/images/icons-18-white.png') no-repeat -108px 0;
-  background-color: #395E7B;
-  margin-right: 5px;
-  border-radius: 3px;
-  cursor: pointer;
+/* line 72, client/css/mapPopup.less */
+#mapPopup .mapPopup a.check:hover span {
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+/* line 79, client/css/mapPopup.less */
+#mapPopup .mapPopup a.check.select span {
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+/* line 87, client/css/mapPopup.less */
+#mapPopup .mapPopup a.save span {
+  background-image: url("../images/save.png");
+}
+/* line 92, client/css/mapPopup.less */
+#mapPopup .mapPopup a.download span {
+  background-image: url("../images/download.png");
+}
+/* line 97, client/css/mapPopup.less */
+#mapPopup .mapPopup a.shop span {
+  background-image: url("../images/cart-in.png");
+}
+/* line 102, client/css/mapPopup.less */
+#mapPopup .mapPopup a.browse span {
+  background-image: url("../images/browses.png");
+}
+/* line 105, client/css/mapPopup.less */
+#mapPopup .mapPopup a.browse-multiple span {
+  background-image: url("../images/browses.png");
 }
 /* line 3, client/css/dataAccess.less */
 .popup-widget-background {
@@ -2227,49 +2250,64 @@ span.ui-datebox-nopad {
   background-color: #484847;
 }
 /* line 114, client/css/tableView.less */
-.table-view tr.row_highlighted {
+.table-view tr.row_selected {
   background-color: #4596CE;
 }
-/* line 121, client/css/tableView.less */
+/* line 120, client/css/tableView.less */
+.table-view tr.row_highlighted {
+  background-color: #395E7B;
+}
+/* line 128, client/css/tableView.less */
 .table-view-checkbox,
 .table-view-expand,
-.browse-visibility-checkbox,
-.focus-checkbox {
+.browse-visibility-checkbox {
   display: inline-block;
   border-radius: 3px;
   margin-right: 3px;
 }
-/* line 127, client/css/tableView.less */
+/* line 134, client/css/tableView.less */
 #table-columns-button {
   display: inline-block;
   border-radius: 3px;
   background: url('../css/images/icons-18-white.png') no-repeat -432px 0;
   background-color: rgba(120, 120, 120, 0.5);
 }
-/* line 134, client/css/tableView.less */
+/* line 142, client/css/tableView.less */
 .table-view-checkbox.ui-icon-checkbox-on,
 .browse-visibility-checkbox.ui-icon-checkbox-on {
   background-color: #4596CE;
 }
-/* line 137, client/css/tableView.less */
+/* line 145, client/css/tableView.less */
 .ui-icon-checkbox-off {
   background-color: rgba(120, 120, 120, 0.5);
 }
-/* line 141, client/css/tableView.less */
-.focus-checkbox {
-  background: url('../images/eye-white.png') no-repeat center center;
+/* line 149, client/css/tableView.less */
+.ui-icon-pin-on {
+  background: url('../images/pin.png') no-repeat center center;
+  background-size: contain;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
 }
-/* line 144, client/css/tableView.less */
-.focus-checkbox.ui-icon-checkbox-off {
-  background: none;
+/* line 158, client/css/tableView.less */
+.ui-icon-pin-off {
+  background: url('../images/pin.png') no-repeat center center;
+  background-size: contain;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+  opacity: 0.6;
 }
-/* line 148, client/css/tableView.less */
+/* line 169, client/css/tableView.less */
 .directDownload {
   background: url('../images/save.png') no-repeat center center;
   display: inline-block;
-  border-radius: 3px;
 }
-/* line 154, client/css/tableView.less */
+/* line 174, client/css/tableView.less */
 .multipleBrowse {
   background: url('../images/multipleBrowseBtn.png') no-repeat center center;
   height: 16px;
@@ -2278,11 +2316,11 @@ span.ui-datebox-nopad {
   margin-right: -8px;
   display: inline-block;
 }
-/* line 163, client/css/tableView.less */
+/* line 183, client/css/tableView.less */
 .multipleBrowse:hover {
   cursor: pointer;
 }
-/* line 168, client/css/tableView.less */
+/* line 188, client/css/tableView.less */
 .outer-container {
   background-color: #ccc;
   position: absolute;
@@ -2291,21 +2329,21 @@ span.ui-datebox-nopad {
   right: 300px;
   bottom: 40px;
 }
-/* line 178, client/css/tableView.less */
+/* line 198, client/css/tableView.less */
 .inner-container {
   height: 81%;
   overflow: hidden;
   position: relative;
 }
-/* line 185, client/css/tableView.less */
+/* line 205, client/css/tableView.less */
 .table-header {
   position: relative;
 }
-/* line 189, client/css/tableView.less */
+/* line 209, client/css/tableView.less */
 .table-body {
   overflow: auto;
 }
-/* line 194, client/css/tableView.less */
+/* line 214, client/css/tableView.less */
 .header-cell {
   background-color: yellow;
   height: 40px;
@@ -2313,37 +2351,37 @@ span.ui-datebox-nopad {
 /*
  * Sorting
  */
-/* line 203, client/css/tableView.less */
+/* line 223, client/css/tableView.less */
 .sorting_asc {
   background: url('../images/sort_asc.png') no-repeat center right;
 }
-/* line 204, client/css/tableView.less */
+/* line 224, client/css/tableView.less */
 .sorting_desc {
   background: url('../images/sort_desc.png') no-repeat center right;
 }
 /**
  * Style for footer elements
  */
-/* line 212, client/css/tableView.less */
+/* line 232, client/css/tableView.less */
 .table-filter label {
   font-size: 13px;
   font-weight: bold;
 }
-/* line 217, client/css/tableView.less */
+/* line 237, client/css/tableView.less */
 .table-filter input {
   display: inline;
   width: auto;
 }
-/* line 223, client/css/tableView.less */
+/* line 243, client/css/tableView.less */
 .table-middleButtons {
   text-align: center;
 }
-/* line 227, client/css/tableView.less */
+/* line 247, client/css/tableView.less */
 .table-rightButtons {
   text-align: right;
 }
 /** underline the product id for direct download */
-/* line 232, client/css/tableView.less */
+/* line 252, client/css/tableView.less */
 .ui-direct-download {
   text-decoration: underline;
   cursor: pointer;
