@@ -307,12 +307,12 @@
 					"fill": false
 				},
 				"select": {
-					"strokeColor": "#7373ff",
+					"strokeColor": "#ff0000",
 					"strokeWidth": 3,
 					"fill": false
 				},
 				"highlight": {
-					"strokeColor": "#ff0000",
+					"strokeColor": "#33ccff",
 					"strokeWidth": 3,
 					"fill": false
 				},
@@ -329,12 +329,12 @@
 					"fill": false
 				},
 				"select": {
-					"strokeColor": "#7373ff",
-					"strokeWidth": 1,
+					"strokeColor": "#00ff00",
+					"strokeWidth": 3,
 					"fill": false
 				},
 				"highlight": {
-					"strokeColor": "#00ff00",
+					"strokeColor": "#33ccff",
 					"strokeWidth": 3,
 					"fill": false
 				},

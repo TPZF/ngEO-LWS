@@ -8740,7 +8740,7 @@ var _onShowBrowses = function(features, fc) {
 
 // Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features, fc) {
-	fc._footprintLayer.modifyFeaturesStyle(features, "highlight-select");
+	fc._footprintLayer.modifyFeaturesStyle(features, "select");
 	Map.trigger("selectFeatures", features);
 };
 
@@ -8797,7 +8797,7 @@ var _onUnHighlightFeatures = function(features, fc) {
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
 			if (feature._featureCollection.isSelected(feature)) {
-				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+				fc._footprintLayer.modifyFeaturesStyle([feature], "select");
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "default");
 				BrowsesManager.removeBrowse(feature);
@@ -13082,6 +13082,7 @@ var BrowsesManager = require('searchResults/browsesManager');
 var DataSetSearch = require('search/model/datasetSearch');
 var Pagination = require('ui/pagination');
 var SearchResults = require('searchResults/model/searchResults');
+var SharePopup = require('ui/sharePopup');
 
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
@@ -13100,6 +13101,17 @@ var StatusPanel = Backbone.View.extend({
 	events: {
 		'click #statusBtnSearch': function() {
 			SearchResults.launch(DataSetSearch);
+		},
+		'click #statusBtnShare': function(event) {
+			var $elem = $(event.currentTarget);
+			SharePopup.open({
+				openSearchUrl: DataSetSearch.getOpenSearchURL({
+					format: "atom"
+				}),
+				url: Configuration.serverHostName + (window.location.pathname) + DataSetSearch.getSharedSearchURL(),
+				positionTo: $elem[0]
+			});
+
 		}
 	},
 

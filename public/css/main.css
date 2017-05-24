@@ -732,27 +732,31 @@ Red dot with number of features
 .sc-dataset-container #searchCriteria {
   margin: 1em 0px;
 }
-/* line 97, client/css/searchCriteria.less */
+/* line 94, client/css/searchCriteria.less */
+.sc-dataset-container #searchCriteria label {
+  word-wrap: break-word;
+}
+/* line 101, client/css/searchCriteria.less */
 .sc-dataset-container #searchCriteria input[data-type="range"] {
   width: 45px;
 }
-/* line 103, client/css/searchCriteria.less */
+/* line 107, client/css/searchCriteria.less */
 .sc-dataset-container #searchCriteria .ui-select .ui-btn-text span {
   color: grey;
 }
-/* line 110, client/css/searchCriteria.less */
+/* line 114, client/css/searchCriteria.less */
 .sc-dataset-container #searchCriteria .ui-select.oneValue .ui-btn-text span {
   color: white;
 }
-/* line 118, client/css/searchCriteria.less */
+/* line 122, client/css/searchCriteria.less */
 .sc-dataset-container #downloadOptions {
   margin: 1em 0px;
 }
-/* line 123, client/css/searchCriteria.less */
+/* line 127, client/css/searchCriteria.less */
 #sc-mode {
   vertical-align: middle;
 }
-/* line 128, client/css/searchCriteria.less */
+/* line 132, client/css/searchCriteria.less */
 #polygonTextError {
   color: red;
   white-space: normal;
@@ -870,11 +874,10 @@ Red dot with number of features
   margin-right: 1px;
   margin-bottom: 0;
   padding: 5px;
-  background-color: #000;
   opacity: 0.6;
   cursor: not-allowed;
 }
-/* line 43, client/css/mapPopup.less */
+/* line 42, client/css/mapPopup.less */
 #mapPopup .mapPopup a span {
   width: 24px;
   height: 24px;
@@ -882,42 +885,24 @@ Red dot with number of features
   background-repeat: no-repeat;
   background-position: center;
 }
-/* line 50, client/css/mapPopup.less */
+/* line 49, client/css/mapPopup.less */
 #mapPopup .mapPopup a.active {
   opacity: 1;
-  background-color: #999;
   cursor: pointer;
 }
-/* line 55, client/css/mapPopup.less */
-#mapPopup .mapPopup a.select {
-  background-color: #395E7B;
-}
-/* line 58, client/css/mapPopup.less */
+/* line 53, client/css/mapPopup.less */
 #mapPopup .mapPopup a.active:hover {
-  background-color: #444;
+  background-color: #666;
 }
-/* line 61, client/css/mapPopup.less */
-#mapPopup .mapPopup a.select:hover {
-  background-color: #4596CE;
-}
-/* line 64, client/css/mapPopup.less */
+/* line 56, client/css/mapPopup.less */
 #mapPopup .mapPopup a.check span {
   background-image: url("../images/pin.png");
-  -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-/* line 72, client/css/mapPopup.less */
-#mapPopup .mapPopup a.check:hover span {
-  -webkit-transform: rotate(0deg);
-  -moz-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  -o-transform: rotate(0deg);
-  transform: rotate(0deg);
-}
-/* line 79, client/css/mapPopup.less */
+/* line 63, client/css/mapPopup.less */
 #mapPopup .mapPopup a.check.select span {
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
@@ -925,23 +910,23 @@ Red dot with number of features
   -o-transform: rotate(0deg);
   transform: rotate(0deg);
 }
-/* line 87, client/css/mapPopup.less */
+/* line 71, client/css/mapPopup.less */
 #mapPopup .mapPopup a.save span {
   background-image: url("../images/save.png");
 }
-/* line 92, client/css/mapPopup.less */
+/* line 76, client/css/mapPopup.less */
 #mapPopup .mapPopup a.download span {
   background-image: url("../images/download.png");
 }
-/* line 97, client/css/mapPopup.less */
+/* line 81, client/css/mapPopup.less */
 #mapPopup .mapPopup a.shop span {
   background-image: url("../images/cart-in.png");
 }
-/* line 102, client/css/mapPopup.less */
+/* line 86, client/css/mapPopup.less */
 #mapPopup .mapPopup a.browse span {
   background-image: url("../images/browses.png");
 }
-/* line 105, client/css/mapPopup.less */
+/* line 89, client/css/mapPopup.less */
 #mapPopup .mapPopup a.browse-multiple span {
   background-image: url("../images/browses.png");
 }
@@ -2251,11 +2236,11 @@ span.ui-datebox-nopad {
 }
 /* line 114, client/css/tableView.less */
 .table-view tr.row_selected {
-  background-color: #4596CE;
+  background-color: #395E7B;
 }
 /* line 120, client/css/tableView.less */
 .table-view tr.row_highlighted {
-  background-color: #395E7B;
+  background-color: #4596CE;
 }
 /* line 128, client/css/tableView.less */
 .table-view-checkbox,
@@ -2300,14 +2285,13 @@ span.ui-datebox-nopad {
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
-  opacity: 0.6;
 }
-/* line 169, client/css/tableView.less */
+/* line 168, client/css/tableView.less */
 .directDownload {
   background: url('../images/save.png') no-repeat center center;
   display: inline-block;
 }
-/* line 174, client/css/tableView.less */
+/* line 173, client/css/tableView.less */
 .multipleBrowse {
   background: url('../images/multipleBrowseBtn.png') no-repeat center center;
   height: 16px;
@@ -2316,11 +2300,11 @@ span.ui-datebox-nopad {
   margin-right: -8px;
   display: inline-block;
 }
-/* line 183, client/css/tableView.less */
+/* line 182, client/css/tableView.less */
 .multipleBrowse:hover {
   cursor: pointer;
 }
-/* line 188, client/css/tableView.less */
+/* line 187, client/css/tableView.less */
 .outer-container {
   background-color: #ccc;
   position: absolute;
@@ -2329,21 +2313,21 @@ span.ui-datebox-nopad {
   right: 300px;
   bottom: 40px;
 }
-/* line 198, client/css/tableView.less */
+/* line 197, client/css/tableView.less */
 .inner-container {
   height: 81%;
   overflow: hidden;
   position: relative;
 }
-/* line 205, client/css/tableView.less */
+/* line 204, client/css/tableView.less */
 .table-header {
   position: relative;
 }
-/* line 209, client/css/tableView.less */
+/* line 208, client/css/tableView.less */
 .table-body {
   overflow: auto;
 }
-/* line 214, client/css/tableView.less */
+/* line 213, client/css/tableView.less */
 .header-cell {
   background-color: yellow;
   height: 40px;
@@ -2351,37 +2335,37 @@ span.ui-datebox-nopad {
 /*
  * Sorting
  */
-/* line 223, client/css/tableView.less */
+/* line 222, client/css/tableView.less */
 .sorting_asc {
   background: url('../images/sort_asc.png') no-repeat center right;
 }
-/* line 224, client/css/tableView.less */
+/* line 223, client/css/tableView.less */
 .sorting_desc {
   background: url('../images/sort_desc.png') no-repeat center right;
 }
 /**
  * Style for footer elements
  */
-/* line 232, client/css/tableView.less */
+/* line 231, client/css/tableView.less */
 .table-filter label {
   font-size: 13px;
   font-weight: bold;
 }
-/* line 237, client/css/tableView.less */
+/* line 236, client/css/tableView.less */
 .table-filter input {
   display: inline;
   width: auto;
 }
-/* line 243, client/css/tableView.less */
+/* line 242, client/css/tableView.less */
 .table-middleButtons {
   text-align: center;
 }
-/* line 247, client/css/tableView.less */
+/* line 246, client/css/tableView.less */
 .table-rightButtons {
   text-align: right;
 }
 /** underline the product id for direct download */
-/* line 252, client/css/tableView.less */
+/* line 251, client/css/tableView.less */
 .ui-direct-download {
   text-decoration: underline;
   cursor: pointer;
