@@ -594,12 +594,22 @@ class CollectionService {
 				_res.possibleValues.push(myParameter[myParamTag + 'Option']['@'].value);
 			}
 		} else if (myParameter['@'].minInclusive && myParameter['@'].maxInclusive) {
-			_res = {
-				"id": myParameter['@'].name,
-				"type": "Range",
-				"rangeMinValue": myParameter['@'].minInclusive,
-				"rangeMaxValue": myParameter['@'].maxInclusive
-			};
+			// if minInclusive and maxIncusive is a number > WEBC can process as a range of numbers
+			// if no matching, skip it and log it
+			let _regexpNumber = /-?(\d+|\d+\.\d+|\.\d+)([eE][-+]?\d+)?/;
+			let _regexpDate = /\d{4}(.\d{2}){2}(\s|T)(\d{2}.){2}\d{2}/g;
+			let _regexpMinValue = _regexpNumber.exec(myParameter['@'].minInclusive);
+			let _regexpMaxValue = _regexpNumber.exec(myParameter['@'].maxInclusive);
+			if ((_regexpMinValue[0] == _regexpMinValue.input) && (_regexpMaxValue[0] == _regexpMaxValue.input)) {
+				_res = {
+					"id": myParameter['@'].name,
+					"type": "Range",
+					"rangeMinValue": myParameter['@'].minInclusive,
+					"rangeMaxValue": myParameter['@'].maxInclusive
+				};
+			} else {
+				Logger.warn('Parameter ' + myParameter['@'].name + ' is skipped (not type of number)');
+			}
 		} else if (myParameter['@'].pattern) {
 			// pattern
 			_res = {
