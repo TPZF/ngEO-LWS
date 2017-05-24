@@ -381,6 +381,10 @@ class CollectionService {
 					} else {
 						if (myCollection.responseFormatOnSearch.indexOf('atom+xml') > -1) {
 							Xml2JsonParser.parse(body, (_result) => {
+								if (typeof _result === 'undefined') {
+									Logger.error('collectionService.setTotalResults - undefined result for ' + _urlCount);
+									resolve(false);
+								}
 								let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
 								Logger.debug(`collectionService.setTotalResults - Total results for ${myCollection.id} = ${_result[_opensearchTag + 'totalResults']}`);
 								myCollection.totalResults = _result[_opensearchTag + 'totalResults'];

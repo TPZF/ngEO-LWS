@@ -97,6 +97,10 @@ class CatalogService {
 					myCatalog.active = false;
 				} else {
 					Xml2JsonParser.parse(body, (_result) => {
+						if (typeof _result === 'undefined') {
+							Logger.error('catalogService.setTotalResults - undefined result for catalog ' + myCatalog.name);
+							return;
+						}
 						let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
 						myCatalog.totalResults = _result[_opensearchTag + 'totalResults'];
 						if (!myCatalog.totalResults || myCatalog.totalResults < 1) {
