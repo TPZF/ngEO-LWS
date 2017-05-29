@@ -152,15 +152,17 @@ class CatalogService {
 				Logger.debug('catalogService.setCollectionsSchemaFrom - GET ' + myCatalog.url + '&startRecord=' + myStart);
 				if (error) {
 					Logger.error('catalogService.setCollectionsSchemaFrom - Unable to get collections for catalog ' + myCatalog.name);
+					resolve();
 				} else if (!body) {
 					Logger.error('catalogService.setCollectionsSchemaFrom - Unable to get body response for catalog ' + myCatalog.name);
+					resolve();
 				} else {
 					Logger.debug('catalogService.setCollectionsSchemaFrom - Push result in collectionsSchema for catalog ' + myCatalog.name);
 					Xml2JsonParser.parse(body, (_result) => {
 						myCatalog.collectionsSchema.push(_result);
+						resolve();
 					});
 				}
-				resolve();
 			});
 		});
 	}
