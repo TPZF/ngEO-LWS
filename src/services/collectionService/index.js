@@ -604,7 +604,7 @@ class CollectionService {
 			let _regexpDate = /\d{4}(.\d{2}){2}(\s|T)(\d{2}.){2}\d{2}/g;
 			let _regexpMinValue = _regexpNumber.exec(myParameter['@'].minInclusive);
 			let _regexpMaxValue = _regexpNumber.exec(myParameter['@'].maxInclusive);
-			if ((_regexpMinValue[0] == _regexpMinValue.input) && (_regexpMaxValue[0] == _regexpMaxValue.input)) {
+			if (_regexpMinValue && _regexpMaxValue && (_regexpMinValue[0] == _regexpMinValue.input) && (_regexpMaxValue[0] == _regexpMaxValue.input)) {
 				let _myType = 'Range';
 				if (myParameter['@'].minInclusive.indexOf('.') >= 0 || myParameter['@'].maxInclusive.indexOf('.') >= 0) {
 					Logger.debug('myParameter.@.minInclusive = ' + myParameter['@'].minInclusive)
