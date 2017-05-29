@@ -326,10 +326,10 @@ class CollectionService {
 						Logger.debug('collectionService.getOsddCollection - osdd retrieve for collection ' + myCollection.id);
 						// put result in osdd attribute
 						myCollection.osdd = _result;
-					});
-					_this.collections.push(myCollection);
-					return _this.setTotalResults(myCollection).then((_flag) => {
-						resolve({ flag: _flag, id: myCollection.id });
+						_this.collections.push(myCollection);
+						return _this.setTotalResults(myCollection).then((_flag) => {
+							resolve({ flag: _flag, id: myCollection.id });
+						});
 					});
 				}
 			});
