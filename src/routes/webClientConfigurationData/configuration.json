@@ -4,18 +4,6 @@
 		"maxVisibleColumns": 11,
 		"columnsDef": [
 			{
-				"sTitle": "Mission",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName"
-			},
-			{
-				"sTitle": "Satellite",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier"
-			},
-			{
-				"sTitle": "Instrument",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
-			},
-			{
 				"sTitle": "Product Type",
 				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
 			},
@@ -28,16 +16,20 @@
 				"mData": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition"
 			},
 			{
-				"sTitle": "Status",
-				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"
+				"sTitle": "Mission",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName"
+			},
+			{
+				"sTitle": "Instrument",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
+			},
+			{
+				"sTitle": "Instrument Mode",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode"
 			},
 			{
 				"sTitle": "Swath",
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"
-			},
-			{
-				"sTitle": "Track",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"
 			},
 			{
 				"sTitle": "Polarisation",
@@ -48,20 +40,32 @@
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"
 			},
 			{
-				"sTitle": "Polarisation Mode",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationMode"
-			},
-			{
-				"sTitle": "Pass",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"
+				"sTitle": "Track",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"
 			},
 			{
 				"sTitle": "Frame",
 				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"
 			},
 			{
+				"sTitle": "Pass",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"
+			},
+			{
+				"sTitle": "Polarisation Mode",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationMode"
+			},
+			{
 				"sTitle": "Product URL",
 				"mData": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href"
+			},
+			{
+				"sTitle": "Satellite",
+				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier"
+			},
+			{
+				"sTitle": "Status",
+				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"
 			},
 			{
 				"sTitle": "Illumination Azimuth Angle",
