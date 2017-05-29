@@ -17,6 +17,7 @@ TBD
 
 - node.js version 7.5.0
 - npm version 4.1.2 (for windows installation it is already contained in)
+- in windows, because of expat-lib used in this project, you have to install in admin modethis modeule `npm install -g windows-build-tools`
 - Create a repository where you want to place your dev folder
 - CD to this repository
 - Retrieve the project git in your repository by typing `git clone https://github.com/TPZF/ngEO-LWS.git`
