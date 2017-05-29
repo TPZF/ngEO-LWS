@@ -1,6 +1,3 @@
-let request = require("request");
-let Xml2JsonParser = require("utils/xml2jsonParser");
-
 /**
  * Collection class
  * Representing the collection of features
