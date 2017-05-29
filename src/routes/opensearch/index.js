@@ -48,9 +48,10 @@ router.get('/about', (req, res) => {
  * Get opensearch description for a catalog
  *
  * @function router.get
- * @param url - /ngeo/opensearch/request
+ * @param url - /ngeo/opensearch/request?query=CATALOG
  * @param req - request
  * @param res - response
+ * @deprecated - not used now !
  */
 router.get('/request', function (req, res) {
 	Logger.debug('GET /ngeo/opensearch/request');
