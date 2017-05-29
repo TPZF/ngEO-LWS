@@ -600,14 +600,20 @@ class CollectionService {
 		} else if (myParameter['@'].minInclusive && myParameter['@'].maxInclusive) {
 			// if minInclusive and maxIncusive is a number > WEBC can process as a range of numbers
 			// if no matching, skip it and log it
-			let _regexpNumber = /-?(\d+|\d+\.\d+|\.\d+)([eE][-+]?\d+)?/;
+			let _regexpNumber = /^[\-]{0,1}[0-9]+[\.][0-9]+|[\-]{0,1}[0-9]+$/;
 			let _regexpDate = /\d{4}(.\d{2}){2}(\s|T)(\d{2}.){2}\d{2}/g;
 			let _regexpMinValue = _regexpNumber.exec(myParameter['@'].minInclusive);
 			let _regexpMaxValue = _regexpNumber.exec(myParameter['@'].maxInclusive);
 			if ((_regexpMinValue[0] == _regexpMinValue.input) && (_regexpMaxValue[0] == _regexpMaxValue.input)) {
+				let _myType = 'Range';
+				if (myParameter['@'].minInclusive.indexOf('.') >= 0 || myParameter['@'].maxInclusive.indexOf('.') >= 0) {
+					Logger.debug('myParameter.@.minInclusive = ' + myParameter['@'].minInclusive)
+					Logger.debug('myParameter.@.maxInclusive = ' + myParameter['@'].maxInclusive)
+					_myType += 'Float';
+				}
 				_res = {
 					"id": myParameter['@'].name,
-					"type": "Range",
+					"type": _myType,
 					"rangeMinValue": myParameter['@'].minInclusive,
 					"rangeMaxValue": myParameter['@'].maxInclusive
 				};
