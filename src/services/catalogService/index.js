@@ -103,11 +103,13 @@ class CatalogService {
 						}
 						let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
 						myCatalog.totalResults = _result[_opensearchTag + 'totalResults'];
-						myCatalog.startIndex = _result[_opensearchTag + 'startIndex'];
-						myCatalog.itemsPerPage = _result[_opensearchTag + 'itemsPerPage'];
 						if (!myCatalog.totalResults || myCatalog.totalResults < 1) {
 							Logger.error('catalogService.setTotalResults - No results for ' + myCatalog.url);
 							myCatalog.active = false;
+						}
+						if (myCatalog.active) {
+							myCatalog.startIndex = _result[_opensearchTag + 'startIndex'] || 0;
+							myCatalog.itemsPerPage = _result[_opensearchTag + 'itemsPerPage'] || 50;
 						}
 						Logger.debug('catalogService.setTotalResults - Push totalResults ' + myCatalog.totalResults + ' in catalog ' + myCatalog.name)
 					});
@@ -130,9 +132,9 @@ class CatalogService {
 		let _this = this;
 		let _aPromises = [];
 		myCatalog.collectionsSchema = [];
-		let _iMax = parseInt(myCatalog.totalResults / myCatalog.itemsPerPage) + 1;
+		let _iMax = Math.floor(parseInt(myCatalog.totalResults) / parseInt(myCatalog.itemsPerPage)) + 1;
 		for (let _i = 0; _i < _iMax; _i++) {
-			let _p = _this.setCollectionsSchemaFrom(myCatalog, myCatalog.startIndex + _i * myCatalog.itemsPerPage);
+			let _p = _this.setCollectionsSchemaFrom(myCatalog, parseInt(myCatalog.startIndex) + _i * parseInt(myCatalog.itemsPerPage));
 			_aPromises.push(_p);
 		}
 		Logger.debug('catalogService.setCollectionsSchema - ' + _aPromises.length + ' requests to retrieve all collections for catalog ' + myCatalog.name);
@@ -151,7 +153,7 @@ class CatalogService {
 		return new Promise((resolve, reject) => {
 			request(myCatalog.url + '&startIndex=' + myStart, (error, response, body) => {
 				Logger.debug('catalogService.setCollectionsSchemaFrom(' + myCatalog.name + ',' + myStart + ')');
-				Logger.debug('catalogService.setCollectionsSchemaFrom - GET ' + myCatalog.url + '&startRecord=' + myStart);
+				Logger.debug('catalogService.setCollectionsSchemaFrom - GET ' + myCatalog.url + '&startIndex=' + myStart);
 				if (error) {
 					Logger.error('catalogService.setCollectionsSchemaFrom - Unable to get collections for catalog ' + myCatalog.name);
 					resolve();
