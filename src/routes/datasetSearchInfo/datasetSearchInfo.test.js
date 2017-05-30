@@ -33,8 +33,8 @@ describe('Route datasetSearchInfo', function () {
 				should(res.body.datasetSearchInfo.datasetId).exactly(testCollectionId);
 				should(res.body.datasetSearchInfo).have.property('attributes');
 				should(res.body.datasetSearchInfo.attributes).be.a.Array();
-				should(res.body.datasetSearchInfo.attributes[0]).have.property('id').exactly('platformSerialIdentifier');
-				should(res.body.datasetSearchInfo.attributes[0]).have.property('type').exactly('List');
+				should(res.body.datasetSearchInfo.attributes[0]).have.property('id');
+				should(res.body.datasetSearchInfo.attributes[0]).have.property('type');
 				done();
 			});
 
