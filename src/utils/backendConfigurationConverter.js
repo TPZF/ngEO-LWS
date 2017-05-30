@@ -87,12 +87,32 @@ let _addBoxGeometry = function (myGeo) {
 
 	let arrList = myGeo.split(" ", -1);
 
-	for (let i = 0; i < arrList.length; i = i + 2) {
-		let coord = [];
-		coord[0] = parseFloat(arrList[i + 1]);
-		coord[1] = parseFloat(arrList[i]);
-		geometry.coordinates[0].push(coord);
-	}
+	let west = parseFloat(arrList[0]);
+	let south = parseFloat(arrList[1]);
+	let east = parseFloat(arrList[2]);
+	let north = parseFloat(arrList[3]);
+
+	let coord = [];
+	coord[0] = south;
+	coord[1] = west;
+	geometry.coordinates[0].push(coord);
+	coord = [];
+	coord[0] = south;
+	coord[1] = east;
+	geometry.coordinates[0].push(coord);
+	coord = [];
+	coord[0] = north;
+	coord[1] = east;
+	geometry.coordinates[0].push(coord);
+	coord = [];
+	coord[0] = north;
+	coord[1] = west;
+	geometry.coordinates[0].push(coord);
+	coord = [];
+	coord[0] = south;
+	coord[1] = west;
+	geometry.coordinates[0].push(coord);
+
 	return geometry;
 
 }
@@ -104,7 +124,7 @@ let _addBoxGeometry = function (myGeo) {
  */
 let _addLineGeometry = function (myGeo) {
 	let geometry = {};
-	geometry.type = "LineString";
+	geometry.type = "MultiLineString";
 	geometry.coordinates = [];
 	geometry.coordinates[0] = [];
 
