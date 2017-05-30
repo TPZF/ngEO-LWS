@@ -103,6 +103,8 @@ class CatalogService {
 						}
 						let _opensearchTag = Utils.findTagByXmlns(_result, Configuration.opensearch.xmlnsOpensearch);
 						myCatalog.totalResults = _result[_opensearchTag + 'totalResults'];
+						myCatalog.startIndex = _result[_opensearchTag + 'startIndex'];
+						myCatalog.itemsPerPage = _result[_opensearchTag + 'itemsPerPage'];
 						if (!myCatalog.totalResults || myCatalog.totalResults < 1) {
 							Logger.error('catalogService.setTotalResults - No results for ' + myCatalog.url);
 							myCatalog.active = false;
@@ -128,9 +130,9 @@ class CatalogService {
 		let _this = this;
 		let _aPromises = [];
 		myCatalog.collectionsSchema = [];
-		let _iMax = parseInt(myCatalog.totalResults / 50) + 1;
+		let _iMax = parseInt(myCatalog.totalResults / myCatalog.itemsPerPage) + 1;
 		for (let _i = 0; _i < _iMax; _i++) {
-			let _p = _this.setCollectionsSchemaFrom(myCatalog, 1 + _i * 50);
+			let _p = _this.setCollectionsSchemaFrom(myCatalog, myCatalog.startIndex + _i * myCatalog.itemsPerPage);
 			_aPromises.push(_p);
 		}
 		Logger.debug('catalogService.setCollectionsSchema - ' + _aPromises.length + ' requests to retrieve all collections for catalog ' + myCatalog.name);
@@ -147,7 +149,7 @@ class CatalogService {
 	 */
 	setCollectionsSchemaFrom(myCatalog, myStart) {
 		return new Promise((resolve, reject) => {
-			request(myCatalog.url + '&startRecord=' + myStart, (error, response, body) => {
+			request(myCatalog.url + '&startIndex=' + myStart, (error, response, body) => {
 				Logger.debug('catalogService.setCollectionsSchemaFrom(' + myCatalog.name + ',' + myStart + ')');
 				Logger.debug('catalogService.setCollectionsSchemaFrom - GET ' + myCatalog.url + '&startRecord=' + myStart);
 				if (error) {
