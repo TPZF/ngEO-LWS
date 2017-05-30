@@ -5,86 +5,89 @@
 		"columnsDef": [
 			{
 				"sTitle": "Product Type",
-				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"
+				"mData": ["properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"]
 			},
 			{
 				"sTitle": "Start",
-				"mData": "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition"
+				"mData": ["properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition"]
 			},
 			{
 				"sTitle": "Stop",
-				"mData": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition"
+				"mData": ["properties.EarthObservation.phenomenonTime.TimePeriod.endPosition"]
 			},
 			{
 				"sTitle": "Mission",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName"]
 			},
 			{
 				"sTitle": "Instrument",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"]
 			},
 			{
 				"sTitle": "Instrument Mode",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode"
+				"mData": [
+					"properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode.#",
+					"properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode"
+				]
 			},
 			{
 				"sTitle": "Swath",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"]
 			},
 			{
 				"sTitle": "Polarisation",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationChannels"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationChannels"]
 			},
 			{
 				"sTitle": "Orbit",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"]
 			},
 			{
 				"sTitle": "Track",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLongitudeGrid.#"]
 			},
 			{
 				"sTitle": "Frame",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.wrsLatitudeGrid.#"]
 			},
 			{
 				"sTitle": "Pass",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"]
 			},
 			{
 				"sTitle": "Polarisation Mode",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationMode"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.polarisationMode"]
 			},
 			{
 				"sTitle": "Product URL",
-				"mData": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href"
+				"mData": ["properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href"]
 			},
 			{
 				"sTitle": "Satellite",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier"]
 			},
 			{
 				"sTitle": "Status",
-				"mData": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"
+				"mData": ["properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"]
 			},
 			{
 				"sTitle": "Illumination Azimuth Angle",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#"]
 			},
 			{
 				"sTitle": "Illumination Zenith Angle",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#"]
 			},
 			{
 				"sTitle": "Illumination Elevation Angle",
-				"mData": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#"
+				"mData": ["properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#"]
 			},
 			{
 				"sTitle": "Timeliness",
-				"mData": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.timeliness"
+				"mData": ["properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.timeliness"]
 			}
 		],
-		"directDownloadColumn": 13
+		"directDownloadColumn": 14
 	},
 	"mailto": "eohelp@esa.int",
 	"proxyUrl": "http://localhost:3000/proxy?url=",
