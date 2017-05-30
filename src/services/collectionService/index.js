@@ -1,6 +1,7 @@
 let _ = require('lodash');
 let request = require('request');
 let Promise = require('promise');
+let fs = require('fs');
 
 let Configuration = require('config');
 
@@ -328,6 +329,7 @@ class CollectionService {
 						myCollection.osdd = _result;
 						_this.collections.push(myCollection);
 						return _this.setTotalResults(myCollection).then((_flag) => {
+							Logger.debug('collectionService.getOsddCollection - setTotalResults return ' + _flag + ' for collection ' + myCollection.id);
 							resolve({ flag: _flag, id: myCollection.id });
 						});
 					});
@@ -475,6 +477,22 @@ class CollectionService {
 
 		let _startTime = Date.now();
 		Logger.info(`Searching for backend with ${_searchUrlRequest}`);
+
+		/*
+		-------------------------------------------------------------------------
+		used for testing different georss geometry
+		-------------------------------------------------------------------------
+		if (myCollectionId === 'SXCAT-Landsat57Merged') {
+			Logger.debug('Collection Landsat57Merged...');
+			
+			let body = fs.readFile(__dirname + '/georss.xml', 'utf-8', function(err, data) {
+				Logger.debug('body = ' + data);
+				Xml2JsonParser.parse(data, myOptions.onSuccess, myOptions.onError);
+			});
+			return;
+		}
+		-------------------------------------------------------------------------
+		*/
 		request(_searchUrlRequest, function (error, response, body) {
 			Logger.info(`Time elapsed searching on backend with ${_searchUrlRequest} took ${Date.now() - _startTime} ms`);
 			if (!error && response.statusCode == 200) {

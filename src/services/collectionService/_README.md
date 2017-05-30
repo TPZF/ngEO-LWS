@@ -25,6 +25,15 @@ This file contains all configuration paramaters for each collection.
 ]
 ~~~~
 
-## index.js
+## georss.xml
 
-To complete
+This file is used to test all different georss geometries
+
+- polygon
+- line
+- point
+- box
+
+Uncomment lines 484->492 in index.js and make a search on Landsat57Merged collection
+Five geometries are setting : Polygon, Line, MultiLine, Point and Box
+These footprints are localised in France
