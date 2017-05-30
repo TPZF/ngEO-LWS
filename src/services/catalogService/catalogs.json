@@ -38,7 +38,7 @@
     },
     {
         "name": "EOP-ESA-SENTINEL",
-        "url": "http://geo.spacebel.be/opensearch/request/?httpAccept=application/atom%2Bxml&uid=%22EOP:ESA:SENTINEL%22",
+        "url": "http://geo.spacebel.be/opensearch/request/?httpAccept=application/atom%2Bxml&amp;uid=%22EOP:ESA:SENTINEL%22",
         "responseFormatOnSearch": "application/atom+xml",
         "avoidedAttributes": [
             "bbox",
@@ -56,8 +56,8 @@
             "recordSchema": "om"
         },
         "credentials": {
-            "username": "xxxxxxxx",
-            "password": "xxxxxxxx"
+            "username": "dmarchio1969",
+            "password": "dmarchio1969..."
         }
     }
 ]
