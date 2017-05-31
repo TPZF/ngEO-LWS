@@ -97,10 +97,12 @@
 		"advancedCriteriaLabels": {
 			"acquisitionType": "Acquisition type",
 			"ailz": "ANX Ill. Zen.",
+			"baseline": "Baseline",
 			"cloudCoverPercentage": "Cloud cover percentage",
 			"city": "City",
 			"completionTimeFromAscendingNode": "Completion time from ascending node",
 			"country": "Country",
+			"countryCode": "Country code",
 			"csalt_cycleNumber": "Cycle number",
 			"csalt_instrumentType": "Instrument type",
 			"csalt_isSegment": "Is segment",
