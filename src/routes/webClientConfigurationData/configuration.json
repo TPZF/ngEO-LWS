@@ -87,7 +87,7 @@
 				"mData": ["properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.timeliness"]
 			}
 		],
-		"directDownloadColumn": 14
+		"directDownloadColumn": 13
 	},
 	"mailto": "eohelp@esa.int",
 	"proxyUrl": "http://localhost:3000/proxy?url=",
