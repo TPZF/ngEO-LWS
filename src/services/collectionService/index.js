@@ -1,7 +1,6 @@
 let _ = require('lodash');
 let request = require('request');
 let Promise = require('promise');
-let fs = require('fs');
 
 let Configuration = require('config');
 
@@ -478,21 +477,6 @@ class CollectionService {
 		let _startTime = Date.now();
 		Logger.info(`Searching for backend with ${_searchUrlRequest}`);
 
-		/*
-		-------------------------------------------------------------------------
-		used for testing different georss geometry
-		-------------------------------------------------------------------------
-		if (myCollectionId === 'SXCAT-Landsat57Merged') {
-			Logger.debug('Collection Landsat57Merged...');
-			
-			let body = fs.readFile(__dirname + '/georss.xml', 'utf-8', function(err, data) {
-				Logger.debug('body = ' + data);
-				Xml2JsonParser.parse(data, myOptions.onSuccess, myOptions.onError);
-			});
-			return;
-		}
-		-------------------------------------------------------------------------
-		*/
 		request(_searchUrlRequest, function (error, response, body) {
 			Logger.info(`Time elapsed searching on backend with ${_searchUrlRequest} took ${Date.now() - _startTime} ms`);
 			if (!error && response.statusCode == 200) {
@@ -517,15 +501,12 @@ class CollectionService {
 	addCredentials(myCollection) {
 		Logger.debug('collectionService.addCredentials(' + myCollection.id + ')');
 		let _result = '';
-		/*let _credentials = _.find(Configuration['credentials'], (_cred) => {
-			return (Object.keys(_cred)[0] === myCollection.catalogId);
-		});*/
 		let _credentials = myCollection.credentials;
 		if (_credentials) {
 			_result += '&username=' + _credentials.username;
 			_result += '&password=' + _credentials.password;
 		}
-		Logger.debug(_result);
+		Logger.debug('collectionService.addCredentials return ' + _result);
 		return _result;
 	}
 
