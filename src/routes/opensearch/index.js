@@ -45,29 +45,6 @@ router.get('/about', (req, res) => {
 });
 
 /**
- * Get opensearch description for a catalog
- *
- * @function router.get
- * @param url - /ngeo/opensearch/request?query=CATALOG
- * @param req - request
- * @param res - response
- * @deprecated - not used now !
- */
-router.get('/request', function (req, res) {
-	Logger.debug('GET /ngeo/opensearch/request');
-	let options = {
-		root: __dirname
-	};
-	if (req.query.query) {
-		if (req.query.query.indexOf('EOP:ESA:SENTINEL') !== -1) {
-			res.status(200).sendFile('./sentinel.xml', options);
-			return;
-		}
-	}
-	res.status(404).send('Not found');
-});
-
-/**
  * Get opensearch description for a collection
  *
  * @function router.get
