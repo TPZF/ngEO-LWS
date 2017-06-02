@@ -1,7 +1,7 @@
 {
     "host": "http://localhost:3000",
     "logger" : {
-        "level": "warn"
+        "level": "none"
     },
     "database": {
     	"connection": {
