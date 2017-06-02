@@ -21,7 +21,7 @@ router.use(function timeLog(req, res, next) {
  * define the home page route
  * 
  * @function router.get
- * @param {string} url - /
+ * @param {string} url - /ngeo/catalogue/:collectionId/search
  */
 router.get('/', function (req, res) {
 

@@ -5,6 +5,11 @@ let should = require('should');
 // APP
 let app = require('../../app');
 
+// LIBS
+let fs = require('fs');
+let Xml2JsonParser = require('utils/xml2jsonParser');
+let collectionService = require('services/collectionService');
+
 describe('Route productSearch', function () {
 
 	it("Wait app is completly loading...", function (done) {
@@ -48,6 +53,80 @@ describe('Route productSearch', function () {
 				done();
 			});
 	})
+
+	it('Check all geometries for georss tag', function () {
+		fs.readFile(__dirname + '/georss.xml', function (err, data) {
+			if (err) {
+				throw "Unable to read file";
+			}
+			Xml2JsonParser.parse(data, (_result) => {
+				// use collection SXCAT-Landsat57Merged to convert response
+				let result = collectionService.convertResponse('SXCAT-Landsat57Merged', _result);
+
+				should(result).have.property('type');
+				should(result.type).be.equal('FeatureCollection');
+				should(result).have.property('features');
+				should(result.features).be.a.Array();
+				
+				let i = 0;
+
+				// first feature : Polygon
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('type');
+				should(result.features[i].geometry.type).be.equal('Polygon');
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('coordinates');
+				should(result.features[i].geometry.coordinates).be.a.Array();
+				should(result.features[i].geometry.coordinates[0]).be.a.Array();
+				should(result.features[i].geometry.coordinates[0].length).be.equal(6);
+
+				// second feature : Line
+				i++;
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('type');
+				should(result.features[i].geometry.type).be.equal('MultiLineString');
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('coordinates');
+				should(result.features[i].geometry.coordinates).be.a.Array();
+				should(result.features[i].geometry.coordinates[0]).be.a.Array();
+				should(result.features[i].geometry.coordinates[0].length).be.equal(2);
+
+				// third feature : MultiLine
+				i++;
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('type');
+				should(result.features[i].geometry.type).be.equal('MultiLineString');
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('coordinates');
+				should(result.features[i].geometry.coordinates).be.a.Array();
+				should(result.features[i].geometry.coordinates[0]).be.a.Array();
+				should(result.features[i].geometry.coordinates[0].length).be.equal(3);
+
+				// fourth feature : Point
+				i++;
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('type');
+				should(result.features[i].geometry.type).be.equal('Point');
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('coordinates');
+				should(result.features[i].geometry.coordinates).be.a.Array();
+				should(result.features[i].geometry.coordinates.length).be.equal(2);
+
+				// fifth feature : Box
+				i++;
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('type');
+				should(result.features[i].geometry.type).be.equal('Polygon');
+				should(result.features[i]).have.property('geometry');
+				should(result.features[i].geometry).have.property('coordinates');
+				should(result.features[i].geometry.coordinates).be.a.Array();
+				should(result.features[i].geometry.coordinates[0]).be.a.Array();
+				should(result.features[i].geometry.coordinates[0].length).be.equal(5);
+
+			});
+		})
+
+	});
 
 	it('GET /ngeo/catalogue/SXCAT-Landsat57Merged/search/about', function (done) {
 
