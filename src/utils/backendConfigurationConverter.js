@@ -7,51 +7,6 @@ let Utils = require('./utils');
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Will convert the gml footprint into the footprint frmat known by our webclient.
- * GML is lon lat and we will convert it into lat lon arrays
- * TODO make it as generic to convert all gml format
- * @param defaultValue
- *		The gml entry in format of gml object containing coordinates are in coordinates string (lon1 lat1 lon2 lat2 ... lonn latn)
- * @return
- *		the geometry json object in webc known format	
- */
-let _convertGmlFpToInternalFp = function (gmlFpEntry, collectionId) {
-	let geometry = {};
-	geometry.type = "Polygon";
-	geometry.coordinates = [];
-	geometry.coordinates[0] = [];
-
-	let posList = Utils.getFromPath(gmlFpEntry, 'multiExtentOf.MultiSurface.surfaceMember.Polygon.exterior.LinearRing.posList', '');
-	if (posList === '') {
-		posList = Utils.getFromPath(gmlFpEntry, 'multiExtentOf.MultiSurface.surfaceMembers.Polygon.exterior.LinearRing.posList', '');
-	}
-	if (posList === '') {
-		Logger.warn('No posList for ' + gmlFpEntry + ' in collection ' + collectionId);
-		return geometry;
-	}
-	let stringPosList = posList;
-	if (posList['#']) {
-		stringPosList = posList['#'];
-	}
-
-	let arrList = stringPosList.split(" ", -1);
-
-	for (let i = 0; i < arrList.length; i = i + 2) {
-		let coord = [];
-		if (collectionId.indexOf('SENTINEL-1-PRODUCTS') === 0) {
-			coord[0] = parseFloat(arrList[i]);
-			coord[1] = parseFloat(arrList[i + 1]);
-		} else {
-			coord[0] = parseFloat(arrList[i + 1]);
-			coord[1] = parseFloat(arrList[i]);
-		}
-		geometry.coordinates[0].push(coord);
-	}
-
-	return geometry;
-}
-
-/**
  * @function _addPolygonGeometry
  * @param {string} myGeo 
  * @return {object}
