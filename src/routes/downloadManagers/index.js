@@ -72,7 +72,7 @@ function _getAllLatestRelease() {
 	}
 
 	fs.readdirSync(dir).forEach((os) => {
-		if (fs.readdirSync(dir + '/' + os).isDirectory()) {
+		if (fs.statSync(dir + '/' + os).isDirectory()) {
 			const versionDesc = fs.readdirSync(dir + '/' + os).filter((file) => {
 				const filePath = path.join(dir + '/' + os, file);
 				return fs.statSync(filePath).isDirectory();
