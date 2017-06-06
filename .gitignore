@@ -14,3 +14,6 @@ coverage/*
 
 # Temp folder
 tmp
+
+# MacOS
+.DS_Store
