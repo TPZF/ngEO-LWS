@@ -80,24 +80,24 @@ function _getAllLatestRelease() {
 			if (os.indexOf('linux') > -1) {
 				_json[os] = {
 					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
+					update: Configuration.host + '/ngeo/downloadManagers/releases/download/linux/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
+					install: Configuration.host + '/ngeo/downloadManagers/releases/download/linux/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
 					version: versionDesc[0]
 				};
 			}
 			if (os.indexOf('win') === 0) {
 				_json[os] = {
 					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
+					update: Configuration.host + '/ngeo/downloadManagers/releases/download/win/' + versionDesc[0] + '/ngeo-downloadmanager.exe',
+					install: Configuration.host + '/ngeo/downloadManagers/releases/download/win/' + versionDesc[0] + '/ngeo-downloadmanager.exe',
 					version: versionDesc[0]
 				};
 			}
 			if (os.indexOf('darwin') > -1) {
 				_json[os] = {
 					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.dmg',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.dmg',
+					update: Configuration.host + '/ngeo/downloadManagers/releases/download/macos/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
+					install: Configuration.host + '/ngeo/downloadManagers/releases/download/macos/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
 					version: versionDesc[0]
 				};
 			}
