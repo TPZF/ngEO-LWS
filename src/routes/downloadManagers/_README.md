@@ -2,6 +2,7 @@
 
 ## Process
 
-- Add folder by version, like X.Y.Z
+- Add folder for each OS
+- Add one folder for each version, like X.Y.Z
 - Drop files in it
 
