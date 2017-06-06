@@ -57,52 +57,54 @@ function _checkRequest(request) {
 /**
  * Get latest version of download manager for each os
  * 
- * @function _getAllLatestRelease
+ * @function _getLatestRelease
+ * @param {string} myOs
+ * @param {string} myVersion
  * @returns {Object}
  * @private
  */
-function _getAllLatestRelease() {
+function _getLatestRelease(myOs, myVersion) {
 
-	const _json = {};
+	let _json = null;
 
-	const dir = `${__dirname}/releases/`;
+	const dir = `${__dirname}/releases/download/${myOs}/`;
 
 	if (!fs.existsSync(dir)) {
+		Logger.error('No directory for ' + dir);
 		return _json;
 	}
 
-	fs.readdirSync(dir).forEach((os) => {
-		const versionDesc = fs.readdirSync(dir + '/' + os).filter((file) => {
-			const filePath = path.join(dir + '/' + os, file);
-			return fs.statSync(filePath).isDirectory();
-		}).reverse();
-		if (versionDesc[0]) {
-			if (os.indexOf('linux') > -1) {
-				_json[os] = {
-					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/linux/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/linux/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
-					version: versionDesc[0]
-				};
-			}
-			if (os.indexOf('win') === 0) {
-				_json[os] = {
-					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/win/' + versionDesc[0] + '/ngeo-downloadmanager.exe',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/win/' + versionDesc[0] + '/ngeo-downloadmanager.exe',
-					version: versionDesc[0]
-				};
-			}
-			if (os.indexOf('darwin') > -1) {
-				_json[os] = {
-					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/macos/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/macos/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
-					version: versionDesc[0]
-				};
-			}
+	let versionDesc = fs.readdirSync(dir).filter((item) => {
+		const itemPath = path.join(dir, item);
+		return fs.statSync(itemPath).isDirectory();
+	}).reverse();
+
+	if (versionDesc[0] && versionDesc[0] > myVersion) {
+		// Linux
+		if (myOs.indexOf('linux') === 0) {
+			_json = {
+				readme: 'Latest release : ' + versionDesc[0],
+				update: Configuration.host + '/ngeo/downloadManagers/releases/download/linux/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
+				install: Configuration.host + '/ngeo/downloadManagers/releases/download/linux/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
+				version: versionDesc[0]
+			};
 		}
-	});
+		// Windows
+		if (myOs.indexOf('win') === 0) {
+			_json = {
+				readme: 'Latest release : ' + versionDesc[0],
+				update: Configuration.host + '/ngeo/downloadManagers/releases/download/win/' + versionDesc[0] + '/ngeo-downloadmanager.exe',
+				install: Configuration.host + '/ngeo/downloadManagers/releases/download/win/' + versionDesc[0] + '/ngeo-downloadmanager.exe',
+				version: versionDesc[0]
+			};
+		}
+		// Mac OS
+		if (myOs.indexOf('darwin') === 0) {
+			_json = {
+				url: Configuration.host + '/ngeo/downloadManagers/releases/download/' + myOs + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip'
+			};
+		}
+	}
 	return _json;
 
 }
@@ -170,17 +172,21 @@ router.get('/about', (req, res) => {
  * Get latest version of download manager installer
  * 
  * @function router.get
- * @param {String} url - /ngeo/downloadManagers/releases/latest
- * @param {object} req - empty
+ * @param {String} url - /ngeo/downloadManagers/releases/:os/latest?v=
+ * @param {object} req - version of download manager which made the request
  * @param {object} res - response
  */
-router.get('/releases/latest', (req, res) => {
-	Logger.debug('GET /ngeo/downloadManagers/releases/latest');
-	const jsonLatest = _getAllLatestRelease();
-	if (jsonLatest !== {}) {
+router.get('/releases/:os/latest', (req, res) => {
+	Logger.debug('GET /ngeo/downloadManagers/releases/' + req.params.os + '/latest?v=' + req.query.v);
+	if (!req.params.os || !req.query.v) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+	const jsonLatest = _getLatestRelease(req.params.os, req.query.v);
+	if (jsonLatest !== null) {
 		res.json(jsonLatest);
 	} else {
-		res.sendStatus(404);
+		res.sendStatus(204);
 	}
 });
 
