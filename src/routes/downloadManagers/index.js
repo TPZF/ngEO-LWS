@@ -72,34 +72,36 @@ function _getAllLatestRelease() {
 	}
 
 	fs.readdirSync(dir).forEach((os) => {
-		const versionDesc = fs.readdirSync(dir + '/' + os).filter((file) => {
-			const filePath = path.join(dir + '/' + os, file);
-			return fs.statSync(filePath).isDirectory();
-		}).reverse();
-		if (versionDesc[0]) {
-			if (os.indexOf('linux') === 0) {
-				_json[os] = {
-					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
-					version: versionDesc[0]
-				};
-			}
-			if (os.indexOf('win') === 0) {
-				_json[os] = {
-					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
-					version: versionDesc[0]
-				};
-			}
-			if (os.indexOf('darwin') === 0) {
-				_json[os] = {
-					readme: 'Latest release : ' + versionDesc[0],
-					update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/release.json',
-					install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
-					version: versionDesc[0]
-				};
+		if (fs.readdirSync(dir + '/' + os).isDirectory()) {
+			const versionDesc = fs.readdirSync(dir + '/' + os).filter((file) => {
+				const filePath = path.join(dir + '/' + os, file);
+				return fs.statSync(filePath).isDirectory();
+			}).reverse();
+			if (versionDesc[0]) {
+				if (os.indexOf('linux') === 0) {
+					_json[os] = {
+						readme: 'Latest release : ' + versionDesc[0],
+						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
+						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
+						version: versionDesc[0]
+					};
+				}
+				if (os.indexOf('win') === 0) {
+					_json[os] = {
+						readme: 'Latest release : ' + versionDesc[0],
+						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
+						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.exe',
+						version: versionDesc[0]
+					};
+				}
+				if (os.indexOf('darwin') === 0) {
+					_json[os] = {
+						readme: 'Latest release : ' + versionDesc[0],
+						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/release.json',
+						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
+						version: versionDesc[0]
+					};
+				}
 			}
 		}
 	});
