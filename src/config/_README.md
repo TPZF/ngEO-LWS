@@ -10,7 +10,7 @@ You cant find :
 - collectionsOptionsPath : path to json file with options parameters for collections (keywords)
 - collectionService.refreshDelay : delay to refresh all collections informations (total results, attributes)
 - opensearch : parameters to find information in opensearch descriptions (param, geo, time, ...)
-- ssoUserId : value of userId in header transmitted by SSO
+- ssoUserId : value of userId in header transmitted by SSO to be mapped in the database
 - searchResults.defaultCountPerPage : default value for pagination on collections - replaced by osdd count value if exists
 
 ## development.json / test.json / production.json
