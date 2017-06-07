@@ -81,8 +81,8 @@ function _getAllLatestRelease() {
 				if (os.indexOf('linux') === 0) {
 					_json[os] = {
 						readme: 'Latest release : ' + versionDesc[0],
-						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
-						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo.AppImage',
+						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
+						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
 						version: versionDesc[0]
 					};
 				}
@@ -97,7 +97,7 @@ function _getAllLatestRelease() {
 				if (os.indexOf('darwin') === 0) {
 					_json[os] = {
 						readme: 'Latest release : ' + versionDesc[0],
-						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/release.json',
+						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
 						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
 						version: versionDesc[0]
 					};
@@ -203,7 +203,7 @@ router.get('/releases/download/:os/:version/:file', (req, res) => {
 	const os = req.params.os;
 	const version = req.params.version;
 	const file = req.params.file;
-	const dir = `${__dirname}/releases/${os}/${version}/${file}`;
+	const dir = `${__dirname}/releases/download/${os}/${version}/${file}`;
 	if (!fs.existsSync(dir)) {
 		res.sendStatus(404);
 		return;
