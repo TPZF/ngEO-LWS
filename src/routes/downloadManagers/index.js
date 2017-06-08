@@ -169,7 +169,7 @@ router.get('/about', (req, res) => {
 });
 
 /**
- * Get latest version of download manager installer
+ * Get latest versions of download manager installer
  * 
  * @function router.get
  * @param {String} url - /ngeo/downloadManagers/releases/latest
@@ -184,6 +184,35 @@ router.get('/releases/latest', (req, res) => {
 	} else {
 		res.sendStatus(404);
 	}
+});
+
+/**
+ * Get release version of download manager installer
+ * Used by macos auto updater
+ * 
+ * @function router.get
+ * @param {String} url - /ngeo/downloadManagers/releases/download/:os/:version/release.json
+ * @param {object} req - empty
+ * @param {object} res - response
+ */
+router.get('/releases/download/:os/:version/release.json', (req, res) => {
+	Logger.debug('GET /ngeo/downloadManagers/releases/download/:os/:version/release.json');
+	if (!req.params.os || !req.params.version) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+	const os = req.params.os;
+	const version = req.params.version;
+	const dir = `${__dirname}/releases/download/${os}/${version}`;
+	if (!fs.existsSync(dir)) {
+		res.sendStatus(404);
+		return;
+	}
+	res.status(200).send(
+		{
+			url: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + version + '/ngeo-downloadmanager.zip'
+		}
+	);
 });
 
 /**
