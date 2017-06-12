@@ -239,22 +239,12 @@
 			"elevationLayer": {
 				"type": "WCS",
 				"crossOrigin": "use-credentials",
-				"baseUrl": "https://tiles.esa.maps.eox.at/elevation?interpolation=bilinear",
+				"baseUrl": "https://dem.esa.maps.eox.at/elevation?interpolation=bilinear",
 				"coverage": "ace2",
 				"version": "2.0.1"
 			}
 		},
 		"backgroundLayers": [
-			{
-				"id": "BlueMarble_TPZ_WMS",
-				"name": "Blue Marble (TPZ-WMS)",
-				"type": "WMS",
-				"baseUrl": "http://demonstrator.telespazio.com/wmspub",
-				"attribution": "Telespazio France",
-				"params": {
-					"layers": "BlueMarble"
-				}
-			},
 			{
 				"id": "eox_terrain",
 				"name": "Terrain",
@@ -264,6 +254,19 @@
 				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
 				"params": {
 					"layer": "terrain",
+					"matrixSet": "WGS84"
+				},
+				"projection": "EPSG:4326"
+			},
+			{
+				"id": "eox_terrainlight",
+				"name": "Terrain light",
+				"type": "WMTS",
+				//"crossOrigin": "use-credentials",
+				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
+				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "terrain-light",
 					"matrixSet": "WGS84"
 				},
 				"projection": "EPSG:4326"
@@ -306,6 +309,38 @@
 					"matrixSet": "WGS84"
 				},
 				"projection": "EPSG:4326"
+			},
+			{
+				"id": "OSM_Official",
+				"name": "Open Street Map (Official)",
+				"type": "OSM",
+				"baseUrl": "http://tile.openstreetmap.org"
+			},
+			{
+				"id": "OSM_Mapquest",
+				"name": "Open Street Map (Mapquest)",
+				"type": "OSM",
+				"baseUrl": "http://otile1.mqcdn.com/tiles/1.0.0/osm"
+			},
+			{
+				"id": "OSM_OpenCycleMap",
+				"name": "Open Street Map (OpenCycleMap)",
+				"type": "OSM",
+				"baseUrl": "http://a.tile.opencyclemap.org/cycle"
+			},
+			{
+				"id": "BingRoad",
+				"name": "Bing Road",
+				"type": "Bing",
+				"key": "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
+				"imageSet": "Road"
+			},
+			{
+				"id": "BingAerial",
+				"name": "Bing Aerial",
+				"type": "Bing",
+				"key": "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
+				"imageSet": "Aerial"
 			}
 		],
 		"styles": {
