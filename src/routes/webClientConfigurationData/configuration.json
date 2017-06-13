@@ -400,7 +400,7 @@
 				"name": "Overlay",
 				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl": "https://tiles.maps.eox.at/wmts/",
+				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
 				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
 				"params": {
 					"layer": "overlay",
@@ -413,7 +413,7 @@
 				"name": "Overlay Bright",
 				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
-				"baseUrl": "https://tiles.maps.eox.at/wmts/",
+				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
 				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
 				"params": {
 					"layer": "overlay_bright",
