@@ -91,6 +91,7 @@
 	},
 	"mailto": "eohelp@esa.int",
 	"proxyUrl": "http://localhost:3000/proxy?url=",
+	"idpUrl": "http://eogrid.esrin.esa.int/login.php",
 	"search": {
 		"geometryPrecision": 2,
 		// labels for advanced crietrias
@@ -246,6 +247,15 @@
 		},
 		"backgroundLayers": [
 			{
+				"id": "BlueMarble_TPZ_WMS",
+				"name": "Blue Marble (TPZ-WMS)",
+				"type": "WMS",
+				"baseUrl": "http://demonstrator.telespazio.com/wmspub",
+				"attribution": "Telespazio France",
+				"params": {
+					"layers": "BlueMarble"
+				}
+			},{
 				"id": "eox_terrain",
 				"name": "Terrain",
 				"type": "WMTS",
