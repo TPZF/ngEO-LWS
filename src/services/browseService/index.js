@@ -84,8 +84,7 @@ class BrowseService {
 							ServiceReference: {
 								'@': {
 									'href': browseConf.url,
-									'title': collectionId,
-									'crossOrigin': browseConf.crossOrigin ? browseConf.crossOrigin : 'use-credentials'
+									'title': collectionId
 								}
 							}
 						},
@@ -97,6 +96,10 @@ class BrowseService {
 						'type': 'QUICKLOOK'
 					}
 				}];
+				// add attribute crossOrigin if exists in browse configuration file
+				if (browseConf.crossOrigin) {
+					browseInfo[0].BrowseInformation.fileName.ServiceReference['@'].crossOrigin = browseConf.crossOrigin;
+				}
 				feature.properties.EarthObservation.result.EarthObservationResult.browse = browseInfo;
 			} else {
 				logger.warn(`Cannot find the browse configuration for feature collection ${collectionId} with pattern `, this.extractFeatureProps(feature));
