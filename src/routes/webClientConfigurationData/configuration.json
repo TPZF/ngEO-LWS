@@ -424,8 +424,9 @@
 			}
 		],
 		"browseDisplay": {
-			"opacity": 1,
-			"crossOrigin": "use-credentials"
+			"opacity": 1
+			//,
+			//"crossOrigin": "use-credentials"
 		}
 	}
 }
