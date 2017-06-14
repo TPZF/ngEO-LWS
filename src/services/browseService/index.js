@@ -84,7 +84,8 @@ class BrowseService {
 							ServiceReference: {
 								'@': {
 									'href': browseConf.url,
-									'title': collectionId
+									'title': collectionId,
+									'crossOrigin': browseConf.crossOrigin ? browseConf.crossOrigin : 'use-credentials'
 								}
 							}
 						},
