@@ -2,13 +2,15 @@
 
 ## index.js
 
+Add browse information for each feature related to the given collection identifier
+
 ## browseConfiguration.json
 
 This file contains all browse configurations with
 
-- pattern : all attributes matching for a product
-- url : url of server browses
-- crossOrigin: set if server allows cross origin request with credentials (use-credentials) or anonymous
+- pattern: all attributes matching for a product - if product attributes match this pattern, then add browse information with this url
+- url: url of server browses
+- crossOrigin: set if server allows cross origin request (CORS) with credentials (set "use-credentials") or anonymous (set "anonymous")
 
 ~~~~json
 [
