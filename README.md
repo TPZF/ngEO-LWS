@@ -115,6 +115,34 @@ Open in your favourite browser `localhost:3000`, you should see the ngeo project
 
 >For other OS, please adapt the script
 
+## ngEO-LWS as service on linux machine
+
+This topic explain some files that are provided in this project and are only used/write for linux platfrom.
+It aims is to put ngEO-LWS as service in a linux server.
+
+The service file is called `ngeo.service` and can be found @ https://github.com/TPZF/ngEO-LWS
+Be aware to update the `host ip adress` in this file before running it as service so it targets the rigth machine.
+
+The aim of this file is to create a service, so when you logout from the machine, the service ngeo (the ngEO-LWS server) is still runnning.
+
+Once it is runing you have two options:
+
+- Either, you have modified some configuration files (for example, files that needs some credentials and are not and SHALL not be pushed in the gitHUB), 
+- either not:
+
+If you have modified some files (for example in our case, in the operational platform ywe changed the credential of some configuration that are needed in feed), then before checkouting new files you have to put your modified files appart, retrieve new files from gitHib configuration and re-apply your modified files:
+For that we have put a single script that those all our needs, and is name `restart-stash.sh`
+
+If you want just restart without retrieving up to date new files from gitHub then just do `restart.sh`
+
+Be ware also that we have not put credentials in the configurations files in gitHub in some catalog that needs credential (for example for FEDEO founded) for EOP-ESA-SENTINEL targeting url 
+http://geo.spacebel.be/opensearch/request/?httpAccept=application/atom%2Bxml&amp;uid=%22EOP:ESA:SENTINEL%22"
+
+But we have modified the credentials configuration in the operational host machine.
+
+So if we need to retrieve up to date new files from gitHub, then we do in our case the command `restart-stash.sh`  which allow us to put the local modified file (in our case the catalogs.json) apart, retrieve new files from github, apply our modification file locally (calalogs.json) and restarting the ngeo-service. 
+
+
 ## Installation Troubleshootings
 If by installing node and npm you have troubleshootings by typing `npm -v`
 
