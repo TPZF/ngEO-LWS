@@ -35,7 +35,7 @@ Before going forward, we assume that you already did `git clone https://github.c
 - `cd` to your git project (`ngEO-LWS`)
 - `cp ./os-dependant-lib/rhel-centos/v6/*.repo /etc/yum.repo.d/`
 - `yum clean all ; yum repolist`
-- `yum install nodejs mongodb-org git devtools`
+- `yum install nodejs mongodb-org`
 - `yum install devtoolset-3-gcc.x86_64 devtoolset-3-gcc-c++-4.9.2-6.el6.x86_64`
 - `scl enable devtoolset-3 bash`
 
