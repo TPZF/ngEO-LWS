@@ -11,21 +11,73 @@ Show what the library does as concisely as possible, developers should be able t
 
 TBD
 
-## Installation
+## Post installation
 
-**You should install**
+- Install Git
+- Create a repository where you want to place your ngEO-LWS folder
+- CD to this repository
+- Retrieve the project git in your repository by typing `git clone https://github.com/TPZF/ngEO-LWS.git`
+
+As ngEO Query Server uses some libraries that uses some OS dependant libraries, you have to install first some dependencies that are used in this project to run it well.
+For example, ngEO-LWS uses expat-lib which depends on node-gyp which depends on gcc version 4.9+ (c++11).
+
+>**Redhat/Centos 6.x post installation** (Thanks to Antoine Jammes for help)
+ 
+For that we have compiled for you the .repo needed in order to install them in the simpliest manner.
+The list of libraries to install is:
+- node.js version 7.x latest (nodesource-el6.repo)
+- mongo db version 3.4 (mongodb-org-3.4.repo)
+- devtoolset-3 owned by rhscl (rhscl-devtoolset-3-epel-6.repo)
+
+Steps installing rhel/centos dependant libraries:
+
+Before going forward, we assume that you already did `git clone https://github.com/TPZF/ngEO-LWS.git`
+- `cd` to your git project (`ngEO-LWS`)
+- `cp ./os-dependant-lib/rhel-centos/v6/*.repo /etc/yum.repo.d/`
+- `yum clean all ; yum repolist`
+- `yum install nodejs mongodb-org git devtools`
+- `yum install devtoolset-3-gcc.x86_64 devtoolset-3-gcc-c++-4.9.2-6.el6.x86_64`
+- `scl enable devtoolset-3 bash`
+
+At this step you have all you need to launch the ngEO-QS
+
+>**Other Linux post installation**
+
+You have to install
 
 - node.js version 7.5.0
 - npm version 4.1.2 (for windows installation it is already contained in)
-- in windows, because of expat-lib used in this project, you have to install in admin modethis modeule `npm install -g windows-build-tools`
-- Create a repository where you want to place your dev folder
-- CD to this repository
-- Retrieve the project git in your repository by typing `git clone https://github.com/TPZF/ngEO-LWS.git`
-- Then do `npm install` and that is it as the **package.json** file contains already all required libraries
+- devtoolset-3-gcc.x86_64 and devtoolset-3-gcc-c++-4.9.2-6.el6.x86_64
 - MongoDB Community Edition version 3.4
-- On windows and Mac OS, set mongod path in environment variables (you can call it from everywhere)
 
-## Configuration
+>**Windows post installation**
+
+You have to install
+
+- node.js version 7.5.0
+- npm version 4.1.2 (for windows installation it is already contained in)
+- in windows, because of expat-lib used in this project, you have to install in admin mode this module `npm install -g windows-build-tools`
+- MongoDB Community Edition version 3.4
+- set mongod path in environment variables as well described in mongo web site (you can call it from everywhere)
+
+>**MacOsx post installation**
+
+You have to install
+
+- node.js version 7.5.0
+- npm version 4.1.2 (for windows installation it is already contained in)
+- MongoDB Community Edition version 3.4
+- set mongod path in environment variables as well described in mongo web site (you can call it from everywhere)
+
+## Installation of ngEO-LWS
+
+**From the project folder**
+
+- CD to this repository (`ngEO-LWS`)
+- At this step, you already retrieve the project git in your repository by typing `git clone https://github.com/TPZF/ngEO-LWS.git`
+- Then do `npm install` and that is it as the **package.json** file contains already all required libraries
+
+## Configuration
 
 See on src/config directory and define :
 
