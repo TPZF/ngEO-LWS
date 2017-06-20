@@ -11,7 +11,7 @@ Show what the library does as concisely as possible, developers should be able t
 
 TBD
 
-## Post installation
+## Pre installation
 
 - Install Git
 - Create a repository where you want to place your ngEO-LWS folder
@@ -33,7 +33,7 @@ Steps installing rhel/centos dependant libraries:
 
 Before going forward, we assume that you already did `git clone https://github.com/TPZF/ngEO-LWS.git`
 - `cd` to your git project (`ngEO-LWS`)
-- `cp ./os-dependant-lib/rhel-centos/v6/*.repo /etc/yum.repo.d/`
+- `cp ./packaging/rhel-centos/v6/*.repo /etc/yum.repo.d/`
 - `yum clean all ; yum repolist`
 - `yum install nodejs mongodb-org`
 - `yum install devtoolset-3-gcc.x86_64 devtoolset-3-gcc-c++-4.9.2-6.el6.x86_64`
@@ -120,8 +120,9 @@ Open in your favourite browser `localhost:3000`, you should see the ngeo project
 This topic explain some files that are provided in this project and are only used/write for linux platfrom.
 It aims is to put ngEO-LWS as service in a linux server.
 
-The service file is called `ngeo.service` and can be found @ https://github.com/TPZF/ngEO-LWS
-Be aware to update the `host ip adress` in this file before running it as service so it targets the rigth machine.
+The service file is called `ngeo.service` and can be found @ https://github.com/TPZF/ngEO-LWS/packaging
+Be aware to update the `host ip adress` in this file before running it as service so it targets the rigth machine. You can also change the port in this file.
+This file is to be placed in `/etc/init.d` 
 
 The aim of this file is to create a service, so when you logout from the machine, the service ngeo (the ngEO-LWS server) is still runnning.
 
