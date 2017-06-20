@@ -4,8 +4,8 @@
 
 This section to explain how to build a rpm package for ngEO-qs containing all needed.
 
- - type `./package.sh <version> <date>` from this folder wher <version> is the version (example `1.0`) and <date> is the date (exmaple `20170620`)
- - the rpm is named like `esa-ngeo-qs-<version>-<date>.x86_64.rpm` and is generated @ `../dist/`
+ - Type `./package.sh <version> <date>` from this folder where `version` is the version (example `1.0`) and `date` is the date (exmaple `20170620`)
+ - The rpm name's nomenclature is `esa-ngeo-qs-<version>-<date>.x86_64.rpm` and is generated @ `../dist/`
 
 ## Install generated rpm
  - At this step, it means that you have already generated your rpm under `../dist/` folder
@@ -16,7 +16,7 @@ This section to explain how to build a rpm package for ngEO-qs containing all ne
  - At this step, it means that you have already generated your rpm under `../dist/` folder
  - To uninstall it go to `../dist/` and type `./ngeo-install.sh uninstall`
 
-## Status is ngEO-QS is installed or not
+## Status if ngEO-QS is installed or not
  - At this step, it means that you have already generated your rpm under `../dist/` folder
  - To check the status if it is installed or not, go to `../dist/` and type `./ngeo-install.sh status`
 
