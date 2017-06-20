@@ -1,0 +1,43 @@
+#!/bin/bash
+# chkconfig: 2345 20 80
+# description: ngEO-QS service
+# @purpose NGEO service script. To be placed in /etc/init.d
+# MAKE SURE to change the [IPADRESS] by the ip adress of the machine where are you installing this ngEO-QS.
+# If you have deploied ngEO-QS using rpm , then the ngeo is placed @ /usr/local/ngeo/ngeo-qs/
+# If you have installed it in another place then change the path by where it is installed
+# IF YOU WANT TO CHANGE THE PORT, THEN CHANGE IT HERE
+
+. /etc/init.d/functions
+
+case "$1" in
+start)
+   cd /usr/local/ngeo/ngeo-qs/
+   mongo admin --eval 'db.shutdownServer()' > /dev/null
+   mongod --config ./.mongodb/conf/mongod.conf --fork
+   NODE_ENV=production HOST=[IPADRESS] PORT=8080 node src/app.js &
+   echo $!>/var/run/ngEO-QS.pid
+   ;;
+stop)
+   cd /usr/local/ngeo/ngeo-qs/
+   mongo admin --eval 'db.shutdownServer()' > /dev/null
+   kill `cat /var/run/ngEO-QS.pid`
+   ps -ef | grep '\snode\s' | awk '{print $2}' | xargs kill
+   rm /var/run/ngEO-QS.pid
+   ;;
+restart)
+   $0 stop
+   $0 start
+   ;;
+status)
+   if [ -e /var/run/ngEO-QS.pid ]; then
+      echo ngEO-QS is running, pid=`cat /var/run/ngEO-QS.pid`
+   else
+      echo ngEO-QS is NOT running
+      exit 1
+   fi
+   ;;
+*)
+   echo "Usage: $0 {start|stop|status|restart}"
+esac
+
+exit 0
