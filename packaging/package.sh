@@ -16,6 +16,14 @@ cp -R ../node_modules esa-ngeo-qs/ngeo-qs/
 cp -R ../public esa-ngeo-qs/ngeo-qs/
 cp -R ../src esa-ngeo-qs/ngeo-qs/
 
+echo "------------------------------------------------------------------------------"  
+echo "------------------------Deleting git ignore files-----------------------------"
+echo "------------------------------------------------------------------------------"  
+find ./esa-ngeo-qs/ngeo-qs/ -name "*.gitignore" -type f -delete
+
+echo "------------------------------------------------------------------------------"  
+echo "------------------------Moving sources to rpmbuild sources--------------------"
+echo "------------------------------------------------------------------------------"  
 tar czf esa-ngeo-qs.tar.gz esa-ngeo-qs
 rm -rf esa-ngeo-qs
 mv esa-ngeo-qs.tar.gz ~/rpmbuild/SOURCES
