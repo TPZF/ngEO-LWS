@@ -9,9 +9,6 @@ rm -rf esa-ngeo-qs
 mkdir -p esa-ngeo-qs/ngeo-qs/
 cd ..
 
-echo "Enabling devtoolset-3-gcc and devtoolset-3-gcc-c++-4.9.2-6"
-echo "Nedeed by node-expat ly used by ngEO-QS"
-
 git pull --rebase
 npm install --production
 cd ./packaging
