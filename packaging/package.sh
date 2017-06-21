@@ -21,7 +21,7 @@ echo "--------------------------------------------------------------------------
 echo "------------------------Deleting unused files for production------------------"
 echo "------------------------------------------------------------------------------"  
 find esa-ngeo-qs/ngeo-qs/ -name "*.gitignore" -type f -delete
-find esa-ngeo-qs/ngeo-qs/ -name "*.test.js" -type f -delete
+find esa-ngeo-qs/ngeo-qs/src/ -name "*.test.js" -type f -delete
 #Replace the logger file pat for production to be under /tmp/ngeo.log instead the default one in production.json which is ngeo.log 
 sed -i "s/ngeo.log/\/tmp\/ngeo.log/g" esa-ngeo-qs/ngeo-qs/src/config/production.json
 
