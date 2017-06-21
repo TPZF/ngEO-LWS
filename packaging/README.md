@@ -4,8 +4,9 @@
 
 This section to explain how to build a rpm package for ngEO-qs containing all needed.
 
- - Type `./package.sh <version> <date>` from this folder where `version` is the version (example `1.0`) and `date` is the date (exmaple `20170620`)
+ - Type `./package.sh <version> <date>` from this folder where `version` is the version (example `1.0`) and `date` is the date (example `20170620`)
  - The rpm name's nomenclature is `esa-ngeo-qs-<version>-<date>.x86_64.rpm` and is generated @ `../dist/`
+ - :exclamation: If there is an error like node-expat ... then type scl `enable devtoolset-3 bash`. Then retry building the rpm
 
 ## Install generated rpm
  - At this step, it means that you have already generated your rpm under `../dist/` folder
