@@ -10,7 +10,7 @@ Group:       	NGEO
 License:     	2017, ESA   
 BuildArch: 	x86_64
 Source0:  	esa-ngeo-qs.tar.gz
-Requires:  	httpd, nodejs 
+Requires:  	nodejs 
 
 %description
 
