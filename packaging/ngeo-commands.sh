@@ -7,7 +7,7 @@
 # @purpose NGEO Query Server as a service script.
 ##############################################################################
 ### BEGIN INIT INFO
-# Prerequistes: before rning this scipt, please place the file named ngeo.service (make sure that it is chmod 755) under /etc/init.d/ 
+# Prerequistes: before rning this scipt, please place the file named ngeo (make sure that it is chmod 755) under /etc/init.d/ 
 # Short-Description: NGEO Query Server service script
 # Description: To start, stop, restart NGEO Query Server as a service 
 ### END INIT INFO
@@ -23,7 +23,7 @@ ngeo_start() {
     echo "------------------------------------------------------------------------------"
     echo " NGEO Query Server service Start"
     echo "------------------------------------------------------------------------------"
-	service ngeo.service start
+	service ngeo start
 }
 
 # ----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ ngeo_stop() {
     echo "------------------------------------------------------------------------------"
     echo " NGEO Query Server service Stop"
     echo "------------------------------------------------------------------------------"
-	service ngeo.service stop
+	service ngeo stop
 
 }
 
@@ -42,7 +42,7 @@ ngeo_stop() {
 # ----------------------------------------------------------------------------
 ngeo_status() {
     echo -n "Checking for service ${MYSELF}:"
-	service ngeo.service status
+	service ngeo status
 }
 
 # ----------------------------------------------------------------------------

@@ -93,7 +93,7 @@ ngeo_uninstall() {
     echo "------------------------------------------------------------------------------" 
     echo "Step 1/4: Uninstall $SUBSYSTEM Component Configuration as Service. " 
     echo "------------------------------------------------------------------------------" 
- 	  echo "Stop NGEO service"
+ 	echo "Stop NGEO service"
   	#if [ -f /etc/init.d/ngeo ] ; then
   	#	sudo /etc/init.d/ngeo stop
   	
