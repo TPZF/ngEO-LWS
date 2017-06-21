@@ -37,4 +37,4 @@ This section to explain how to build a rpm package for ngEO-qs containing all ne
  - After the installation, you can change the log file location if you want for ngEO-QS.
  - You can change it @ `/usr/local/ngeo/ngeo-qs/src/config/production.json`
  - Do not forget to restart ngEO-QS by typing `service ngeo restart`
- - Same for other configuration files that you want to change (those are found in the document `ngEO-WEBC-QS-ICD-001_1.0.docx`, and they are also explained in the REDAME.md of the project)
+ - Same for other configuration files that you want to change (those are found in the document `ngEO-WEBC-QS-ICD-001_1.0.docx`, and they are also explained in the README.md of the project)
