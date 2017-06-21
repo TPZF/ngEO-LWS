@@ -26,6 +26,7 @@ echo "------------------------Deleting unused files for production--------------
 echo "------------------------------------------------------------------------------"  
 find ./esa-ngeo-qs/ngeo-qs/ -name "*.gitignore" -type f -delete
 find ./esa-ngeo-qs/ngeo-qs/ -name "*.test.js" -type f -delete
+#sed -i "s/\.\/ngeo.log/\/tmp/ngeo\.log/g" dist/ngeo-install.sh
 
 echo "------------------------------------------------------------------------------"  
 echo "------------------------Moving sources to rpmbuild sources--------------------"
