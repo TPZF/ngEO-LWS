@@ -75,7 +75,7 @@ ngeo_install() {
     echo "Step 3/3: NGEO Component Installation " 
     echo "------------------------------------------------------------------------------" 
 	  #sudo yum install -y httpd
-	  sudo rpm -Uvh esa-ngeo-qs-1.0-20170620.x86_64.rpm
+	  sudo rpm -Uvh esa-ngeo-qs-VERSION-RELEASE.x86_64.rpm
 	
 
     echo "------------------------------------------------------------------------------" 
