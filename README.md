@@ -120,7 +120,7 @@ Open in your favourite browser `localhost:3000`, you should see the ngeo project
 This topic explain some files that are provided in this project and are only used/write for linux platfrom.
 It aims is to put ngEO-LWS as service in a linux server.
 
-The service file is called `ngeo.service` and can be found @ https://github.com/TPZF/ngEO-LWS/packaging
+The service file is called `ngeo` and can be found @ https://github.com/TPZF/ngEO-LWS/packaging
 Be aware to update the `host ip adress` in this file before running it as service so it targets the rigth machine. You can also change the port in this file.
 This file is to be placed in `/etc/init.d` 
 

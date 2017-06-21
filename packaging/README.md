@@ -22,18 +22,18 @@ This section to explain how to build a rpm package for ngEO-qs containing all ne
 
 ## Set ngEO-QS as service on your machine (rhel/centos)
 
- - To set the ngEO-QS as service just place the file named `ngeo.service` under folder `/etc/init.d/`
- - Set chmod 755 on this file `/etc/init.d/ngeo.service`
+ - To set the ngEO-QS as service just place the file named `ngeo` under folder `/etc/init.d/`
+ - Set chmod 755 on this file `/etc/init.d/ngeo`
  - Change the [IPADRESS] in this file by your machine's ip adress and you can also change the PORT if needed
- - Start ngeo from eveywhere by just typing `service ngeo.service start`
- - Stop ngeo from eveywhere by just typing `service ngeo.service stop`
- - Restart ngeo from eveywhere by just typing `service ngeo.service restart`
- - Check ngeo status from eveywhere by just typing `service ngeo.service status`
+ - Start ngeo from eveywhere by just typing `service ngeo start`
+ - Stop ngeo from eveywhere by just typing `service ngeo stop`
+ - Restart ngeo from eveywhere by just typing `service ngeo restart`
+ - Check ngeo status from eveywhere by just typing `service ngeo status`
  - All those commands can be found in the file named `ngeo-commands.sh` found under `../dist/` folder
 
  ## Change the log file location of ngEO-QS
 
  - After the installation, you can change the log file location if you want for ngEO-QS.
  - You can change it @ `/usr/local/ngeo/ngeo-qs/src/config/production.json`
- - Do not forget to restart ngEO-QS by typing `service ngeo.service restart`
+ - Do not forget to restart ngEO-QS by typing `service ngeo restart`
  - Same for other configuration files that you want to change (those are found in the document `ngEO-WEBC-QS-ICD-001_1.0.docx`, and they are also explained in the REDAME.md of the project)
