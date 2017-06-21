@@ -22,9 +22,10 @@ cp -R ../public esa-ngeo-qs/ngeo-qs/
 cp -R ../src esa-ngeo-qs/ngeo-qs/
 
 echo "------------------------------------------------------------------------------"  
-echo "------------------------Deleting git ignore files-----------------------------"
+echo "------------------------Deleting unused files for production------------------"
 echo "------------------------------------------------------------------------------"  
 find ./esa-ngeo-qs/ngeo-qs/ -name "*.gitignore" -type f -delete
+find ./esa-ngeo-qs/ngeo-qs/ -name "*.test.js" -type f -delete
 
 echo "------------------------------------------------------------------------------"  
 echo "------------------------Moving sources to rpmbuild sources--------------------"
@@ -52,5 +53,5 @@ cp ~/rpmbuild/RPMS/x86_64/esa-ngeo-qs-$NGEO_VERSION-$NGEO_RELEASE.x86_64.rpm dis
 #cp ./packaging/ngeo dist
 cp ./packaging/ngeo-install.sh dist
 sed -i "s/VERSION-RELEASE/$NGEO_VERSION-$NGEO_RELEASE/g" dist/ngeo-install.sh
-cp ./packaging/ngeo.service dist
+cp ./packaging/ngeo dist
 cp ./packaging/ngeo-commands.sh dist
