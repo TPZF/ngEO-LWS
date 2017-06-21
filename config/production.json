@@ -1,0 +1,14 @@
+{
+	"host": "http://ngeo-light.evo-pdgs.com/ngeo-qs",
+	"logger": {
+		"level": "warn",
+		"outputPath": "./ngeo.log"
+	},
+	"database": {
+		"connection": {
+			"url": "mongodb://127.0.0.1:27017/mydatabase",
+			"username": "",
+			"password": ""
+		}
+	}
+}
