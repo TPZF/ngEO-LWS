@@ -11,18 +11,36 @@
 
 case "$1" in
 start)
+   #check if always running the mode process
+   NODEPID=$(ps -ef | grep '\snode\s' | awk '{print $2}')
+   #If the process is still running, then kill it, but normally the step just before should have killed it
+   #This is the way to stop node because nothing exists apart this actually
+   if [[ ! -z ${NODEPID} ]]
+   then
+     kill ${NODEPID}
+   fi
    cd /usr/local/ngeo/ngeo-qs/
-   mongo admin --eval 'db.shutdownServer()' > /dev/null
+   #mongo admin --eval 'db.shutdownServer()' > /dev/null
    mongod --config ./.mongodb/conf/mongod.conf --fork
    NODE_ENV=production HOST=[IPADRESS] PORT=8080 node src/app.js &
    echo $!>/var/run/ngEO-QS.pid
+   echo "ngEO-QS started"
    ;;
 stop)
    cd /usr/local/ngeo/ngeo-qs/
    mongo admin --eval 'db.shutdownServer()' > /dev/null
    kill `cat /var/run/ngEO-QS.pid`
-   ps -ef | grep '\snode\s' | awk '{print $2}' | xargs kill
+   #check if always running the mode process
+   NODEPID=$(ps -ef | grep '\snode\s' | awk '{print $2}')
+   #If the process is still running, then kill it, but normally the step just before should have killed it
+   #This is the way to stop node because nothing exists apart this actually
+   if [[ ! -z ${NODEPID} ]]
+   then
+     kill ${NODEPID}
+   fi
+   #ps -ef | grep '\snode\s' | awk '{print $2}' | xargs kill
    rm /var/run/ngEO-QS.pid
+   echo "ngEO-QS stoppped"
    ;;
 restart)
    $0 stop
