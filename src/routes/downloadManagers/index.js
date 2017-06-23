@@ -81,8 +81,8 @@ function _getAllLatestRelease() {
 				if (os.indexOf('linux') === 0) {
 					_json[os] = {
 						readme: 'Latest release : ' + versionDesc[0],
-						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
-						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.zip',
+						update: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
+						install: Configuration.host + '/ngeo/downloadManagers/releases/download/' + os + '/' + versionDesc[0] + '/ngeo-downloadmanager.AppImage',
 						version: versionDesc[0]
 					};
 				}
