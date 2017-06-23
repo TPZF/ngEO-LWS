@@ -10,10 +10,15 @@ class AuthenticationService {
 	constructor() {
 	}
 
+	/**
+	 * Check if user is authenticated with SSO
+	 * @method isAuthenticated
+	 * @param {*} myRequest 
+	 * @param {*} myResponse 
+	 * @param {*} myCallbackFunction 
+	 */
 	isAuthenticated(myRequest, myResponse, myCallbackFunction) {
 		Logger.debug('AuthenticationService.isAuthenticated');
-		// TODO remove it when SSO is activated
-		myRequest.headers[Configuration['ssoUserId']] = 'anonymous';
 		let flag = false;
 		if (typeof this.getUserId(myRequest) !== 'undefined') {
 			flag = true;
@@ -29,9 +34,11 @@ class AuthenticationService {
      * get userId from myRequest
      * @method getUserId
      * @param {*} myRequest 
-     * @param {*} myResponse 
+	 * @returns {string | undefined}
      */
 	getUserId(myRequest) {
+		// TODO remove it when SSO is activated
+		myRequest.headers[Configuration['ssoUserId']] = 'anonymous';
 		Logger.debug('AuthenticationService.getUserId = ' + myRequest.headers[Configuration['ssoUserId']]);
 		return myRequest.headers[Configuration['ssoUserId']];
 	}
