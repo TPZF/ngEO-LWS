@@ -1,5 +1,6 @@
 // CORE
 let express = require('express');
+let ObjectId = require('mongodb').ObjectID;
 let _ = require('lodash');
 
 // UTILS
@@ -13,6 +14,24 @@ let DatabaseService = require('services/databaseService');
 // CONST
 let DATA_ACCESS_REQUEST_STATUS_NAME = 'DataAccessRequestStatus';
 let DOWNLOAD_MANAGER_NAME = 'DownloadManager';
+
+/**
+ * check request inputs (method, params, values, ...)
+ * @function _checkRequest
+ * @param request
+ * @return boolean
+ * @private
+ */
+function _checkRequest(request) {
+	if (request.method === 'DELETE') {
+		if (!DatabaseService.checkParamId(request.params.dar_id)) {
+			Logger.debug(request.params.dar_id);
+			Logger.debug('no valid dar_id');
+			return false;
+		}
+	}
+	return true;
+}
 
 // ROUTER
 let router = express.Router({
@@ -93,6 +112,78 @@ router.get('/about', (req, res) => {
 	Logger.debug('GET /ngeo/dataAccessRequestStatuses/about');
 
 	res.status(200).send('Description of dataAccessRequestStatuses requests');
+
+});
+
+/**
+ * Delete a dataAccessRequestStatus
+ */
+router.delete('/:dar_id', (req, res) => {
+
+	Logger.debug('DELETE /ngeo/dataAccessRequestStatuses/:dar_id');
+
+	// check if request is valid
+	if (!_checkRequest(req)) {
+		res.status(400).json("Request is not valid");
+		return;
+	}
+
+	let idToDelete = req.params.dar_id;
+
+	// define callback function after deleting DownloadManager
+	let cbDeleteDar = function (response) {
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+		} else {
+			res.status(204).send();
+		}
+	};
+
+	// callback after getting DM for current DAR
+	let cbAfterListDM = function (response) {
+		// catch error
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+			return;
+		}
+		// catch length != 1
+		if (response.datas.length !== 1) {
+			res.status(400).json('Bad request !');
+			return;
+		}
+		// call delete
+		DatabaseService.delete(DATA_ACCESS_REQUEST_STATUS_NAME, idToDelete, cbDeleteDar);
+	}
+
+	// callback after getting DAR
+	let cbAfterListDAR = function (response) {
+		// catch error
+		if (response.code !== 0) {
+			res.status(response.code).json(response.datas);
+			return;
+		}
+		// catch length != 1
+		if (response.datas.length !== 1) {
+			res.status(400).json('Bad request !');
+			return;
+		}
+		let dar = response.datas[0];
+		// define query to find DM with :
+		// - DM id from current DAR
+		// - current user id from authentification
+		let myQueryFilter = {
+			_id: ObjectId(dar.dlManagerId),
+			userId: AuthenticationService.getUserId(req)
+		};
+		DatabaseService.list(DOWNLOAD_MANAGER_NAME, myQueryFilter, cbAfterListDM);
+	}
+
+	// 
+	let jsonQueryForfilter = {
+		_id: ObjectId(idToDelete)
+	};
+	// call list service
+	DatabaseService.list(DATA_ACCESS_REQUEST_STATUS_NAME, jsonQueryForfilter, cbAfterListDAR);
 
 });
 
