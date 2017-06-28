@@ -39,7 +39,9 @@ class AuthenticationService {
 	getUserId(myRequest) {
 		// TODO remove it when SSO is activated
 		myRequest.headers[Configuration['ssoUserId']] = 'anonymous';
-		Logger.debug('AuthenticationService.getUserId = ' + myRequest.headers[Configuration['ssoUserId']]);
+		//Logger.debug('AuthenticationService.getUserId = ' + myRequest.headers[Configuration['ssoUserId']]);
+		//let ssoHeaderId = Configuration['ssoUserId'];
+		//return typeof ssoHeaderId === 'undefined' ? undefined : myRequest.headers[ssoHeaderId];
 		return myRequest.headers[Configuration['ssoUserId']];
 	}
 
