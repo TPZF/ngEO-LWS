@@ -88,20 +88,24 @@ let _getAllLatestRelease = function () {
 				}
 				if (os.indexOf('win') === 0) {
 					_json[os] = {
-						readme: 'Latest release : ' + versionDesc[0],
+						readme: `Latest release : ${versionDesc[0]}`,
 						update: `${Configuration.host}/ngeo/downloadManagers/releases/download/${os}/${versionDesc[0]}`,
 						install: `${Configuration.host}/ngeo/downloadManagers/releases/download/${os}/${versionDesc[0]}/ngeo-downloadmanager-${versionDesc[0]}.exe`,
 						version: versionDesc[0],
+						fullName: `ngeo-downloadmanager-${versionDesc[0]}.exe`,
 						latestYml: `./releases/download/${os}/${versionDesc[0]}/latest.yml`,
-						latestSoftPath: `./releases/download/${os}/${versionDesc[0]}/ngeo-downloadmanager-${versionDesc[0]}.exe`
+						latestApplicationPath: `./releases/download/${os}/${versionDesc[0]}/ngeo-downloadmanager-${versionDesc[0]}.exe`
 					};
 				}
-				if (os.indexOf('darwin') === 0) {
+				if (os.indexOf('mac') === 0) {
 					_json[os] = {
-						readme: 'Latest release : ' + versionDesc[0],
-						update: Configuration.host + `/ ngeo / downloadManagers / releases / download / ${os} /${versionDesc[0]}/release.json`,
-						install: Configuration.host + `/ ngeo / downloadManagers / releases / download / ${os} /${versionDesc[0]}/ngeo - downloadmanager - ${versionDesc[0]}.zip`,
-						version: versionDesc[0]
+						readme: `Latest release : ${versionDesc[0]}`,
+						update: `${Configuration.host}/ngeo/downloadManagers/releases/download/${os}/${versionDesc[0]}/release.json`,
+						install: `${Configuration.host}/ngeo/downloadManagers/releases/download/${os}/${versionDesc[0]}/ngeo-downloadmanager-${versionDesc[0]}.zip`,
+						version: versionDesc[0],
+						fullName: `ngeo-downloadmanager-${versionDesc[0]}.zip`,
+						latestYml: `./releases/download/${os}/${versionDesc[0]}/latest-mac.yml`,
+						latestApplicationPath: `./releases/download/${os}/${versionDesc[0]}/ngeo-downloadmanager-${versionDesc[0]}.zip`
 					};
 				}
 			}
@@ -109,8 +113,58 @@ let _getAllLatestRelease = function () {
 	});
 	//Logger.debug(_json);
 	return _json;
+};
 
-}
+/**
+ * According to the electron-updater module used for the application download manager,
+ * it request a service REST with this format
+ * "http://<host>/ngeo/downloadManagers/releases/<os>/latest/<file>"
+ * <ul>
+ * file can be
+ * <li>latest.yml for the update descriptor for windows</li>
+ * <li>latest-mac.yml for the update descriptor for mac</li>
+ * <li>TODO latest.yml for the update descriptor for linux</li>
+ * </ul>
+ *  
+ * @function findFileForAutoUpdate
+ * @param os (could be win, mac or linux)
+ * @param fileTofind could be latest.yml, latest-mac.yml or application file (exmaple ngeo-downloadmanager-0.x.x.exe)
+ * @param request
+ * @returns {file path} if found, otherwise 'undefined'
+ * @private
+ * 
+ */
+let findFileForAutoUpdate = function (os, fileToFind) {
+	const jsonLatest = _getAllLatestRelease();
+	let fileToSend;
+	let jsonConf;
+	for (let osName in jsonLatest) {
+		if (osName.indexOf(os) === 0) {
+			jsonConf = jsonLatest[osName];
+			break;
+		}
+	}
+	if (typeof jsonConf === 'undefined') {
+		return undefined;
+	}
+	//if the requested was latest.yml and os windows then send the yml for windows
+	//same for mac expect the electron auto-update request latst-mac.yml on mac
+	//TODO for linux
+	if (fileToFind.endsWith('.yml')) {
+		return jsonConf.latestYml;
+	}
+	//here we enter the request of the software itself as it uses the same REST service buut the attribute is not the same
+	//for exmaple for .yml, it is latest.yml ro latest-mac.yml depending on the os from where the electron auto-updater is launched
+	if (fileToFind == jsonConf.fullName) {
+		fileToSend = jsonConf.latestApplicationPath;
+		return fileToSend;
+	}
+
+	return undefined;
+	/*if (typeof fileToSend === 'undefined') {
+		res.status(400).json("Could not find the updator file attributes");
+	}*/
+};
 
 // ROUTER
 let router = express.Router({
@@ -194,69 +248,28 @@ router.get('/releases/latest', (req, res) => {
  * Get latest versions of download manager installer
  * 
  * @function router.get
- * @param {String} url - /ngeo/downloadManagers/releases/latest
- * @param {object} req - empty
+ * @param {String} url - /ngeo/downloadManagers/releases/:os/latest/fileName
+ * @param {object} req - empty having property os for the os (win, mac or linux)
  * @param {object} res - response
  */
-router.get('/releases/:os/latest/latest.yml', (req, res) => {
+router.get('/releases/:os/latest/:fileName', (req, res) => {
 	let os = req.params.os;
-	Logger.debug(`GET / ngeo / downloadManagers / releases / ${os} /latest/latest.yml`);
-	if (!os) {
-		res.status(400).json("Request is not valid. Needs os");
-		return;
-	}
-	let options = {
-		root: __dirname
-	};
-	const jsonLatest = _getAllLatestRelease();
-	let fileToSend;
-	for (let osName in jsonLatest) {
-		if (osName.indexOf('win') === 0) {
-			let jsonPara = jsonLatest[osName];
-			fileToSend = jsonPara.latestYml;
-			break;
-		}
-	}
-	if (typeof fileToSend === 'undefined') {
-		res.status(400).json("Could not find the updator file attributes");
-	}
-	res.status(200).sendFile(fileToSend, options);
-});
-
-/**
- * Get release version of download manager installer
- * Used by macos auto updater
- * 
- * @function router.get
- * @param {String} url - /ngeo/downloadManagers/releases/download/:os/:version/release.json
- * @param {object} req - empty
- * @param {object} res - response
- */
-router.get('/releases/:os/latest/:soft', (req, res) => {
-	const os = req.params.os;
-	const soft = req.params.soft;
-	Logger.debug(`GET / ngeo / downloadManagers / releases / ${os} /latest/${os}`);
-	if (!os || !soft) {
-		res.status(400).json("Request is not valid");
+	let fileName = req.params.fileName;
+	Logger.debug(`GET /ngeo/downloadManagers/releases/${os}/latest/${fileName}`);
+	if (!os || !fileName) {
+		res.status(404).json("Request is not valid. Needs os and filename");
 		return;
 	}
 
+	let fileToSend = findFileForAutoUpdate(os, fileName);
+	if (typeof fileToSend === 'undefined') {
+		res.status(400).json(`Could not find the file ${fileName} for os ${os} you requested`);
+	}
+
+	Logger.debug(`Sending ${fileName}`);
 	let options = {
 		root: __dirname
 	};
-
-	const jsonLatest = _getAllLatestRelease();
-	let fileToSend;
-	for (let osName in jsonLatest) {
-		if (osName.indexOf('win') === 0) {
-			let jsonPara = jsonLatest[osName];
-			fileToSend = jsonPara.latestSoftPath;
-			break;
-		}
-	}
-	if (typeof fileToSend === 'undefined') {
-		res.status(400).json("Could not find the last update file");
-	}
 	res.status(200).sendFile(fileToSend, options);
 });
 
@@ -277,7 +290,7 @@ router.get('/releases/download/:os/:version/:file', (req, res) => {
 	const os = req.params.os;
 	const version = req.params.version;
 	const file = req.params.file;
-	const dir = `${__dirname}/releases/download/${os}/${version}/${file}`;
+	const dir = `${__dirname} /releases/download / ${os} /${version}/${file} `;
 	if (!fs.existsSync(dir)) {
 		res.sendStatus(404);
 		return;
