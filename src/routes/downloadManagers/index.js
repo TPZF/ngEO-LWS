@@ -116,25 +116,16 @@ let _getAllLatestRelease = function () {
 };
 
 /**
- * According to the electron-updater module used for the application download manager,
- * it request a service REST with this format
- * "http://<host>/ngeo/downloadManagers/releases/<os>/latest/<file>"
- * <ul>
- * file can be
- * <li>latest.yml for the update descriptor for windows</li>
- * <li>latest-mac.yml for the update descriptor for mac</li>
- * <li>TODO latest.yml for the update descriptor for linux</li>
- * </ul>
+ * According to the os name {mac|win|linux}, will retunr the json confogiration conatining entire information need.
+ * 
  *  
- * @function findFileForAutoUpdate
+ * @function _getLatestJsonConf
  * @param os (could be win, mac or linux)
- * @param fileTofind could be latest.yml, latest-mac.yml or application file (exmaple ngeo-downloadmanager-0.x.x.exe)
- * @param request
- * @returns {file path} if found, otherwise 'undefined'
+ * @returns {json configuration containing entire information need} if found, otherwise 'undefined'
  * @private
  * 
  */
-let findFileForAutoUpdate = function (os, fileToFind) {
+let _getLatestJsonConf = function (os) {
 	const jsonLatest = _getAllLatestRelease();
 	let fileToSend;
 	let jsonConf;
@@ -144,6 +135,34 @@ let findFileForAutoUpdate = function (os, fileToFind) {
 			break;
 		}
 	}
+	return jsonConf;
+};
+
+/**
+ * According to the electron-updater module used for the application download manager,
+ * it request a service REST with this format
+ * "http://<host>/ngeo/downloadManagers/releases/<os>/latest/<file>"
+ * <ul>
+ * file can be
+ * <li>latest.yml for the update descriptor for windows</li>
+ * <li>latest-mac.yml for the update descriptor for mac</li>
+ * <li>TODO latest.yml for the update descriptor for linux</li>
+ * <li>installer file</li>
+ * </ul>
+ *  
+ * @function _findFileForAutoUpdate
+ * @param os (could be win, mac or linux)
+ * @param fileTofind could be latest.yml, latest-mac.yml or application file (exmaple ngeo-downloadmanager-0.x.x.exe)
+ * @param request
+ * @returns {file yaml or installer} if found, otherwise 'undefined'
+ * @private
+ * 
+ */
+let _findFileForAutoUpdate = function (os, fileToFind) {
+	const jsonLatest = _getAllLatestRelease();
+	let fileToSend;
+	let jsonConf = _getLatestJsonConf(os);
+
 	if (typeof jsonConf === 'undefined') {
 		return undefined;
 	}
@@ -161,15 +180,13 @@ let findFileForAutoUpdate = function (os, fileToFind) {
 	}
 
 	return undefined;
-	/*if (typeof fileToSend === 'undefined') {
-		res.status(400).json("Could not find the updator file attributes");
-	}*/
 };
 
 // ROUTER
 let router = express.Router({
 	mergeParams: true
 });
+
 router.use(function timeLog(req, res, next) {
 	// for all downloadmanagers request, authentication is required
 	Logger.debug(req.originalUrl);
@@ -245,6 +262,34 @@ router.get('/releases/latest', (req, res) => {
 });
 
 /**
+ * Download the latest version of download manager installer
+ * 
+ * @function router.get
+ * @param {String} url - /ngeo/downloadManagers/releases/download/:os/latest
+ * @param {object} req - request
+ * @param {object} res - response
+ */
+router.get('/releases/download/:os/latest', (req, res) => {
+	let os = req.params.os;
+	Logger.debug(`GET /releases/download/${os}/latest`);
+	if (!os) {
+		res.status(404).json("Request is not valid. Needs os (win/mac or linux) to download the latest installer");
+		return;
+	}
+	let jsonConf = _getLatestJsonConf(os);
+	if (typeof jsonConf === 'undefined') {
+		res.status(404).json('Unbale to find the latest confoguration of the specified os in our server. Please contact the administrator');
+		return undefined;
+	}
+
+	let options = {
+		root: __dirname
+	};
+	res.setHeader('Content-disposition', 'attachment; filename=' + jsonConf.fullName);
+	res.status(200).sendFile(jsonConf.latestApplicationPath, options);
+});
+
+/**
  * Get latest versions of download manager installer
  * 
  * @function router.get
@@ -255,23 +300,26 @@ router.get('/releases/latest', (req, res) => {
 router.get('/releases/:os/latest/:fileName', (req, res) => {
 	let os = req.params.os;
 	let fileName = req.params.fileName;
-	Logger.debug(`GET /ngeo/downloadManagers/releases/${os}/latest/${fileName}`);
+	Logger.debug(`GET / ngeo / downloadManagers / releases / ${os} / latest / ${fileName}`);
 	if (!os || !fileName) {
 		res.status(404).json("Request is not valid. Needs os and filename");
 		return;
 	}
 
-	let fileToSend = findFileForAutoUpdate(os, fileName);
+	let fileToSend = _findFileForAutoUpdate(os, fileName);
 	if (typeof fileToSend === 'undefined') {
 		res.status(400).json(`Could not find the file ${fileName} for os ${os} you requested`);
 	}
 
-	Logger.debug(`Sending ${fileName}`);
+	Logger.debug(`Sending ${fileName} `);
 	let options = {
 		root: __dirname
 	};
+	res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
 	res.status(200).sendFile(fileToSend, options);
 });
+
+
 
 /**
  * Get a specific version of download manager installer
