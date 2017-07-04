@@ -7,10 +7,6 @@ It is not expected to interface with other components such as the ngEO controlle
 
 Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
 
-## Motivation
-
-TBD
-
 ## Pre installation
 
 - Install Git
@@ -21,7 +17,7 @@ TBD
 As ngEO Query Server uses some libraries that uses some OS dependant libraries, you have to install first some dependencies that are used in this project to run it well.
 For example, ngEO-LWS uses expat-lib which depends on node-gyp which depends on gcc version 4.9+ (c++11).
 
->**Redhat/Centos 6.x post installation** (Thanks to Antoine Jammes for help)
+>**Redhat/Centos 6.x pre installation** (Thanks to Antoine Jammes for help)
  
 For that we have compiled for you the .repo needed in order to install them in the simpliest manner.
 The list of libraries to install is:
@@ -41,7 +37,7 @@ Before going forward, we assume that you already did `git clone https://github.c
 
 At this step you have all you need to launch the ngEO-QS
 
->**Other Linux post installation**
+>**Other Linux pre installation**
 
 You have to install
 
@@ -60,7 +56,7 @@ You have to install
 - MongoDB Community Edition version 3.4
 - set mongod path in environment variables as well described in mongo web site (you can call it from everywhere)
 
->**MacOsx post installation**
+>**MacOsx pre installation**
 
 You have to install
 
