@@ -37,12 +37,18 @@ class AuthenticationService {
 	 * @returns {string | undefined}
      */
 	getUserId(myRequest) {
-		// TODO remove it when SSO is activated
-		myRequest.headers[Configuration['ssoUserId']] = 'anonymous';
-		//Logger.debug('AuthenticationService.getUserId = ' + myRequest.headers[Configuration['ssoUserId']]);
-		//let ssoHeaderId = Configuration['ssoUserId'];
-		//return typeof ssoHeaderId === 'undefined' ? undefined : myRequest.headers[ssoHeaderId];
-		return myRequest.headers[Configuration['ssoUserId']];
+		let userId;
+		if (Configuration.hasOwnProperty('ssoUserId')) {
+			Logger.debug(`Will retrieve sso user id from header mapped to ${Configuration['ssoUserId']}`);
+			let ssoHeaderId = Configuration['ssoUserId'];
+			userId = typeof ssoHeaderId === 'undefined' ? undefined : myRequest.headers[ssoHeaderId];
+			Logger.debug(`The user id from sso is ${userId}`);
+		} else {
+			Logger.warn("ssoUserId tag not found in the configuration so server not protected behind and all user mapped with anonymous user");
+			//myRequest.headers[Configuration['ssoUserId']] = 'anonymous';
+			userId = 'anonymous';
+		}
+		return userId;
 	}
 
 }
