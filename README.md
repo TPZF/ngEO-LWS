@@ -81,6 +81,19 @@ See on src/config directory and define :
 - host,
 - etc.
 
+## SSL Configuration data
+
+We have generated a self signed certificate and key for https protocol.
+You can change them in the folder `src/ssl`:
+- private key name shall be : `ngeo.key`
+- public certificate name shall be : `ngeo.cert`
+
+If you want to change the name then adapt the code in `src/app.js`
+
+**How to create a self-signed PEM file:**
+`openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem`
+
+
 ## Starting/Stoping/Testing Server
 >Linux or Macosx commands
 
@@ -107,7 +120,7 @@ open in your favourite browser `localhost:3000`, you should see the ngeo project
 |*Stoping server*  | `npm run stop-windows` | `npm run stop-windows-dev`  |                   | 
 |*Test with Coverage*|         |                     |`npm run coverage-windows` | 
 
-Open in your favourite browser `localhost:3000`, you should see the ngeo project as the ngeo client is also integrated into the project
+Open in your favourite browser `http://localhost:3000` or `https://localhost:3001`, you should see the ngeo project as the ngeo client is also integrated into the project
 
 >For other OS, please adapt the script
 
