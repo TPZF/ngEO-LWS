@@ -25,7 +25,7 @@ This section to explain how to build a rpm package for ngEO-qs containing all ne
 
  - To set the ngEO-QS as service just place the file named `ngeo` under folder `/etc/init.d/`
  - Set chmod 755 on this file `/etc/init.d/ngeo`
- - Change the **[IPADRESS]** in this file by your machine's ip adress and you can also change the **HTTP_PORT** and **HTTPS_PORT** if needed
+ - Change the **[IPADRESS]** in this file by your machine's ip adress and you can also change the **HTTP_PORT** , **HTTPS_PORT**  and **PROTOCOL** (can be `BOTH` , `HTTP` or `HTTPS` means that server is launched on both protocol or just https or just http) if needed
  - Start ngeo from eveywhere by just typing `service ngeo start`
  - Stop ngeo from eveywhere by just typing `service ngeo stop`
  - Restart ngeo from eveywhere by just typing `service ngeo restart`

@@ -64,23 +64,53 @@ app.use('/ngeo/opensearch', opensearch);
 
 //host for both http and https
 let host = process.env.HOST || 'localhost';
-//http port from env otherwise 3000 if not found (the 8080 is more often in use that is why such a port)
-let httpPort = process.env.HTTP_PORT || 3000;
 
-//https port from conf if found otherwise 3001 by default (the 443 is more often in use that is why such a port)
-let httpsPort = process.env.HTTPS_PORT || 3001;
-//all stuff needed for the https protocol
-let privateKey = fs.readFileSync('./ssl/ngeo.key', 'utf8');
-let certificate = fs.readFileSync('./ssl/ngeo.cert', 'utf8');
-let credentials = { key: privateKey, cert: certificate };
+/**
+ * Create a http server wich will take port from process environment if set otherwise 3000 by default 
+ */
+let createHttpServer = function () {
+	//http port from env otherwise 3000 if not found (the 8080 is more often in use that is why such a port)
+	let httpPort = process.env.HTTP_PORT || 3000;
+	//create a http server listening on port httpPort
+	http.createServer(app).listen(httpPort, host, function () {
+		logger.info("Express server listening @ http://%s:%s", host, httpPort);
+	});
+};
 
-//create a http server listening on port httpPort
-http.createServer(app).listen(httpPort, host, function () {
-	logger.info("Express server listening @ http://%s:%s", host, httpPort);
-});
+/**
+ * Create a https server which will take port from process environment otherwise 3001 by default
+ */
+let createHttpsServer = function () {
+	//https port from conf if found otherwise 3001 by default (the 443 is more often in use that is why such a port)
+	let httpsPort = process.env.HTTPS_PORT || 3001;
+	//all stuff needed for the https protocol
+	let privateKey = fs.readFileSync('./ssl/ngeo.key', 'utf8');
+	let certificate = fs.readFileSync('./ssl/ngeo.cert', 'utf8');
+	let credentials = { key: privateKey, cert: certificate };
+	//create a https server with the https port and other stuff needed
+	https.createServer(credentials, app).listen(httpsPort, host, function () {
+		logger.info("Express server listening @ https://%s:%s", host, httpsPort);
+	});
+};
 
-//create a https server with the https port and other stuff needed
-https.createServer(credentials, app).listen(httpsPort, host, function () {
-	logger.info("Express server listening @ https://%s:%s", host, httpsPort);
-});
+//here we check if there is a protocol where to run the server
+//It could be HTTPS, HTTP or BOTH, if none is specified then will be both
+let protocol = process.env.PROTOCOL || 'BOTH';
+switch (protocol) {
+	case 'BOTH':
+		createHttpServer();
+		createHttpsServer();
+		break;
+	case 'HTTPS':
+		createHttpsServer();
+		break;
+	case 'HTTP':
+		createHttpServer();
+		break;
+	default:
+		console.error(`Unrecognized process.env.PROTOCOL: ${protocol} using both http and https by default`);
+		createHttpServer();
+		createHttpsServer();
+}
+
 module.exports = app;

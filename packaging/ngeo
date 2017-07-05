@@ -22,7 +22,8 @@ start)
    cd /usr/local/ngeo/ngeo-qs/
    #mongo admin --eval 'db.shutdownServer()' > /dev/null
    mongod --config ./.mongodb/conf/mongod.conf --fork
-   NODE_ENV=production HOST=[IPADRESS] HTTP_PORT=8080 HTTPS_PORT=443 node src/app.js &
+   #PROTOCOL could be 'BOTH' if you want to start qs on both http and https protocol, or 'HTTP' for only http protocol or 'HTTPS' for only https protocol or if other values or not set then will be considered as 'BOTH'
+   NODE_ENV=production HOST=[IPADRESS] HTTP_PORT=8080 HTTPS_PORT=443 PROTOCOL=BOTH node src/app.js &
    echo $!>/var/run/ngEO-QS.pid
    echo "ngEO-QS started"
    ;;
