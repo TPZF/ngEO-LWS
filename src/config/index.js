@@ -3,7 +3,7 @@ let process = require('process');
 class Configuration {
 	constructor() {
 		// FIXME : just only in dev mode
-		process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+		//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 		console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
 		switch (process.env.NODE_ENV) {
 			case 'development':

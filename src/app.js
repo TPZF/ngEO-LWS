@@ -12,6 +12,8 @@ require('app-module-path').addPath(__dirname);
 let express = require('express'),
 	configuration = require('./config'),
 	http = require('http'),
+	https = require('https'),
+	fs = require('fs'),
 	path = require('path'),
 	httpProxy = require('http-proxy'),
 	proxy = require('./proxy'),
@@ -37,7 +39,6 @@ let opensearch = require('./routes/opensearch');
 let app = express();
 
 //all environment
-app.set('port', process.env.PORT || 3000);
 app.use(methodOverride());
 app.use(errorHandler());
 // set limit for json input to 50mb
@@ -60,10 +61,26 @@ app.use('/ngeo/dataAccessRequestStatuses', dataAccessRequestStatuses);
 app.use('/ngeo/opensearch', opensearch);
 
 //let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
+
+//host for both http and https
 let host = process.env.HOST || 'localhost';
-http.createServer(app).listen(app.get('port'), host, function () {
-	let port = app.get('port');
-	logger.info("Express server listening @ http://%s:%s", host, port);
+//http port from env otherwise 3000 if not found (the 8080 is more often in use that is why such a port)
+let httpPort = process.env.HTTP_PORT || 3000;
+
+//https port from conf if found otherwise 3001 by default (the 443 is more often in use that is why such a port)
+let httpsPort = process.env.HTTPS_PORT || 3001;
+//all stuff needed for the https protocol
+let privateKey = fs.readFileSync('./certdata/ngeo.key', 'utf8');
+let certificate = fs.readFileSync('./certdata/ngeo.cert', 'utf8');
+let credentials = { key: privateKey, cert: certificate };
+
+//create a http server listening on port httpPort
+http.createServer(app).listen(httpPort, host, function () {
+	logger.info("Express server listening @ http://%s:%s", host, httpPort);
 });
 
+//create a https server with the https port and other stuff needed
+https.createServer(credentials, app).listen(httpsPort, host, function () {
+	logger.info("Express server listening @ https://%s:%s", host, httpsPort);
+});
 module.exports = app;
