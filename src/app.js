@@ -70,8 +70,8 @@ let httpPort = process.env.HTTP_PORT || 3000;
 //https port from conf if found otherwise 3001 by default (the 443 is more often in use that is why such a port)
 let httpsPort = process.env.HTTPS_PORT || 3001;
 //all stuff needed for the https protocol
-let privateKey = fs.readFileSync('./certdata/ngeo.key', 'utf8');
-let certificate = fs.readFileSync('./certdata/ngeo.cert', 'utf8');
+let privateKey = fs.readFileSync('./ssl/ngeo.key', 'utf8');
+let certificate = fs.readFileSync('./ssl/ngeo.cert', 'utf8');
 let credentials = { key: privateKey, cert: certificate };
 
 //create a http server listening on port httpPort
