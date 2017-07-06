@@ -350,6 +350,19 @@
 				"projection": "EPSG:4326"
 			},
 			{
+				"id": "eox_sentinel2",
+				"name": "Sentinel-2 Cloudless",
+				"type": "WMTS",
+				//"crossOrigin": "use-credentials",
+				"baseUrl": "https://tiles.maps.eox.at/wmts/",
+				"attribution": "Sentinel-2 Cloudless { Data © <a href='http://www.copernicus.eu'>Copernicus</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "s2cloudless",
+					"matrixSet": "WGS84"
+				},
+				"projection": "EPSG:4326"
+			},
+			{
 				"id": "OSM_Official",
 				"name": "Open Street Map (Official)",
 				"type": "OSM",
@@ -435,7 +448,7 @@
 		},
 		"layers": [
 			{
-				"name": "Overlay",
+				"name": "Overlay (names/roads/water bodies)",
 				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
 				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
@@ -448,13 +461,26 @@
 				"projection": "EPSG:4326"
 			},
 			{
-				"name": "Overlay Bright",
+				"name": "Overlay Bright (names/roads/water bodies)",
 				"type": "WMTS",
 				//"crossOrigin": "use-credentials",
 				"baseUrl": "https://tiles.esa.maps.eox.at/wmts/",
 				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
 				"params": {
 					"layer": "overlay_bright",
+					"matrixSet": "WGS84"
+				},
+				"visible": false,
+				"projection": "EPSG:4326"
+			},
+			{
+				"name": "Overlay Bright (names/political boundaries)",
+				"type": "WMTS",
+				//"crossOrigin": "use-credentials",
+				"baseUrl": "https://tiles.maps.eox.at/wmts/",
+				"attribution": "Terrain { Data © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors and <a href='http://maps.eox.at/#data'>others</a>, Rendering © <a href='http://eox.at/'>EOX</a> }",
+				"params": {
+					"layer": "overlay_base_bright",
 					"matrixSet": "WGS84"
 				},
 				"visible": false,
