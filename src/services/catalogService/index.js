@@ -81,8 +81,9 @@ class CatalogService {
 	 */
 	setTotalResults(myCatalog) {
 		return new Promise((resolve, reject) => {
-			Logger.debug('catalogService.setTotalResults(' + myCatalog.name + ')');
-			// 
+			Logger.debug(`catalogService target url is (${myCatalog.url})`);
+			Logger.debug(`catalogService.setTotalResults (${myCatalog.name})`);
+
 			if (Configuration.request && Configuration.request.tlsRejectUnauthorized) {
 				console.log('tls reject unauthorized is false !')
 				//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";

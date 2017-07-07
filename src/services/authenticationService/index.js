@@ -39,6 +39,7 @@ class AuthenticationService {
 	getUserId(myRequest) {
 		let userId;
 		if (Configuration.hasOwnProperty('ssoUserId')) {
+			Logger.debug(`The request headers contains \n${JSON.stringify(myRequest.headers)}`);
 			Logger.debug(`Will retrieve sso user id from header mapped to ${Configuration['ssoUserId']}`);
 			let ssoHeaderId = Configuration['ssoUserId'];
 			userId = typeof ssoHeaderId === 'undefined' ? undefined : myRequest.headers[ssoHeaderId];
