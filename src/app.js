@@ -15,9 +15,6 @@ let express = require('express'),
 	https = require('https'),
 	fs = require('fs'),
 	path = require('path'),
-	httpProxy = require('http-proxy'),
-	proxy = require('./proxy'),
-	expressProxy = require('express-http-proxy'),
 	url = require('url'),
 	logger = require('./utils/logger'),
 	methodOverride = require('method-override'),
@@ -60,7 +57,6 @@ app.use('/ngeo/simpleDataAccessRequests', simpleDataAccessRequests);
 app.use('/ngeo/dataAccessRequestStatuses', dataAccessRequestStatuses);
 app.use('/ngeo/opensearch', opensearch);
 
-//let wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 
 //host for both http and https
 let host = process.env.HOST || 'localhost';
