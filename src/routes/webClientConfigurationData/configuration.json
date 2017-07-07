@@ -234,9 +234,9 @@
 	"downloadManager": {
 		"enable": true,
 		"downloadManagerInstallationLink": {
-			"Windows": "/ngeo/downloadManagers/releases/download/win/latest",
-			"Linux": "/ngeo/downloadManagers/releases/download/linux/latest",
-			"MacOS": "/ngeo/downloadManagers/releases/download/mac/latest"
+			"Windows": "/ngeo-qs/ngeo/downloadManagers/releases/download/win/latest",
+			"Linux": "/ngeo-qs/ngeo/downloadManagers/releases/download/linux/latest",
+			"MacOS": "/ngeo-qs/ngeo/downloadManagers/releases/download/mac/latest"
 			//"DMTU Windows" : "/files/download-manager-0.7.6-win_x64.zip",
 			//"DMTU Linux" : "/files/download-manager-0.7.6-linux_x64.tar.gz",
 			//"DMTU MacOS" : "/files/download-manager-0.7.6-macosx_x64.tar.gz"
