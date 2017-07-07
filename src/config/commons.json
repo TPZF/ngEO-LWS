@@ -15,5 +15,11 @@
 	"ssoUserId": "SSO-USER-ID",
 	"searchResults": {
 		"defaultCountPerPage": 50
+	},
+	"proxySettings": {
+		"useProxy": false,
+		"host": "xxx",
+		"port": "xxx",
+		"protocol": "http:"
 	}
 }
