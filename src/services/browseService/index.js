@@ -3,6 +3,16 @@ let logger = require('utils/logger');
 let Configuration = require('config');
 let Utils = require('utils/utils');
 
+//platform id to retrieve from this path
+const platformIdMData = ['properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName'];
+//serial id to retrieve from this path
+const seriaIdMData = ['properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier'];
+//short name to retrieve from this path
+const shortNameMData = ['properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName'];
+//operational mode to retrieve from this path (if not found from the first in the array then itertae to the other ...)
+const operationalModeMData = ['properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode.#', 'properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode'];
+const productTypeMData = ['properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType'];
+
 /**
  * Browse service adding the wms/wmts information to products
  */
@@ -35,14 +45,15 @@ class BrowseService {
 	 * @param feature 
 	 */
 	extractFeatureProps(feature) {
+		//var value = Configuration.getPropertyFromPaths(product, columnDefs[i].mData);
 		let properties = null;
 		if (feature.properties.EarthObservation) {
 			properties = {
-				"plateformId": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName', '*'),//"Landsat",
-				"serialId": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.serialIdentifier', '*'),//"5",
-				"shortName": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName', '*'),//"TM",
-				"operationalMode": Utils.getFromPath(feature, 'properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode', '*'),//"IM",
-				"productType": Utils.getFromPath(feature, 'properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType', '*')//"TM__GTC_1P"
+				"plateformId": Utils.getPropertyFromPaths(feature, platformIdMData, '*'),//"Landsat",
+				"serialId": Utils.getPropertyFromPaths(feature, seriaIdMData, '*'),//"5",
+				"shortName": Utils.getPropertyFromPaths(feature, shortNameMData, '*'),//"TM",
+				"operationalMode": Utils.getPropertyFromPaths(feature, operationalModeMData, '*'),//"IM",
+				"productType": Utils.getPropertyFromPaths(feature, productTypeMData, '*')//"TM__GTC_1P"
 			}
 		}
 		return properties;

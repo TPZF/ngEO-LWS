@@ -1,3 +1,5 @@
+let _ = require('lodash');
+
 /**
  *  utilities file containing shared funccion
  */
@@ -44,6 +46,31 @@ module.exports = {
 		}
 
 		return defaultValue;
+	},
+
+	/**
+	 * Get property from an array of paths
+	 *
+	 * @function getPropertyFromPaths
+	 * @param object - Object from which you need to extract the property
+	 * @param propertyPaths - Array of paths 
+	 * @param defaultValue - The default value if none path was found
+	 * @returns {string}
+	*/
+	getPropertyFromPaths: function (object, propertyPaths, defaultValue) {
+		var _this = this;
+		if (propertyPaths && _.isArray(propertyPaths) && propertyPaths.length > 0) {
+			var value = defaultValue;
+			propertyPaths.forEach(function (_propertyPath) {
+				var _value = _this.getFromPath(object, _propertyPath, defaultValue);
+				if (_value !== defaultValue && typeof _value !== 'object') {
+					value = _value;
+				}
+			});
+			return value;
+		} else {
+			return defaultValue;
+		}
 	},
 
 	/**
