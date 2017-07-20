@@ -6,6 +6,12 @@ let Logger = require('utils/logger');
 let Configuration = require('config');
 let Utils = require('utils/utils');
 
+//if there is a proxy to access from in the mahcine where is installed nego-qs, in order to
+//access external backend http server then put it here
+if (Configuration.hasOwnProperty('proxyUrl')) {
+	request = request.defaults({ 'proxy': Configuration.proxyUrl });
+}
+
 /**
  * Catalog service designed to manage the available catalogs on different backends
  */

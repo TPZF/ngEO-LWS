@@ -17,6 +17,13 @@ let Collection = require('./collection');
 let CatalogService = require('../catalogService');
 let BrowseService = require('../browseService');
 
+//if there is a proxy to access from in the mahcine where is installed nego-qs, in order to
+//access external backend http server then put it here
+if (Configuration.hasOwnProperty('proxyUrl')) {
+	request = request.defaults({ 'proxy': Configuration.proxyUrl });
+}
+
+
 /**
  * @function _addOriginDatasetId
  * @param {String} myCollectionId
@@ -275,7 +282,7 @@ class CollectionService {
 					// set collection object
 					let _collection = new Collection(_idCollection, _url, _oneEntry.title, myCatalog.id);
 					_collection.responseFormatOnSearch = myCatalog.responseFormatOnSearch;
-					if(myCatalog.credentials){
+					if (myCatalog.credentials) {
 						_collection.credentials = myCatalog.credentials;
 					}
 					// add other datas
@@ -364,7 +371,7 @@ class CollectionService {
 			myCollection.url_search = this.buildUrlSearch(_searchRequestDescription);
 
 			// create request to retrieve the number of available products
-			let _urlCount = _buildSearchRequestWithValue(myCollection.url_search, {count: 1});
+			let _urlCount = _buildSearchRequestWithValue(myCollection.url_search, { count: 1 });
 			// add credentials if exists
 			_urlCount += this.addCredentials(myCollection);
 			// and make first search
@@ -469,7 +476,7 @@ class CollectionService {
 				_searchParams[_collection.parameters[_param]] = myOptions.params[_param];
 			}
 		}
-		
+
 		let _searchUrlRequest = _buildSearchRequestWithParam(_collection.url_search, _searchParams);
 		_searchUrlRequest += this.addMandatoryAttributes(_collection);
 		_searchUrlRequest += this.addCredentials(_collection);
