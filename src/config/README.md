@@ -12,7 +12,7 @@ You cant find :
 - `opensearch` : parameters to find information in opensearch descriptions (param, geo, time, ...)
 - `ssoUserId` : value of userId in header transmitted by SSO to be mapped in the database. If this tag is not defined (not the value but entire tag) then we assume that the QS is not behind sso and thus all user will be mapped as `anonymous` user. Otherwise if tag is defined with the sso header where to retrieve the userId, then we assume that QS is behind sso and ssoid will be mapped with the database entry (shopcart and wonload manager). 
 - `searchResults.defaultCountPerPage` : default value for pagination on collections - replaced by osdd count value if exists
-- `proxyUrl` : not manadatory, but if set shall be of format `http://full proxy url` or `https:// full proxy url`. Used in order to reach external backend urls from ngeo-qs if the machine where is installed ngeo-qs is protected behind a this proxy server
+- `proxyUrl` : not manadatory, but if set shall be of format `http://full proxy url` or `https:// full proxy url`. Used in order to reach external backend urls from ngeo-qs if the machine where is installed ngeo-qs is protected behind this proxy server.
 
 ## development.json / test.json / production.json
 
