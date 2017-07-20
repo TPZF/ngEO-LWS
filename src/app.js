@@ -20,8 +20,7 @@ let express = require('express'),
 	methodOverride = require('method-override'),
 	errorHandler = require('errorhandler'),
 	bodyParser = require('body-parser'),
-	routes = require('routes'),
-	globalTunnel = require('global-tunnel');
+	routes = require('routes');
 
 let webClientConfigurationData = require('./routes/webClientConfigurationData');
 let datasetPopulationMatrix = require('./routes/datasetPopulationMatrix');
@@ -89,20 +88,6 @@ let createHttpsServer = function () {
 		logger.info("Express server listening @ https://%s:%s", host, httpsPort);
 	});
 };
-
-//Check if we have proxy configured 
-//means that your network is behind a proxy server
-//@see https://www.npmjs.com/package/global-tunnel
-if (configuration.hasOwnProperty('proxySettings')) {
-	if (configuration.proxySettings.useProxy) {
-		globalTunnel.initialize({
-			tunnel: 'neither',
-			protocol: configuration.proxySettings.protocol,
-			host: configuration.proxySettings.host,
-			port: configuration.proxySettings.port
-		});
-	}
-}
 
 //here we check if there is a protocol where to run the server
 //It could be HTTPS, HTTP or BOTH, if none is specified then will be both
