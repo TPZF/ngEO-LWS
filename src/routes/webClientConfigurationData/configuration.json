@@ -129,7 +129,7 @@
 	},
 	"mailto": "eohelp@esa.int",
 	"proxyUrl": "http://localhost:3000/proxy?url=",
-	"idpUrl": "http://eogrid.esrin.esa.int/login.php",
+	"idpUrl": "https://eoli.eo.esa.int/ngeo-sso/sec/#data-services-area",
 	"search": {
 		"geometryPrecision": 2,
 		// labels for advanced crietrias
