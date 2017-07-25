@@ -5,6 +5,10 @@ let request = require('supertest');
 // APP
 let app = require('../../app');
 
+// Configuration
+let Configuration = require('config');
+let ssoVar = Configuration.ssoUserId;
+
 /**
  * Unit test file for service web Shopcarts
  * It allow to test the REST service and the mongodb database
@@ -41,6 +45,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.post('/ngeo/shopcarts')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(201)
 				.expect('Content-Type', /json/)
@@ -60,6 +65,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.get('/ngeo/shopcarts')
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -88,6 +94,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.put('/ngeo/shopcarts/' + idShopCart)
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -107,6 +114,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.delete('/ngeo/shopcarts/' + idShopCart)
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(204, done);
 
@@ -117,6 +125,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.get('/ngeo/shopcarts')
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -146,6 +155,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.post('/ngeo/shopcarts')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(400)
 				.expect('Content-Type', /json/)
@@ -169,6 +179,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.post('/ngeo/shopcarts')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(400)
 				.expect('Content-Type', /json/)
@@ -192,6 +203,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.post('/ngeo/shopcarts')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(400)
 				.expect('Content-Type', /json/)
@@ -220,6 +232,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.put('/ngeo/shopcarts/')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(404, done);
 
@@ -238,6 +251,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.put('/ngeo/shopcarts/45f45r78')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(400)
 				.expect('Content-Type', /json/)
@@ -262,6 +276,7 @@ describe('Route ShopCarts', function () {
 
 			request(app)
 				.put('/ngeo/shopcarts/58c26cd2907fc63264933800')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(400)
 				.expect('Content-Type', /json/)
@@ -295,6 +310,7 @@ describe('Route shopCart features', function () {
 
 		request(app)
 			.post('/ngeo/shopcarts')
+			.set(ssoVar, 'anonymous')
 			.send(datas)
 			.expect(201)
 			.expect('Content-Type', /json/)
@@ -323,6 +339,7 @@ describe('Route shopCart features', function () {
 
 			request(app)
 				.get('/ngeo/shopcarts/' + idShopCart + '/items')
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -423,6 +440,7 @@ describe('Route shopCart features', function () {
 
 			request(app)
 				.post('/ngeo/shopcarts/' + idShopCart + '/items')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(201)
 				.expect('Content-Type', /json/)
@@ -498,6 +516,7 @@ describe('Route shopCart features', function () {
 
 			request(app)
 				.post('/ngeo/shopcarts/' + idShopCart + '/items/delete')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -518,6 +537,7 @@ describe('Route shopCart features', function () {
 
 			request(app)
 				.delete('/ngeo/shopcarts/' + idShopCart)
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(204, done);
 
@@ -528,6 +548,7 @@ describe('Route shopCart features', function () {
 
 			request(app)
 				.get('/ngeo/shopcarts/' + idShopCart + '/items')
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(404)
 				.expect('Content-Type', /json/)

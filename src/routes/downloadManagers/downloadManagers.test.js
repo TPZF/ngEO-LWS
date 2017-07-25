@@ -5,6 +5,9 @@ let should = require('should');
 // APP
 let app = require('../../app');
 
+// Configuration
+let Configuration = require('config');
+let ssoVar = Configuration.ssoUserId;
 /**
  * Unit test file for service web DownloadManagers
  * It allow to test the REST service and the mongodb database
@@ -37,6 +40,7 @@ describe('Route downloadManagers', function () {
 
 			request(app)
 				.post('/ngeo/downloadManagers')
+				.set(ssoVar, 'anonymous')
 				.send(datas)
 				.expect(201)
 				.expect('Content-Type', /json/)
@@ -56,6 +60,7 @@ describe('Route downloadManagers', function () {
 
 			request(app)
 				.get('/ngeo/downloadManagers')
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -75,6 +80,7 @@ describe('Route downloadManagers', function () {
 
 			request(app)
 				.delete('/ngeo/downloadManagers/' + idDownloadManager)
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(204, done);
 
@@ -85,6 +91,7 @@ describe('Route downloadManagers', function () {
 
 			request(app)
 				.get('/ngeo/downloadManagers')
+				.set(ssoVar, 'anonymous')
 				.send()
 				.expect(200)
 				.expect('Content-Type', /json/)
@@ -107,6 +114,7 @@ describe('Route downloadManagers', function () {
 
 			request(app)
 				.get('/ngeo/downloadManagers/releases/latest')
+				.set(ssoVar, 'anonymous')
 				.expect(200)
 				.expect('Content-Type', /json/)
 				.end(function (err, res) {

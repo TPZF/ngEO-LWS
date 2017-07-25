@@ -5,6 +5,10 @@ let should = require('should');
 // APP
 let app = require('../../app');
 
+// Configuration
+let Configuration = require('config');
+let ssoVar = Configuration.ssoUserId;
+
 /**
  * Unit test file for service web DataAccessRequestStatuses
  * It allow to test the REST service and the mongodb database
@@ -15,6 +19,7 @@ describe('Route dataAccessRequestStatuses', function () {
 
 		request(app)
 			.get('/ngeo/dataAccessRequestStatuses')
+			.set(ssoVar, 'anonymous')
 			.send()
 			.expect(200)
 			.expect('Content-Type', /json/)
@@ -31,6 +36,7 @@ describe('Route dataAccessRequestStatuses', function () {
 
 		request(app)
 			.get('/ngeo/dataAccessRequestStatuses/about')
+			.set(ssoVar, 'anonymous')
 			.send()
 			.expect(200)
 			.end(function (err, res) {
