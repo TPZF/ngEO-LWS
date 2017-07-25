@@ -53,7 +53,8 @@ let router = express.Router({
 	mergeParams: true
 });
 router.use(function timeLog(req, res, next) {
-	next();
+	// for all simple data access request, authentication is required
+	AuthenticationService.isAuthenticated(req, res, next);
 });
 
 /**
