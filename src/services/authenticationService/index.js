@@ -1,5 +1,5 @@
 let Logger = require('utils/logger'),
-	Configuration = require('config');
+	Configuration = require('../../config');
 
 /**
  * Database service
@@ -39,15 +39,18 @@ class AuthenticationService {
 	getUserId(myRequest) {
 		let userId;
 		if (Configuration.hasOwnProperty('ssoUserId')) {
-			Logger.debug(`The request headers contains \n${JSON.stringify(myRequest.headers)}`);
-			Logger.debug(`Will retrieve sso user id from header mapped to ${Configuration['ssoUserId']}`);
 			let ssoHeaderId = Configuration['ssoUserId'];
-			userId = typeof ssoHeaderId === 'undefined' ? undefined : myRequest.headers[ssoHeaderId];
+			Logger.debug(`The request headers contains \n${JSON.stringify(myRequest.headers)}`);
+			Logger.debug(`Will retrieve sso user id from header mapped to ${ssoHeaderId}`);
+			userId = myRequest.headers[ssoHeaderId];
 			Logger.debug(`The user id from sso is ${userId}`);
+			if (typeof userId === 'undefined' || !userId.trim()) {
+				userId = undefined;
+				Logger.debug(`The user id from sso was undefined or empty so qs will map it to ${userId}`);
+			}
 		} else {
-			Logger.warn("ssoUserId tag not found in the configuration so server not protected behind and all user mapped with anonymous user");
-			//myRequest.headers[Configuration['ssoUserId']] = 'anonymous';
-			userId = 'anonymous';
+			Logger.warn("ssoUserId tag not found in the configuration so server no access to protected services");
+			userId = undefined;
 		}
 		return userId;
 	}
