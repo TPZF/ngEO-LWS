@@ -32,6 +32,7 @@ let downloadManagers = require('./routes/downloadManagers');
 let simpleDataAccessRequests = require('./routes/simpleDataAccessRequests');
 let dataAccessRequestStatuses = require('./routes/dataAccessRequestStatuses');
 let opensearch = require('./routes/opensearch');
+let userId = require('./routes/userId');
 
 let app = express();
 
@@ -56,6 +57,7 @@ app.use('/ngeo/downloadManagers', downloadManagers);
 app.use('/ngeo/simpleDataAccessRequests', simpleDataAccessRequests);
 app.use('/ngeo/dataAccessRequestStatuses', dataAccessRequestStatuses);
 app.use('/ngeo/opensearch', opensearch);
+app.use('/ngeo/userId', userId);
 
 
 //host for both http and https
