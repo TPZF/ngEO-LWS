@@ -12,7 +12,7 @@
 		"xmlnsOpensearch": "/spec/opensearch/1.1/",
 		"xmlnsGeo": "/opensearch/extensions/geo/"
 	},
-	"ssoUserId": "SSO-USER-ID",
+	"ssoUserId": "sso-user-id",
 	"searchResults": {
 		"defaultCountPerPage": 50
 	}
