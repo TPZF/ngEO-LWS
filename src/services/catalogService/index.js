@@ -212,8 +212,8 @@ class CatalogService {
 		_xmlResult += '<title type="text">ngEO collections</title>';
 		_xmlResult += '<subtitle type="text">Available collections in ngEO</subtitle>';
 		_xmlResult += '<updated>' + new Date().toUTCString() + '</updated>';
-		_xmlResult += '<author><name>ngEO Super Catalog</name></author>';
-		_xmlResult += '<generator version="2.40">ngEO Super catalog</generator>';
+		_xmlResult += '<author><name>ngEO Catalog</name></author>';
+		_xmlResult += '<generator version="2.40">ngEO catalog</generator>';
 		_xmlResult += '<os:totalResults>' + myNbResults + '</os:totalResults>';
 		_xmlResult += '<os:startIndex>0</os:startIndex>';
 		_xmlResult += '<os:itemsPerPage>100</os:itemsPerPage>';
