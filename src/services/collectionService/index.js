@@ -551,7 +551,7 @@ class CollectionService {
 	findSearchRequestDescription(myCollection) {
 		let _jsonOSDD = myCollection.osdd;
 		let _paramTag = Utils.findTagByXmlns(_jsonOSDD, Configuration.opensearch.xmlnsParameter);
-		let _nodesFind = _.filter(_jsonOSDD.Url, function (_item) {
+		let _nodesFind = _.filter(Utils.getTagObjectFromOSDD(_jsonOSDD, 'Url'), function (_item) {
 			if (_item['@'] && (_item['@'].type === myCollection.responseFormatOnSearch)) {
 				if (_item['@'][_paramTag + ':method']) {
 					if (_item['@'][_paramTag + 'method'].toLowerCase() === 'get') {
@@ -884,7 +884,10 @@ class CollectionService {
 
 		// more than 1
 		let _result = mySearchRequestDescription[0]['@'].template;
-
+		//if more than one then take all the query params and add them to the first if not exists
+		//example, template1=uri?p1={v1}&p2={v2}
+		//         template2=uri?p1={v1}&p3={v3}
+		//result to return would be uri?p1={v1}&p2={v2}&p3={v3}
 		for (var _i = 1; _i < mySearchRequestDescription.length; _i++) {
 			let _template = mySearchRequestDescription[_i]['@'].template;
 			let _uri = _template.substring(0, _template.indexOf('?'));

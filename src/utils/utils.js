@@ -122,6 +122,35 @@ module.exports = {
 			}
 		}
 		return _result;
+	},
+
+	/** 
+	 * @function getTagObjectFromOSDD
+	 * @param {JSON} myJsonOSDD the osdd in json format
+	 * @param {string} tagName the tagname we want to search (give only the tagname without the namespace as from the xml osdd specification)
+	 * @returns {Array} array of object that has key equal to the tagName we are searching from this OSDD
+	*/
+	getTagObjectFromOSDD: function (myJsonOSDD, tagName) {
+		let resultNodes = [];
+		_.forEach(myJsonOSDD, function (value, key) {
+			if (key == tagName || key.endsWith(":" + tagName)) {
+				resultNodes.push(myJsonOSDD[key]);
+			}
+		});
+		//as the osdd xml is transformed in json and if we have stange config from the backend
+		//for exmaple they can configure it like
+		//<OpenSearchDescription> ...
+		//	...
+		//	<Url rel="self" template="http://fedeo.esa.int/opensearch/description.xml?parentIdentifier=ENVISAT.ASA.WSS_1P" type="application/opensearchdescription+xml"/>
+		//	<os:Url xmlns:os="http://a9.com/-/spec/opensearch/1.1/" ...>
+		//	<os:Url xmlns:os="http://a9.com/-/spec/opensearch/1.1/" ...>
+		//	...
+		//</OpenSearchDescription>
+		//We had the case for fedeo for example returning such a response
+		//So when this is transformed into json object by our translator then
+		//it is like osddJson containing one object Url and other object os:url containing an array of Object url
+		//That is why we flatten it so we have an array of Url or namespace:Url
+		return _.flatten(resultNodes);
 	}
 
 };
