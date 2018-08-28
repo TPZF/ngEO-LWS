@@ -9,6 +9,10 @@ Show what the library does as concisely as possible, developers should be able t
 
 ## Pre installation
 
+>**Resources Requirement**
+
+For optimal performance it should run well with `2 CPU, 4Gb RAM, 100Gb memory`
+
 - Install Git
 - Create a repository where you want to place your ngEO-LWS folder
 - CD to this repository
